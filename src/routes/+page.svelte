@@ -97,7 +97,7 @@
 
     <p class="mt-10 text-center text-sm/6 text-gray-500">
       Already a member?
-      <a href="/login" class="font-semibold text-indigo-600 hover:text-indigo-500">Login here</a>
+      <a href="/" class="font-semibold text-indigo-600 hover:text-indigo-500">Login here</a>
     </p>
   </div>
 </div>
