@@ -37,6 +37,7 @@
                 </div>
             </button>
         </div>
+        
     </section>
     {#if chat}
         <section class='flex flex-col gap-5 relative'>
