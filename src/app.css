@@ -1,3 +1,22 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@theme {
+    --color-background: #EBEBEB;
+    --color-primary: #344E41;
+    --color-secondary: #588157;
+    --color-primary-shade: #3A5A40;
+    --color-secondary-shade: #A3B18A;
+    --color-accent: #DF971A;
+    --color-action: #6363FF;
+
+    --font-sans: jost;
+}
+
+@font-face {
+    font-family: jost;
+    src: url('/fonts/Jost-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

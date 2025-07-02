@@ -17,4 +17,6 @@
 	});
 </script>
 
-{@render children()}
+<main class='bg-background'>
+	{@render children()}
+</main>
