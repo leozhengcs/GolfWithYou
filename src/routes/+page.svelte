@@ -14,6 +14,7 @@
   import { fly, slide } from "svelte/transition";
 
   let step = $state(1); // Keeps track of which question user is on.
+  let formElement: HTMLFormElement;
 
   // Basic Information
   let fullName = $state('');
@@ -38,25 +39,15 @@
   let handicapIndex = $state('');
   let golfId = $state('');
 
-  // Account Information
-
   let errorMessage = $state('');
 
-  async function handleAuth() {
-      goto('/home')
-      errorMessage = '';
-      try {
-          const { error } = await supabase.auth.signUp({ email, password });
-          if (error) throw error;
-          goto('/dashboard'); // change this to your post-login route
-      } catch (error) {
-          if (error instanceof Error) {
-              errorMessage = error.message;
-          } else {
-              errorMessage = 'An unknown error has occured. Please try again later.'
-          }
-      }
-  }
+  $effect(() => {
+    if (step == 10) {
+      console.log('trying to submit');
+      formElement.submit();
+    }
+  })
+
 </script>
 
 <div
@@ -131,57 +122,21 @@
     />
   </div>
   {/if}
-
 </div>
-  <!-- <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img class="mx-auto h-10 w-auto" src="/icons/Golf.png" alt="GolfWithYou Icon" />
-    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign up for an account</h2>
-  </div>
 
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    
-    <form class="space-y-6" action="#" method="POST">
-      <div>
-        <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
-        <div class="mt-2">
-          <input bind:value={email} type="email" name="email" id="email" autocomplete="email" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
-        </div>
-        <div class="mt-2">
-          <input bind:value={password} type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="confirm-password" class="block text-sm/6 font-medium text-gray-900">Confirm Password</label>
-        </div>
-        <div class="mt-2">
-          <input bind:value={confirmPassword} type="password" name="confirm-password" id="confirm-password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="dob" class="block text-sm/6 font-medium text-gray-900">Date of Birth</label>
-        </div>
-        <div class="mt-2">
-          <input bind:value={dob} type="text" name="dob" id="dob" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-        </div>
-      </div>
-
-      <div>
-        <button onclick={() => goto('/discover')} type="button" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">Sign Up</button>
-      </div>
-    </form>
-
-    <p class="mt-10 text-center text-sm/6 text-gray-500">
-      Already a member?
-      <a href="/" class="font-semibold text-indigo-600 hover:text-indigo-500">Login here</a>
-    </p>
-  </div> -->
+<form method="POST" bind:this={formElement}>
+  <input type="hidden" name='fullName' bind:value={fullName}/> 
+  <input type="hidden" name='email' bind:value={email}/> 
+  <input type="hidden" name='gender' bind:value={gender}>
+  <input type="hidden" name='password' bind:value={password}>
+  <input type="hidden" name='confirmPassword' bind:value={confirmPassword}>
+  <input type="hidden" name='otherGender' bind:value={otherGender}>
+  <input type="hidden" name='dob' bind:value={dob}>
+  <input type="hidden" name='phone' bind:value={phone}>
+  <input type="hidden" name='postalCode' bind:value={postalCode}>
+  <input type="hidden" name='ethnicity' bind:value={ethnicity}>
+  <input type="hidden" name='otherEthnicity' bind:value={otherEthnicity}>
+  <input type="hidden" name='clubName' bind:value={clubName}>
+  <input type="hidden" name='handicapIndex' bind:value={handicapIndex}>
+  <input type="hidden" name='golfId' bind:value={golfId}>
+</form>

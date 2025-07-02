@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
-
 	let {
         golfId = $bindable(),
 		step = $bindable(),
@@ -33,7 +31,7 @@
             </button>
             <button
                     class="inline-block rounded-sm border border-blue-300 bg-blue-300 px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-blue-600 focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all w-fit"
-                    onclick={() => goto('/discover')}
+                    onclick={() => step++}
                 >
                     Complete Signup
             </button>

@@ -67,14 +67,14 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.session = session
   event.locals.user = user
 
-  const privateRoutes = ['/home', '/friends']
+  const privateRoutes = ['/discover', '/friends']
 
   if (!event.locals.session && privateRoutes.includes(event.url.pathname)) {
     redirect(303, '/')
   }
 
-  if (event.locals.session && event.url.pathname === '/auth') {
-    redirect(303, '/app')
+  if (event.locals.session && (event.url.pathname === '/auth' || event.url.pathname === '/')) {
+    redirect(303, '/discover')
   }
 
   return resolve(event)

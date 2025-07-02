@@ -1,4 +1,8 @@
 <script lang='ts'>
+    import type { UserProfile } from "$lib/types/Database";
+
+    let { data } = $props();
+    let { user } = $derived(data);
 
     let email = $state('');
     let username = $state('');
@@ -26,7 +30,7 @@
     </section>
     <section class="flex flex-col w-full h-full border-1 border-gray-300 gap-5 rounded-lg p-10 py-5">
         <h1 class='text-3xl'>Profile</h1>
-        <span class='text-sm bg-green-500 rounded-lg text-white w-fit p-1'>Verified</span>
+        <span class={`text-sm ${user.verified ? "bg-green-500" : "bg-red-500"} rounded-lg text-white w-fit p-1`}>{user.verified ? "Verified" : "Not Verified"}</span>
         <div>
             <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
             <div class="mt-2">
