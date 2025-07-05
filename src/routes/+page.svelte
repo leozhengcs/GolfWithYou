@@ -1,8 +1,8 @@
 
 <script lang='ts'>
-  import { goto } from "$app/navigation";
-  import { supabase } from "$lib/supabaseClient";
+  import Step0 from "$lib/components/signup/Step0.svelte";
   import Step1 from "$lib/components/signup/Step1.svelte";
+  import Step2_1 from "$lib/components/signup/Step2-1.svelte";
   import Step2 from "$lib/components/signup/Step2.svelte";
   import Step3 from "$lib/components/signup/Step3.svelte";
   import Step4 from "$lib/components/signup/Step4.svelte";
@@ -13,8 +13,10 @@
   import Step9 from "$lib/components/signup/Step9.svelte";
   import { fly, slide } from "svelte/transition";
 
-  let step = $state(1); // Keeps track of which question user is on.
+  let step = $state(0); // Keeps track of which question user is on.
   let formElement: HTMLFormElement;
+
+  let privateGolfer = $state(false);
 
   // Basic Information
   let fullName = $state('');
@@ -27,7 +29,7 @@
   let gender = $state('');
   let otherGender = $state('');
 
-  let dob = $state(''); // DD/MM/YYYY
+  let dob = $state(''); // YYYY-MM-DD
   let phone = $state(''); // 000-000-0000 Auto formats when typing (Optional)
   let postalCode = $state(''); // 6 Digits with no spaces
 
@@ -42,8 +44,7 @@
   let errorMessage = $state('');
 
   $effect(() => {
-    if (step == 10) {
-      console.log('trying to submit');
+    if (step == 11) {
       formElement.submit();
     }
   })
@@ -53,24 +54,33 @@
 <div
 	class={`flex h-screen w-screen items-center justify-center ${step > 1 ? 'bg-gradient-to-br from-green-100 via-emerald-200 to-green-500' : ''}`}
 >  
-  {#if step == 1}
-  <div class='flex w-full h-full justify-center'>
+  {#if step == 0}
+    <Step0
+      bind:step
+    />
+  {:else if step == 1}
+  <div class='flex w-full h-full justify-center' in:fly={{ duration: 300, x: 300, opacity: 0 }}>
     <Step1 
         bind:fullName
         bind:email 
-        bind:password
-        bind:confirmPassword
         bind:step
       />
   </div>
   {:else if step == 2}
+  <div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
+      <Step2_1
+        bind:privateGolfer
+        bind:step
+      />
+    </div>
+  {:else if step == 3}
   <div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
     <Step2
       bind:dob
       bind:step
     />
   </div>
-  {:else if step == 3}
+  {:else if step == 4}
   <div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
     <Step3
       bind:gender
@@ -78,21 +88,21 @@
       bind:otherGender
     />
   </div>
-  {:else if step == 4}
+  {:else if step == 5}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step4
       bind:phone
       bind:step
     />
   </div>
-  {:else if step == 5}
+  {:else if step == 6}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step5
       bind:postalCode
       bind:step
     />
   </div>
-  {:else if step == 6}
+  {:else if step == 7}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step6
       bind:step
@@ -100,21 +110,21 @@
       bind:otherEthnicity
     />
   </div>
-  {:else if step == 7}
+  {:else if step == 8}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step7
       bind:step
       bind:clubName
     />
   </div>
-  {:else if step == 8}
+  {:else if step == 9}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step8
       bind:handicapIndex
       bind:step
     />
   </div>
-  {:else if step == 9}
+  {:else if step == 10}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step9
       bind:step

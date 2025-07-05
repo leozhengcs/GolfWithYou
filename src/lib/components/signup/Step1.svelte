@@ -12,13 +12,13 @@
 
 <div
 	class="flex h-full w-full items-center justify-center bg-cover bg-center"
-	style="background-image:url(/images/signup/signup1.jpg)"
+	style="background-image:url('/images/signup/signup1.jpg')"
 >
 	<div class="absolute inset-0 bg-gray-800/50"></div>
 
     <!-- Login Button -->
     <button 
-        onclick={() => goto('/discover')}
+        onclick={() => goto('/auth/login')}
         class="absolute top-5 right-5 p-2 cursor-pointer text-lg text-white after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:bg-white after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
     >
         Login
@@ -51,26 +51,6 @@
                     class="peer mt-0.5 w-full border-gray-300 border-0 border-b sm:text-sm focus:outline-none focus:ring-0"
                     placeholder="Email"
                     bind:value={email}
-                />
-			</div>
-
-			<div>
-                <input
-                    type="password"
-                    id="password"
-                    class="peer mt-0.5 w-full border-gray-300 border-0 border-b sm:text-sm focus:outline-none focus:ring-0"
-                    placeholder="Password"
-                    bind:value={password}
-                />
-			</div>
-
-			<div>
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    class="peer mt-0.5 w-full border-gray-300 border-0 border-b sm:text-sm focus:outline-none focus:ring-0"
-                    placeholder="Confirm Password"
-                    bind:value={confirmPassword}
                 />
 			</div>
 

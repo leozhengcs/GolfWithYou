@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 
     if (!user) {
         return {
-            data: null,
+            profile: null,
             error: "User not authenticated"
         };
     }
@@ -18,8 +18,8 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 
     if (error) {
         console.error("Error fetching profile: ", error);
-        return { data: null, error: error };
+        return { profile: null, error: error };
     }
 
-    return { user: data, error: null };
+    return { profile: data, error: null };
 }

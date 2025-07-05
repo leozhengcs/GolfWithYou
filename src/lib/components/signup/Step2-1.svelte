@@ -1,23 +1,25 @@
 <script lang="ts">
 	let {
-        dob = $bindable(),
+        privateGolfer = $bindable(),
 		step = $bindable(),
 	} = $props();
 </script>
 
 <div class='w-96 flex flex-col gap-5'>
 	<section>
-		<h1 class='text-3xl'>Let's get started!</h1>
-		<span class='text-lg'>When's your birthday?</span>
+		<h1 class='text-3xl'>Before we get started,</h1>
+		<span class='text-lg'>Are you a private golf club member?</span>
 	</section>
 	<div>
-		<input
-			type="text"
-			id="fullName"
-			class="peer mt-0.5 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
-			placeholder="YYYY-MM-DD"
-			bind:value={dob}
-		/>
+		<select
+            id="memberSelect"
+            class="peer mt-0.5 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
+            bind:value={privateGolfer}
+            >
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+        </select>
+
 	</div>
 	<div class='w-full flex justify-end gap-2'>
 		<button

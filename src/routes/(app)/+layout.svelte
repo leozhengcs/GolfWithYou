@@ -6,7 +6,7 @@
 </script>
 
 <Navbar/>
-<div class='flex p-10 pt-32 min-h-screen flex-col overflow-x-hidden'>
+<div class='flex p-10 pt-32 min-h-screen flex-col overflow-x-clip relative'>
     {@render children()}
 </div>
 <Footer/>
