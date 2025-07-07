@@ -23,7 +23,7 @@
 
             <button 
                 onclick={() => step++}
-                class="relative p-2 cursor-pointer text-lg text-white after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:bg-background after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
+                class="relative p-2 cursor-pointer text-lg text-background after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:bg-background after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
             >
                 Register
             </button>

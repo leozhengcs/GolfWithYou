@@ -3,12 +3,12 @@
 </script>
 
 <nav class='w-full flex flex-row justify-between items-center p-5 absolute top-0 z-50 shadow-md bg-primary text-accent h-[75px]'>
-    <button class='w-10 cursor-pointer' onclick={() => goto('/discover')}>
-        <img src="/icons/Golf.png" alt="">
+    <button class='w-15 cursor-pointer' onclick={() => goto('/discover')}>
+        <img src="/icons/Logo.png" alt="">
     </button>
     <div class='flex flex-row gap-10'>
-        <a href="/discover">Discover</a>
-        <a href="/friends">Friends</a>
-        <a href="/profile">Profile</a>
+        <a class='text-xl' href="/discover">Discover</a>
+        <a class='text-xl' href="/friends">Friends</a>
+        <a class='text-xl' href="/profile">Profile</a>
     </div>
 </nav>
