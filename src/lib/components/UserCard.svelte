@@ -1,7 +1,6 @@
 <script lang='ts'>
   import type { PublicUserProfile } from "$lib/types/Database";
   import { getAge } from "$lib/utils/date";
-	import { isRedirect } from "@sveltejs/kit";
   import UserModal from "./UserModal.svelte";
 
   let { user }: { user: PublicUserProfile } = $props();
@@ -13,12 +12,26 @@
 </script>
 
 {#if showUser}
-  <UserModal age={getAge(user.dob)} name={user.full_name} handicap_index={user.handicap_index} member={user.club_name} src={user.avatar_url} closeModal={closeModal} />
+  <UserModal 
+    id={user.id}
+    age={getAge(user.dob)} 
+    name={user.full_name} 
+    handicap_index={user.handicap_index} 
+    member={user.club_name} 
+    src={user.avatar_url ?? "/icons/DefaultProfile.png"} 
+    images={user.user_images_url}
+    {closeModal} 
+    bio={user.bio}
+    golf_id={user.golf_id}
+    gender={user.gender}
+    other_gender={user.other_gender}
+    verified={user.verified}
+  />
 {/if}
 <button onclick={() => {showUser = true;}} class="w-64 flex-shrink-0 block rounded-lg p-4 shadow-xs shadow-indigo-100 bg-gray-200 cursor-pointer">
   <img
     alt=""
-    src={user.avatar_url}
+    src={user.avatar_url ?? '/icons/DefaultProfile.png'}
     class="h-56 aspect-square rounded-md object-cover object-center"
   />
 
@@ -26,7 +39,7 @@
     <div class='flex flex-col'>
       <div class='w-fit'>
         <dt class="sr-only">Name</dt>
-        <dd class="font-medium">{name}</dd>
+        <dd class="font-medium">{user.full_name}</dd>
       </div>
       <div class='w-fit'>
         <dt class="sr-only">Age</dt>
