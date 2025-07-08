@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { UserProfile } from '$lib/types/Database';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let { profile }: { profile: UserProfile | null } = $derived(data);
@@ -10,6 +11,14 @@
 	let email = $derived(profile?.email);
 	let bio = $state('');
 	let gender = $derived(profile?.gender.toLowerCase());
+
+	const handleLogout = async () => {
+		await fetch('/api/logout', {
+			method: "POST"
+		});
+
+		goto('/');
+	}
 </script>
 
 <div class="grid w-full flex-1 grid-cols-[250px_auto] gap-5 px-52">
@@ -23,21 +32,21 @@
 			>
 				Profile
 			</button>
-			<button
+			<!-- <button
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
 			>
 				Theme
-			</button>
+			</button> -->
 			<button
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
 			>
 				Data and Privacy
 			</button>
-			<button
+			<!-- <button
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
 			>
 				Settings
-			</button>
+			</button> -->
 		</div>
 	</section>
 	<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 p-10 py-5">
@@ -102,9 +111,9 @@
 				<option value="prefer_not_to_say">Prefer not to say</option>
 			</select>
 		</div>
-		<div class="flex w-full justify-end gap-2">
-			<button class="w-fit cursor-pointer rounded-lg bg-blue-300 p-2">Cancel Changes</button>
-			<button class="w-fit cursor-pointer rounded-lg bg-blue-300 p-2">Save Changes</button>
+		<div class="flex w-full justify-end gap-5">
+			<button class='text-red-400 hover:cursor-pointer hover:underline' onclick={handleLogout}>Logout</button>
+			<button class="rounded-lg border-1 border-action bg-action px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-action focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all w-fit">Edit Profile</button>
 		</div>
 	</section>
 </div>

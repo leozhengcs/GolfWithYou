@@ -1,4 +1,5 @@
 export interface UserProfile {
+	id: string;
     club_name: string,
     dob: string,
     full_name: string,
@@ -9,7 +10,20 @@ export interface UserProfile {
     email: string,
     golf_id: string,
     gender: string,
-    ethnicity: string,
-    otherEthnicity: string | null,
     otherGender: string | null
+}
+
+export interface PublicUserProfile {
+    id: string,
+    club_name: string,
+    handicap_index: string,
+    full_name: string,
+    golf_id: string,
+    verified: boolean,
+    user_images_url: string,
+    avatar_url: string,
+    dob: string,
+    bio: string,
+    gender: string,
+    other_gender: string
 }

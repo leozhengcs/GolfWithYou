@@ -1,37 +1,55 @@
 <script lang="ts">
-    import { toast } from "svelte-sonner";
+	import { toast } from "svelte-sonner";
 
 	let {
-        postalCode = $bindable(),
+        phone = $bindable(),
 		step = $bindable(),
 	} = $props();
 
-    let invalidPostal: null | string = $state(null);
+    let invalidNumber: null | string = $state(null);
 
-    const handleSubmit = () => {
-        if (!postalCode || postalCode.length < 5 || postalCode.includes(' ')) {
-            invalidPostal = postalCode;
-            toast.error("Please enter a valid postal code.");
-            return;
-        }
+    const handlePhoneInput = (e: Event) => {
+        const input = e.target as HTMLInputElement;
+		const digits = input.value.replace(/\D/g, ''); // remove non-digits
 
-        step++;
+		// Limit to 10 digits
+		const trimmed = digits.slice(0, 10);
+
+		// Format as XXX-XXX-XXXX
+		const formatted = trimmed
+			.replace(/^(\d{3})(\d{1,3})?(\d{1,4})?$/, (_, a, b, c) =>
+				[a, b, c].filter(Boolean).join('-')
+			);
+
+		phone = formatted;
     }
 
+    const handleSubmit = () => {
+        invalidNumber = phone;
+        const digits = phone.replace(/\D/g, '');
+
+		if (digits.length !== 10) {
+			toast.error('Please enter a valid 10-digit phone number.');
+			return;
+		}
+
+		step++;
+    }
 </script>
+
 
 <div class='w-96 flex flex-col gap-5'>
     <section>
-        <h1 class='text-3xl'>A few more questions!</h1>
-        <span class='text-lg'>What's your postal code?</span>
+        <h1 class='text-3xl'>What's your phone number?</h1>
     </section>
     <div>
         <input
             type="text"
-            id="postalCode"
-            class={`peer mt-0.5 w-full ${invalidPostal == postalCode? "border-red-400" : "border-black"} border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400`}
-            placeholder="V6T2A3"
-            bind:value={postalCode}
+            id="phone"
+            class={`peer mt-0.5 w-full ${invalidNumber == phone ? "border-red-400" : "border-black"} border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400`}
+            placeholder="123-456-7890"
+            oninput={handlePhoneInput}
+            bind:value={phone}
         />
     </div>
     <div class='w-full flex justify-end gap-2'>

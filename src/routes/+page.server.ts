@@ -14,8 +14,6 @@ export const actions: Actions = {
     const dob = formData.get('dob') as string
     const phone = formData.get('phone') as string
     const postalCode = formData.get('postalCode') as string
-    const ethnicity = formData.get('ethnicity') as string
-    const otherEthnicity = formData.get('otherEthnicity') as string
     const clubName = formData.get('clubName') as string
     const handicapIndex = formData.get('handicapIndex') as string
     const golfId = formData.get('golfId') as string
@@ -34,12 +32,10 @@ export const actions: Actions = {
         email,
         full_name: fullName,
         gender, 
-        other_gender: otherGender, 
+        other_gender: otherGender || null, 
         dob, 
         phone, 
         postal_code: postalCode,
-        ethnicity,
-        other_ethnicity: otherEthnicity,
         club_name: clubName,
         handicap_index: handicapIndex,
         golf_id: golfId,
@@ -50,6 +46,6 @@ export const actions: Actions = {
       console.log("ERROR: ", insert.error);
     }
 
-    redirect(303, '/');
+    redirect(303, '/discover');
   }
 }

@@ -7,8 +7,8 @@
         <img src="/icons/Logo.png" alt="">
     </button>
     <div class='flex flex-row gap-10'>
-        <a class='text-xl' href="/discover">Discover</a>
-        <a class='text-xl' href="/friends">Friends</a>
-        <a class='text-xl' href="/profile">Profile</a>
+        <a class='text-lg' href="/discover">Discover</a>
+        <a class='text-lg' href="/friends">Friends</a>
+        <a class='text-lg' href="/profile">Profile</a>
     </div>
 </nav>

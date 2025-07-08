@@ -12,6 +12,7 @@
   import Step9 from "$lib/components/signup/Step9.svelte";
   import Step10 from "$lib/components/signup/Step10.svelte";
   import Step11 from "$lib/components/signup/Step11.svelte";
+  import Step12 from "$lib/components/signup/Step12.svelte";
   import { Toaster } from "svelte-sonner";
   import { fly, slide } from "svelte/transition";
 
@@ -34,9 +35,6 @@
   let dob = $state(''); // YYYY-MM-DD
   let phone = $state(''); // 000-000-0000 Auto formats when typing (Optional)
   let postalCode = $state(''); // 6 Digits with no spaces
-
-  let ethnicity = $state('');
-  let otherEthnicity = $state('');
   
   // Information Regarding Golfing
   let clubName = $state('');
@@ -44,7 +42,7 @@
   let golfId = $state('');
 
   $effect(() => {
-    if (step == 12) {
+    if (step == 13) {
       formElement.submit();
     }
   })
@@ -83,36 +81,36 @@
   {:else if step == 4}
   <div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
     <Step4
-      bind:gender
-      bind:otherGender
+      bind:dob
       bind:step
     />
   </div>
   {:else if step == 5}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step5
-      bind:phone
+      bind:gender
+      bind:otherGender
       bind:step
     />
   </div>
   {:else if step == 6}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step6
-      bind:postalCode
+      bind:phone
       bind:step
     />
   </div>
   {:else if step == 7}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step7
-      bind:clubName
+      bind:postalCode
       bind:step
     />
   </div>
   {:else if step == 8}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step8
-      bind:handicapIndex
+      bind:clubName
       bind:step
     />
   </div>
@@ -120,20 +118,27 @@
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step9
       bind:step
-      bind:golfId
+      bind:handicapIndex
     />
   </div>
   {:else if step == 10}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step10
+      bind:golfId
+      bind:step
+    />
+  </div>
+  {:else if step == 11}
+  <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
+    <Step11
+      bind:step
       bind:password
       bind:passwordConfirm
-      bind:step
     />
   </div>
   {:else}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
-    <Step11
+    <Step12
       bind:step
     />
   </div>
@@ -150,8 +155,6 @@
   <input type="hidden" name='dob' bind:value={dob}>
   <input type="hidden" name='phone' bind:value={phone}>
   <input type="hidden" name='postalCode' bind:value={postalCode}>
-  <input type="hidden" name='ethnicity' bind:value={ethnicity}>
-  <input type="hidden" name='otherEthnicity' bind:value={otherEthnicity}>
   <input type="hidden" name='clubName' bind:value={clubName}>
   <input type="hidden" name='handicapIndex' bind:value={handicapIndex}>
   <input type="hidden" name='golfId' bind:value={golfId}>

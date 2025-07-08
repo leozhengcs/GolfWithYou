@@ -1,55 +1,87 @@
 <script lang="ts">
-	import { toTitleCase } from "$lib/utils/string";
 	import { toast } from "svelte-sonner";
 
 	let {
-        gender = $bindable(),
-		otherGender = $bindable(),
+        dob = $bindable(),
 		step = $bindable(),
 	} = $props();
 
+	let invalidDob: null | string = $state(null);
+
+    function isValidDate(str: string): boolean {
+		// Ensure the format is exactly YYYY-MM-DD
+		if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false;
+		
+		const [year, month, day] = str.split('-').map(Number);
+		
+		// Check valid ranges
+		if (month < 1 || month > 12 || day < 1 || day > 31) return false;
+		
+		// Construct a real date and compare values
+		const date = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+
+		return (
+			date.getFullYear() === year &&
+			date.getMonth() + 1 === month &&
+			date.getUTCDate() === day
+		);
+    }
+
 	const handleSubmit = () => {
-
-		if (!gender) {
-			toast.error("Please select a gender");
+		console.log(!isValidDate(dob))
+		if (!dob || !isValidDate(dob)) {
+			invalidDob = dob;
+			toast.error("Please enter a valid date in YYYY-MM-DD format.");
 			return;
-		}
-
-		if (otherGender) {
-			otherGender = toTitleCase(otherGender);
 		}
 
 		step++;
 	}
-</script>
 
+    const handleDateInput = (e: Event) => {
+		const input = e.target as HTMLInputElement;
+		let raw = input.value;
+
+		// Allow user to fully delete the input
+		if (raw.trim() === '') {
+			dob = '';
+			return;
+		}
+
+		// Remove all non-digit characters
+		let digits = raw.replace(/\D/g, '');
+
+		// Format to YYYY-MM-DD
+		let formatted = '';
+		if (digits.length <= 4) {
+			formatted = digits;
+		} else if (digits.length <= 6) {
+			formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
+		} else {
+			formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+		}
+
+		// Limit to 10 characters
+		formatted = formatted.slice(0, 10);
+
+		input.value = formatted;
+		dob = formatted;
+    }
+</script>
 
 <div class='w-96 flex flex-col gap-5'>
 	<section>
-		<h1 class='text-3xl'>Which best describes your gender?</h1>
+		<h1 class='text-3xl'>When is your birthday?</h1>
 	</section>
 	<div>
-		<select
-			id="genderSelect"
-			class="peer mt-0.5 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
-			bind:value={gender}
-			>
-			<option value="" disabled selected>Select gender</option>
-			<option value="Male">Male</option>
-			<option value="Female">Female</option>
-			<option value="Non-binary">Non-binary</option>
-			<option value="Prefer not to say">Prefer not to say</option>
-			<option value="Other">Other</option>
-		</select>
-
-		{#if gender === "Other"}
-			<input
-				type="text"
-				class="mt-2 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
-				placeholder="Please specify your ethnicity"
-				bind:value={otherGender}
-			/>
-		{/if}
+		<input
+			type="text"
+			id="fullName"
+			class={`peer mt-0.5 w-full ${invalidDob == dob ? "border-red-400" : "border-black"} border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400`}
+			placeholder="YYYY-MM-DD"
+            oninput={handleDateInput}
+			bind:value={dob}
+		/>
 	</div>
 	<div class='w-full flex justify-end gap-2'>
 		<button

@@ -15,7 +15,7 @@ declare global {
 			supabase: SupabaseClient<Database>
 			safeGetSession: () => Promise<{ session: Session | null; user: User | null }>
 			session: Session | null
-			user: User | null
+			user: UserProfile | null
 		}
 		interface PageData {
 			session: Session | null

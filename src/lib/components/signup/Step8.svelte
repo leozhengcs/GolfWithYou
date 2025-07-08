@@ -1,34 +1,25 @@
 <script lang="ts">
-    import { toast } from "svelte-sonner";
+	import { toTitleCase } from "$lib/utils/string";
+	import { toast } from "svelte-sonner";
 
 	let {
-        handicapIndex = $bindable(),
+        clubName = $bindable(),
 		step = $bindable(),
 	} = $props();
 
-    let invalidScore: null | number = $state(null);
+	let invalidClub: null | string = $state(null);
 
-    const handleSubmit = () => {   
-        if (!handicapIndex || handicapIndex < 0 || handicapIndex > 54) {
-            toast.error("Please enter a valid handicap index score.");
-            return;
-        }
+	const handleSubmit = () => {
+		if (!clubName || clubName.length > 1000) {
+			invalidClub = clubName;
+			toast.error("Please enter a valid club name");
+			return;
+		}
 
-        step++;
-    }
+		clubName = toTitleCase(clubName);
+		step++;
+	}
 
-    const handleScoreInput = (e: Event) => {
-        const input = e.target as HTMLInputElement;
-
-		// Remove non-digit characters
-		const digitsOnly = input.value.replace(/\D/g, '');
-        handicapIndex = digitsOnly;
-        if (handicapIndex > 54) {
-            handicapIndex = 54;
-        } else if (handicapIndex < 0) {
-            handicapIndex = 0;
-        }
-    }
 </script>
 
 <div
@@ -36,19 +27,16 @@
 >
     <div class='w-96 flex flex-col gap-5'>
         <section>
-            <h1 class='text-3xl'>Almost done!</h1>
-            <span class='text-lg'>What's your handicap index?</span>
+            <h1 class='text-3xl'>Now some questions regarding your membership</h1>
+            <span class='text-lg'>What's your golf club name?</span>
         </section>
         <div>
             <input
                 type="text"
-                id="handicapIndex"
-                class={`peer mt-0.5 w-full ${invalidScore == handicapIndex? "border-red-400" : "border-black"} border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400`}
-                placeholder="10.2"
-                min="0"
-                max="54"
-                oninput={handleScoreInput}
-                bind:value={handicapIndex}
+                id="clubName"
+                class={`peer mt-0.5 w-full ${invalidClub == clubName ? "border-red-400" : "border-black"} border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400`}
+                placeholder="Shaughnessy Golf & Country Club"
+                bind:value={clubName}
             />
         </div>
         <div class='w-full flex justify-end gap-2'>
@@ -66,4 +54,5 @@
             </button>
         </div>
     </div>
+
 </div>
