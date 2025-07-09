@@ -1,12 +1,100 @@
 <script lang='ts'>
     import { fade } from "svelte/transition";
+    import { onMount } from "svelte";
+    import { supabase } from "$lib/supabaseClient";
 
-    let message = $state('');
-    const sendMessage = () => {
-        
+    type Message = {
+        id: string;
+        chat_id: string;
+        sender_id: string;
+        content: string;
+        created_at: string;
+    };
+    
+    let { id, gender, other_gender, verified, golf_id, name, age, handicap_index, member, src, closeModal, bio, images, self } = $props();
+
+    let messages: Message[] = $state([]);
+    let newMessage = $state('');
+    let chatId = $state('');
+    let channel;
+
+    $inspect(messages);
+
+    async function getOrCreateChat() {
+        const response = await fetch('/api/chats', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ otherUserId: id })
+        })
+
+        const res = await response.json();
+
+        if (response.ok) {
+            console.log('Chat ID:', res.chatId);
+            chatId = res.chatId
+            // open chat UI...
+        } else {
+            console.error('Failed to create chat:', res.error);
+        }
     }
 
-    let { id, gender, other_gender, verified, golf_id, name, age, handicap_index, member, src, closeModal, bio, images } = $props();
+    async function loadMessages() {
+        const res = await fetch(`/api/message?chatId=${chatId}`);
+        const data = await res.json();
+        if (res.ok) {
+            messages = data;
+        } else {
+            console.error('Load error:', data.error);
+        }
+    }
+
+    async function sendMessage() {
+        const res = await fetch('/api/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, content: newMessage })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            console.error('Send error:', data.error);
+        }
+    }
+
+    onMount(async () => {
+        try {
+            await getOrCreateChat();
+            await loadMessages();
+
+            const channelName = 'private_chat_' + chatId;
+            const alreadyExists = supabase.getChannels().some(
+                (ch) => ch.topic === `realtime:${channelName}`
+            );
+
+            if (!alreadyExists) {
+                channel = supabase.channel(channelName)
+                    .on(
+                        'postgres_changes',
+                        {
+                            event: 'INSERT',
+                            schema: 'public',
+                            table: 'messages',
+                            filter: `chat_id=eq.${chatId}`
+                        },
+                        (payload) => {
+                        messages = [...messages, payload.new as Message];
+                        }
+                    );
+
+                channel.subscribe();
+            }
+
+        } catch (err: any) {
+            console.error('onMount error:', err.message || err);
+        }
+    });
 </script>
 
 <div 
@@ -14,7 +102,7 @@
 	tabindex="0" 
     aria-label='Close Modal' 
     onclick={closeModal} 
-    onkeydown={(e) => e.key === 'Esc' || e.key === ' ' ? closeModal() : null}
+    onkeydown={(e) => e.key === 'Esc' ? closeModal() : null}
     transition:fade={{ duration:300 }} 
     class='absolute w-full h-full top-0 left-0 bg-gray-500/50 flex justify-center items-center z-40'
 >
@@ -48,14 +136,18 @@
                 <h1 class='text-xl'>User Images</h1>
             </section>
         </div>
-        <div class='flex flex-col gap-5 relative'>
-            <h1 class='text-2xl mb-12'>Justin Han</h1>
+        <div class='flex flex-col gap-5 relative overflow-y-auto'>
+            <h1 class='text-2xl mb-12'>User</h1>
             <div class='flex flex-row items-end gap-5'>
                 <div class='w-10 rounded-full overflow-hidden aspect-square'>
                     <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
                 </div>
+                <!-- Message Receive -->
+                 {#each messages as message}
+                    {console.log(message)}
+                 {/each}
                 <div class='bg-gray-200 w-fit rounded-lg p-2'>
-                    <p class='max-w-[500px] text-wrap w-fit p-0 m-0'>Nice to meet you [user], I saw you were a member at [insert golf club] which was somewhere I've always wanted to go. Is it possible for you to host me in the upcoming weekend?</p>
+                    <p class='max-w-[500px] text-wrap w-fit p-0 m-0'></p>
                 </div>
             </div>
             <div class="flex flex-row items-end gap-5 justify-end">
@@ -68,8 +160,8 @@
             </div>
             <div class="mt-10 flex gap-4 w-full items-center border-t pt-4 absolute bottom-0 z-50">
                 <input
-                    bind:value={message}
-                    onkeydown={(e) => e.key === 'Enter' && sendMessage()}
+                    bind:value={newMessage}
+                    onkeydown={(e) => { if (e.key === 'Enter') sendMessage() }}
                     class="flex-1 border rounded-full px-4 py-2 outline-none"
                     placeholder="Type your message..."
                 />

@@ -3,7 +3,7 @@
   import { getAge } from "$lib/utils/date";
   import UserModal from "./UserModal.svelte";
 
-  let { user }: { user: PublicUserProfile } = $props();
+  let { user, self }: { user: PublicUserProfile, self: any } = $props();
   let showUser = $state(false);
 
   const closeModal = () => {
@@ -26,6 +26,7 @@
     gender={user.gender}
     other_gender={user.other_gender}
     verified={user.verified}
+    {self}
   />
 {/if}
 <button onclick={() => {showUser = true;}} class="w-64 flex-shrink-0 block rounded-lg p-4 shadow-xs shadow-indigo-100 bg-gray-200 cursor-pointer">

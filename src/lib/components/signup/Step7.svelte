@@ -9,7 +9,7 @@
     let invalidPostal: null | string = $state(null);
 
     const handleSubmit = () => {
-        if (!postalCode || postalCode.length < 5 || postalCode.includes(' ')) {
+        if (!postalCode || postalCode.length < 5) {
             invalidPostal = postalCode;
             toast.error("Please enter a valid postal code.");
             return;

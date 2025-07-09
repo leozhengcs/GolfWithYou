@@ -1,6 +1,12 @@
 import { redirect } from '@sveltejs/kit'
-
+import { createClient } from '@supabase/supabase-js';
 import type { Actions } from './$types'
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { PRIVATE_SUPABASE_URL } from '$env/static/private';
+
+// TEMPORARY SOLUTION
+
+const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL);
 
 export const actions: Actions = {
   default: async ({ request, locals: { supabase } }) => {
@@ -27,7 +33,7 @@ export const actions: Actions = {
       redirect(303, '/auth/error')
     }
 
-    const insert = await supabase.from('users').insert([{ 
+    const insert = await supabaseAdmin.from('users').insert([{ 
         id: data?.user?.id, 
         email,
         full_name: fullName,
@@ -46,6 +52,6 @@ export const actions: Actions = {
       console.log("ERROR: ", insert.error);
     }
 
-    redirect(303, '/discover');
+    throw redirect(303, '/discover');
   }
 }
