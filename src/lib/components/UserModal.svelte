@@ -61,6 +61,7 @@
         if (!res.ok) {
             console.error('Send error:', data.error);
         }
+        await loadMessages();
     }
 
     onMount(async () => {
@@ -138,26 +139,28 @@
         </div>
         <div class='flex flex-col gap-5 relative overflow-y-auto'>
             <h1 class='text-2xl mb-12'>User</h1>
-            <div class='flex flex-row items-end gap-5'>
-                <div class='w-10 rounded-full overflow-hidden aspect-square'>
-                    <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
-                </div>
-                <!-- Message Receive -->
-                 {#each messages as message}
-                    {console.log(message)}
-                 {/each}
-                <div class='bg-gray-200 w-fit rounded-lg p-2'>
-                    <p class='max-w-[500px] text-wrap w-fit p-0 m-0'></p>
-                </div>
-            </div>
-            <div class="flex flex-row items-end gap-5 justify-end">
-                <div class="bg-gray-200 w-fit rounded-lg p-2">
-                    <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>Nice to meet you [user], I saw you were a member at [insert golf club] which was somewhere I've always wanted to go. Is it possible for you to host me in the upcoming weekend?</p>
-                </div>
-                <div class="w-10 rounded-full overflow-hidden aspect-square">
-                    <img src="/images/example3.jpg" alt="">
-                </div>
-            </div>
+            {#each messages as message}
+                {#if message.sender_id == id}
+                    <div class='flex flex-row items-end gap-5'>
+
+                        <div class='w-10 rounded-full overflow-hidden aspect-square'>
+                            <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
+                        </div>
+                        <div class='bg-gray-200 w-fit rounded-lg p-2'>
+                            <p class='max-w-[500px] text-wrap w-fit p-0 m-0'>{message.content}</p>
+                        </div>
+                    </div>
+                {:else}
+                    <div class="flex flex-row items-end gap-5 justify-end">
+                        <div class="bg-gray-200 w-fit rounded-lg p-2">
+                            <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>{message.content}</p>
+                        </div>
+                        <div class="w-10 rounded-full overflow-hidden aspect-square">
+                            <img src="/images/example3.jpg" alt="">
+                        </div>
+                    </div>
+                {/if}
+            {/each}
             <div class="mt-10 flex gap-4 w-full items-center border-t pt-4 absolute bottom-0 z-50">
                 <input
                     bind:value={newMessage}
