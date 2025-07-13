@@ -10,7 +10,10 @@ export interface UserProfile {
     email: string,
     golf_id: string,
     gender: string,
-    otherGender: string | null
+    bio: string,
+    user_images_url: string,
+    avatar_url: string,
+    other_gender: string | null
 }
 
 export interface PublicUserProfile {
