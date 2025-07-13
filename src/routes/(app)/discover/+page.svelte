@@ -17,7 +17,6 @@
 	onMount(() => {
 		otherUsers = users.filter((u) => u.id !== user?.id);
 	})
-
 </script>
 
 <div class="flex flex-col gap-10">

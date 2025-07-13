@@ -1,6 +1,6 @@
 <script lang='ts'>
     import { fade } from "svelte/transition";
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import { supabase } from "$lib/supabaseClient";
 
     type Message = {
@@ -17,6 +17,8 @@
     let newMessage = $state('');
     let chatId = $state('');
     let channel;
+    let inputRef: HTMLInputElement;
+    let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
 
     $inspect(messages);
 
@@ -34,7 +36,6 @@
         if (response.ok) {
             console.log('Chat ID:', res.chatId);
             chatId = res.chatId
-            // open chat UI...
         } else {
             console.error('Failed to create chat:', res.error);
         }
@@ -48,20 +49,28 @@
         } else {
             console.error('Load error:', data.error);
         }
+        await tick(); // Waits for the bottom of the chat anchor element to load.
+        bottomRef.scrollIntoView({ behavior: 'smooth' });
     }
 
-    async function sendMessage() {
+    async function sendMessage(event: SubmitEvent) {
+        event.preventDefault();
+        const m = newMessage;
+        newMessage = '';
         const res = await fetch('/api/message', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, content: newMessage })
+            body: JSON.stringify({ chat_id: chatId, content: m })
         });
 
         const data = await res.json();
         if (!res.ok) {
             console.error('Send error:', data.error);
         }
+
         await loadMessages();
+        await tick();
+        inputRef.focus();
     }
 
     onMount(async () => {
@@ -105,7 +114,7 @@
     onclick={closeModal} 
     onkeydown={(e) => e.key === 'Esc' ? closeModal() : null}
     transition:fade={{ duration:300 }} 
-    class='absolute w-full h-full top-0 left-0 bg-gray-500/50 flex justify-center items-center z-40'
+    class='absolute w-screen h-screen top-0 left-0 bg-gray-500/50 flex justify-center items-center z-40'
 >
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -137,41 +146,44 @@
                 <h1 class='text-xl'>User Images</h1>
             </section>
         </div>
-        <div class='flex flex-col gap-5 relative overflow-y-auto'>
-            <h1 class='text-2xl mb-12'>User</h1>
-            {#each messages as message}
-                {#if message.sender_id == id}
-                    <div class='flex flex-row items-end gap-5'>
-
-                        <div class='w-10 rounded-full overflow-hidden aspect-square'>
-                            <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
+        <div class='flex flex-col relative overflow-y-hidden'>
+            <h1 class='text-2xl h-8'>{name}</h1>
+            <div class='overflow-y-auto flex flex-1 flex-col gap-5 pr-5'>
+                {#each messages as message}
+                    {#if message.sender_id == id}
+                        <div class='flex flex-row items-end gap-5'>
+    
+                            <div class='w-10 rounded-full overflow-hidden aspect-square'>
+                                <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
+                            </div>
+                            <div class='bg-gray-200 w-fit rounded-lg p-2'>
+                                <p class='max-w-[500px] text-wrap w-fit p-0 m-0'>{message.content}</p>
+                            </div>
                         </div>
-                        <div class='bg-gray-200 w-fit rounded-lg p-2'>
-                            <p class='max-w-[500px] text-wrap w-fit p-0 m-0'>{message.content}</p>
+                    {:else}
+                        <div class="flex flex-row items-end gap-5 justify-end">
+                            <div class="bg-gray-200 w-fit rounded-lg p-2">
+                                <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>{message.content}</p>
+                            </div>
+                            <div class="w-10 rounded-full overflow-hidden aspect-square">
+                                <img src="/images/example3.jpg" alt="">
+                            </div>
                         </div>
-                    </div>
-                {:else}
-                    <div class="flex flex-row items-end gap-5 justify-end">
-                        <div class="bg-gray-200 w-fit rounded-lg p-2">
-                            <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>{message.content}</p>
-                        </div>
-                        <div class="w-10 rounded-full overflow-hidden aspect-square">
-                            <img src="/images/example3.jpg" alt="">
-                        </div>
-                    </div>
-                {/if}
-            {/each}
-            <div class="mt-10 flex gap-4 w-full items-center border-t pt-4 absolute bottom-0 z-50">
+                    {/if}
+                {/each}
+                <div bind:this={bottomRef}></div>
+            </div>
+            <form class="gap-4 w-full items-center border-t pt-4 bottom-0 z-50 bg-white flex" onsubmit={sendMessage}>
                 <input
                     bind:value={newMessage}
-                    onkeydown={(e) => { if (e.key === 'Enter') sendMessage() }}
-                    class="flex-1 border rounded-full px-4 py-2 outline-none"
+                    bind:this={inputRef}
+                    class="flex-1 rounded-full px-4 py-2 focus:outline-none focus:ring-0"
                     placeholder="Type your message..."
                 />
-                <button onclick={sendMessage} class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">
+                <button type='submit' class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 cursor-pointer">
                     Send
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 </div>

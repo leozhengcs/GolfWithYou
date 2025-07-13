@@ -46,7 +46,7 @@
 			<input
 				type="text"
 				class="mt-2 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
-				placeholder="Please specify your ethnicity"
+				placeholder="Please specify your gender"
 				bind:value={otherGender}
 			/>
 		{/if}
