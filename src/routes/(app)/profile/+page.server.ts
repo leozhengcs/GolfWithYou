@@ -36,15 +36,12 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 export const actions: Actions = {
 
     default: async ({ request, locals: { supabase } }) => {
-
-
         const formData = await request.formData()
         const fullName = formData.get('fullName') as string
         const email = formData.get('email') as string
         const gender = formData.get('gender') as string
         const bio = formData.get('bio') as string
-        
-        console.log("here:   ")
+
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
@@ -55,7 +52,7 @@ export const actions: Actions = {
         }
 
         console.log("fd: ", formData);
-        console.log("hihu  ", user.id);
+        // console.log("hihu  ", user.id);
 
 
         const { data, error } = await supabaseAdmin
