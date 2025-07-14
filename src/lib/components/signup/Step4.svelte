@@ -18,6 +18,10 @@
 		if (month < 1 || month > 12 || day < 1 || day > 31) return false;
 
 		const date = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T00:00:00`);
+		const now = new Date();
+
+	  	if (date.getTime() > now.getTime()) return false;
+
 
 		// console.log(date.getFullYear(), year)
 		// console.log(date.getMonth(), month)

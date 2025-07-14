@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { toast } from "svelte-sonner";
+
 	let {
 		step = $bindable()
 	} = $props();
@@ -49,8 +51,7 @@
             </button>
             <button
 				class="inline-block rounded-sm border border-action bg-action px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-action focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all w-fit"
-                onclick={() => step++}
-                disabled={!agreed}
+                onclick={() => {agreed? step++ : toast.error("Please read and agree to continue.")}}
             >
                 Continue
             </button>

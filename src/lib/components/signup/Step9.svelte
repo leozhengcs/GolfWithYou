@@ -21,7 +21,13 @@
         const input = e.target as HTMLInputElement;
 
 		// Remove non-digit characters
-		const digitsOnly = input.value.replace(/\D/g, '');
+		let digitsOnly = input.value.replace(/[^0-9.]/g, '');
+
+        const parts = digitsOnly.split('.');
+        if (parts.length > 2) {
+            digitsOnly = parts[0] + '.' + parts[1]; // Keep only the first decimal
+        }
+
         handicapIndex = digitsOnly;
         if (handicapIndex > 54) {
             handicapIndex = 54;

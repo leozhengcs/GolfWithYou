@@ -14,15 +14,15 @@ export const actions: Actions = {
     const fullName = formData.get('fullName') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
-    const confirmPassword = formData.get('confirmPassword') as string
+    // const confirmPassword = formData.get('confirmPassword') as string
     const gender = formData.get('gender') as string
     const otherGender = formData.get('otherGender') as string
     const dob = formData.get('dob') as string
     const phone = formData.get('phone') as string
     const postalCode = formData.get('postalCode') as string
     const clubName = formData.get('clubName') as string
-    const handicapIndex = formData.get('handicapIndex') as string
-    const golfId = formData.get('golfId') as string
+    const handicapIndex = Number(formData.get('handicapIndex') as string)
+    const golfId = Number(formData.get('golfId') as string)
 
     const { data, error } = await supabase.auth.signUp({ 
       email, 

@@ -9,6 +9,10 @@
     let invalidPostal: null | string = $state(null);
 
     const handleSubmit = () => {
+        //trim whitespace
+        postalCode = postalCode.replace(/\s+/g, '');
+
+        //check length
         if (!postalCode || postalCode.length < 5) {
             invalidPostal = postalCode;
             toast.error("Please enter a valid postal code.");
