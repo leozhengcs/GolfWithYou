@@ -1,3 +1,19 @@
+/*
+const formData = new FormData();
+formData.append('image', imageFile);
+formData.append('type', "avatar") <----
+
+const res = await fetch('/api/uploadImage', {
+    method: 'POST',
+    body: formData
+});
+
+each call has a type, only avatar images uploading is set up right now
+use the else block for handling other user images
+
+*/
+
+
 // src/routes/api/messages/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -61,6 +77,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         return json(data, { status: 201 });
 
     } else {
+        //add other handling here
 
     }
     const data = "not avatar"
