@@ -1,7 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import type { UserProfile, FriendRequest } from "$lib/types/Database";
+import type { PublicUserProfile, UserProfile, FriendRequest } from "$lib/types/Database";
 
 export const load: PageServerLoad = async ({ locals: { supabase }}) => {
+    const { data: { user } } = await supabase.auth.getUser();
+
     const { data, error } = await supabase
         .from('users')
         .select('*')
@@ -40,23 +42,30 @@ export const load: PageServerLoad = async ({ locals: { supabase }}) => {
 
     if (requestQuery.data) {
         for (const request of requestQuery.data) {
-            // Grab the sender avatar
+            // Grab the sender information
             const { data, error } = await supabase
-                .from('users')
+                .from('public_user_profiles')
                 .select('*')
                 .eq('id', request.sender_id)
-                .single();
+                .single<PublicUserProfile>();
+
+            console.log(data);
+            console.log(error);
+
+            if (error) {
+                console.log("Error getting sender profile");
+                continue;
+            }
 
             requests.push({
-                avatar_url: data.avatar_url as string,
+                sender: data,
                 context: request.context as string,
-                sender_id: request.sender_id as string,
                 receiver_id: request.receiver_id as string,
-                sender_name: data.full_name as string,
             });
         }
     }
 
+    console.log("Friend Requests: ", requests);
 
     return { user: data, friends, requests };
 }

@@ -27,10 +27,10 @@
             {#each requests || [] as request} 
                 <button onclick={openChat} class='grid grid-cols-[20%_80%] gap-5 p-2 overflow-hidden cursor-pointer hover:bg-gray-200 rounded-lg' aria-label='friend'>
                     <div class='aspect-square rounded-full overflow-hidden col-start-1'>
-                        <img src={request.avatar_url} alt="" class='w-full h-full object-cover'>
+                        <img src={request.sender.avatar_url} alt="" class='w-full h-full object-cover'>
                     </div>
                     <div class='flex items-center col-start-2'>
-                        <span>{request.sender_name}</span>
+                        <span>{request.sender.full_name}</span>
                     </div>
                 </button>
             {/each}

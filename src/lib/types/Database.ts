@@ -32,11 +32,7 @@ export interface PublicUserProfile {
 }
 
 export interface FriendRequest {
-    avatar_url: string,
+    sender: PublicUserProfile,
     receiver_id: string,
-    sender_id: string,
     context: string,
-    sender_name: string,
-    // Catchall for extra properties
-    [key: string]: string
 }
