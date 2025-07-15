@@ -2,6 +2,7 @@
     import { fade } from "svelte/transition";
     import { onMount, tick } from "svelte";
     import { supabase } from "$lib/supabaseClient";
+    import { toast } from "svelte-sonner";
 
     type Message = {
         id: string;
@@ -17,10 +18,12 @@
     let newMessage = $state('');
     let chatId = $state('');
     let channel;
-    let inputRef: HTMLInputElement;
+    let isFriend = $state(false);
+    let hasSentMessage = $state(false);
+    let inputRef: HTMLInputElement; // For keeping the text box focused
     let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
 
-    $inspect(messages);
+    // $inspect(messages);
 
     async function getOrCreateChat() {
         const response = await fetch('/api/chats', {
@@ -34,7 +37,6 @@
         const res = await response.json();
 
         if (response.ok) {
-            console.log('Chat ID:', res.chatId);
             chatId = res.chatId
         } else {
             console.error('Failed to create chat:', res.error);
@@ -55,7 +57,10 @@
 
     async function sendMessage(event: SubmitEvent) {
         event.preventDefault();
-        const m = newMessage;
+
+        const m = newMessage.trim();
+        if (m === '') return;
+
         newMessage = '';
         const res = await fetch('/api/message', {
             method: 'POST',
@@ -64,9 +69,32 @@
         });
 
         const data = await res.json();
+
         if (!res.ok) {
             console.error('Send error:', data.error);
         }
+
+        if (!isFriend) {
+            hasSentMessage = true;
+            // Send friend request
+            const res = await fetch('/api/add_friend', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ receiver_id: id, text: m })
+            })
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.error);
+                return;
+            }
+
+            toast.success(data.data);
+        }
+
 
         await loadMessages();
         await tick();
@@ -75,8 +103,15 @@
 
     onMount(async () => {
         try {
+            isFriend = self.friends && self.friends.includes(id);
+
             await getOrCreateChat();
             await loadMessages();
+
+            // Checks if you have aleady sent a message to a non-friend
+            if (!isFriend) {
+                hasSentMessage = messages.some(msg => msg.sender_id === self.id);
+            }
 
             const channelName = 'private_chat_' + chatId;
             const alreadyExists = supabase.getChannels().some(
@@ -94,7 +129,7 @@
                             filter: `chat_id=eq.${chatId}`
                         },
                         (payload) => {
-                        messages = [...messages, payload.new as Message];
+                            messages = [...messages, payload.new as Message];
                         }
                     );
 
@@ -105,6 +140,7 @@
             console.error('onMount error:', err.message || err);
         }
     });
+
 </script>
 
 <div 
@@ -135,7 +171,7 @@
                 <h1 class="text-xl">User Info</h1>
                 <span class='text-sm'>Club Name: <span class='text-gray-400'>{member}</span></span>
                 <span class='text-sm'>Handicap Index: <span class='text-gray-400'>{handicap_index}</span></span>
-                <span class='text-sm'>Gender: <span class='text-gray-400'>{other_gender == '' ? gender : other_gender}</span></span>
+                <span class='text-sm'>Gender: <span class='text-gray-400'>{gender}</span></span>
                 <span class='text-sm'>Golf Id: <span class='text-gray-400'>{golf_id}</span></span>
             </section>
             <section class="flex flex-col">
@@ -174,14 +210,20 @@
                 <div bind:this={bottomRef}></div>
             </div>
             <form class="gap-4 w-full items-center border-t pt-4 bottom-0 z-50 bg-white flex" onsubmit={sendMessage}>
+
                 <input
                     bind:value={newMessage}
                     bind:this={inputRef}
                     class="flex-1 rounded-full px-4 py-2 focus:outline-none focus:ring-0"
-                    placeholder="Type your message..."
+                    placeholder={(!isFriend && hasSentMessage) ? "Friend Request Pending..." : "Type your message..."}
+                    disabled={!isFriend && hasSentMessage}
                 />
-                <button type='submit' class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 cursor-pointer">
-                    Send
+                <button 
+                    type='submit' 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 cursor-pointer"
+                    disabled={!isFriend && hasSentMessage}
+                >
+                    {self.friends && self.friends.includes(id) ? 'Send' : 'Send Friend Request'}
                 </button>
             </form>
         </div>

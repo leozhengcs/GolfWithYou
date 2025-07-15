@@ -49,7 +49,6 @@
 
 </script>
 
-<Toaster position='bottom-right' duration={3000} richColors closeButton/>
 <div
 	class={`flex h-screen w-screen items-center justify-center ${step > 0 ? 'bg-gradient-to-br from-green-100 via-emerald-200 to-green-500' : ''}`}
 >  

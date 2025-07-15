@@ -1,7 +1,11 @@
 <script lang='ts'>
+    let { data } = $props();
+    let { user, friends, requests } = $derived(data);
 
     let chat = $state(false);
     let message = $state('');
+
+    $inspect(requests);
     const sendMessage = () => {
 
     }
@@ -13,14 +17,24 @@
 <div class='grid grid-cols-[250px_auto] flex-1 gap-16'>
     <section class="flex flex-col">
         <h1 class='text-2xl mb-2'>Friends</h1>
-        <div class='w-full flex flex-row items-center rounded-lg px-2 gap-2 text-gray-700 bg-gray-300 mb-5'>
+        <!-- <div class='w-full flex flex-row items-center rounded-lg px-2 gap-2 text-gray-700 bg-gray-300 mb-5'>
             <span>Search</span>
             <div class='w-5'>
                 <img src="/icons/Search.png" alt="Search">
             </div>
-        </div>
+        </div> -->
         <div class='flex flex-col'>
-            <button onclick={openChat} class='grid grid-cols-[20%_80%] gap-5 p-2 overflow-hidden cursor-pointer hover:bg-gray-200 rounded-lg' aria-label='friend'>
+            {#each requests || [] as request} 
+                <button onclick={openChat} class='grid grid-cols-[20%_80%] gap-5 p-2 overflow-hidden cursor-pointer hover:bg-gray-200 rounded-lg' aria-label='friend'>
+                    <div class='aspect-square rounded-full overflow-hidden col-start-1'>
+                        <img src={request.avatar_url} alt="" class='w-full h-full object-cover'>
+                    </div>
+                    <div class='flex items-center col-start-2'>
+                        <span>{request.sender_name}</span>
+                    </div>
+                </button>
+            {/each}
+            <!-- <button onclick={openChat} class='grid grid-cols-[20%_80%] gap-5 p-2 overflow-hidden cursor-pointer hover:bg-gray-200 rounded-lg' aria-label='friend'>
                 <div class='aspect-square rounded-full overflow-hidden col-start-1'>
                     <img src="/images/example1.jpg" alt="" class='w-full h-full object-cover'>
                 </div>
@@ -35,9 +49,8 @@
                 <div class='flex items-center col-start-2'>
                     <span>Alex Hughs</span>
                 </div>
-            </button>
+            </button> -->
         </div>
-        
     </section>
     {#if chat}
         <section class='flex flex-col gap-5 relative'>

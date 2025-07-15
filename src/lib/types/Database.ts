@@ -30,3 +30,13 @@ export interface PublicUserProfile {
     gender: string,
     other_gender: string
 }
+
+export interface FriendRequest {
+    avatar_url: string,
+    receiver_id: string,
+    sender_id: string,
+    context: string,
+    sender_name: string,
+    // Catchall for extra properties
+    [key: string]: string
+}
