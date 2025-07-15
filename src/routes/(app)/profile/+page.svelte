@@ -35,21 +35,28 @@
 	$inspect(imageFile);
 
 	let avatarUrl = $derived(profile?.avatar_url);
+	let tempUrl: string | null = $state(null);
+	let imageUploaded: boolean = $state(false);
 	let formElement: HTMLFormElement;
 
-
 	async function handleFileChange(event: Event) {
-
 		event.preventDefault();
 		const target = event.target as HTMLInputElement;
 
 		if (target?.files && target.files[0]) {
 			imageFile = target.files[0];
-			console.log("if:  ", imageFile);
+			console.log('if:  ', imageFile);
+			tempUrl = URL.createObjectURL(imageFile);
+		}
+	}
 
+	async function handleFileUpload(event: Event) {
+		event.preventDefault();
+
+		if (imageFile) {
 			const formData = new FormData();
 			formData.append('image', imageFile);
-			formData.append('type', "avatar")
+			formData.append('type', 'avatar');
 
 			const res = await fetch('/api/uploadImage', {
 				method: 'POST',
@@ -62,7 +69,14 @@
 				console.error('Send error:', data.error);
 			}
 		}
+
+		//show its uploaded
+		tempUrl = null;
+		imageUploaded = true;
+
 	}
+
+
 </script>
 
 <div class="grid w-full flex-1 grid-cols-[250px_auto] gap-5 px-52">
@@ -155,17 +169,27 @@
 						style="display: none"
 						onchange={handleFileChange}
 					/>
+					<!-- onchange={handleFileChange} -->
 
 					<!-- Styled label as a button -->
 					<label
 						for="file-upload"
 						class="upload-button inline-block cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-blue-600"
-						>Upload Image</label
+						>Select Image</label
 					>
-					{#if avatarUrl}
+					{#if tempUrl}
 						<p>Preview:</p>
-						<img src={avatarUrl} alt="" width="200" />
+						<img src={tempUrl} alt="" class="aspect-square h-56 rounded-md object-cover object-center" />
+
+						<button
+							class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+							onclick={handleFileUpload}>Upload Image</button
+						>
 					{/if}
+					{#if imageUploaded && !tempUrl}
+						<div> File Uploaded Successfully</div>
+					{/if}
+
 				</div>
 			</div>
 			<div>
