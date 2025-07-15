@@ -1,40 +1,44 @@
 <script lang="ts">
-    let {
-        profile = $bindable(),
-        disabled = $bindable(),
-        handleEdit = $bindable(),
-        handleSubmit = $bindable(),
+	let {
+		profile = $bindable(),
+		disabled = $bindable(),
+		handleEdit = $bindable(),
+		handleSubmit = $bindable(),
+        handleFileChange = $bindable(),
+        handleFileUpload = $bindable(),
 
-        full_name = $bindable(),
-        bio = $bindable(),
-        gender = $bindable(),
-        dob = $bindable(),
-        club_name = $bindable(),
-        handicap_index = $bindable(),
-        golf_id = $bindable(),
-        other_gender = $bindable(),
-    } = $props();
+		full_name = $bindable(),
+		bio = $bindable(),
+		gender = $bindable(),
+		dob = $bindable(),
+		club_name = $bindable(),
+		handicap_index = $bindable(),
+		golf_id = $bindable(),
+		other_gender = $bindable(),
+        imageUploaded = $bindable(),
+        tempUrl = $bindable(),
+	} = $props();
 
-    const handleScoreInput = (e: Event) => {
-        const input = e.target as HTMLInputElement;
+	const handleScoreInput = (e: Event) => {
+		const input = e.target as HTMLInputElement;
 
 		// Remove non-digit characters
 		let digitsOnly = input.value.replace(/[^0-9.]/g, '');
 
-        const parts = digitsOnly.split('.');
-        if (parts.length > 2) {
-            digitsOnly = parts[0] + '.' + parts[1]; // Keep only the first decimal
-        }
+		const parts = digitsOnly.split('.');
+		if (parts.length > 2) {
+			digitsOnly = parts[0] + '.' + parts[1]; // Keep only the first decimal
+		}
 
-        handicap_index = digitsOnly;
-        if (handicap_index > 54) {
-            handicap_index = 54;
-        } else if (handicap_index < 0) {
-            handicap_index = 0;
-        }
-    }
+		handicap_index = digitsOnly;
+		if (handicap_index > 54) {
+			handicap_index = 54;
+		} else if (handicap_index < 0) {
+			handicap_index = 0;
+		}
+	};
 
-    const handleDateInput = (e: Event) => {
+	const handleDateInput = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 		let raw = input.value;
 
@@ -62,14 +66,15 @@
 
 		input.value = formatted;
 		dob = formatted;
-    }
+	};
 
-    const handleIdInput = (e: Event) => {
-        const input = e.target as HTMLInputElement;
-        const digitsOnly = input.value.replace(/\D/g, '');
-        golf_id = digitsOnly;
-    }
+	const handleIdInput = (e: Event) => {
+		const input = e.target as HTMLInputElement;
+		const digitsOnly = input.value.replace(/\D/g, '');
+		golf_id = digitsOnly;
+	};
 </script>
+
 <section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 p-10 py-5">
 	<h1 class="text-3xl">Profile</h1>
 	<span
@@ -79,10 +84,37 @@
 	<div>
 		<label for="image" class="block text-sm/6 font-medium text-gray-900">Upload Icon</label>
 		<div class="mt-2">
-			<input id="file-upload" type="file" accept="image/*" style="display: none" {disabled} />
+			<input
+				id="file-upload"
+				type="file"
+				accept="image/*"
+				style="display: none"
+				onchange={handleFileChange}
+			/>
+			<!-- onchange={handleFileChange} -->
 
 			<!-- Styled label as a button -->
-			<label for="file-upload" class="upload-button">Upload Image</label>
+			<label
+				for="file-upload"
+				class="upload-button inline-block cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-blue-600"
+				>Select Image</label
+			>
+			{#if tempUrl}
+				<p>Preview:</p>
+				<img
+					src={tempUrl}
+					alt=""
+					class="aspect-square h-56 rounded-md object-cover object-center"
+				/>
+
+				<button
+					class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+					onclick={handleFileUpload}>Upload Image</button
+				>
+			{/if}
+			{#if imageUploaded && !tempUrl}
+				<div>File Uploaded Successfully</div>
+			{/if}
 		</div>
 	</div>
 	<div>
@@ -99,14 +131,14 @@
 			/>
 		</div>
 	</div>
-    <div>
+	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Handicap Index</label>
 		<div class="mt-2">
 			<input
 				bind:value={handicap_index}
-                oninput={handleScoreInput}
-                min='0'
-                max='54'
+				oninput={handleScoreInput}
+				min="0"
+				max="54"
 				type="text"
 				name="handicap_index"
 				id="handicap_index"
@@ -116,7 +148,7 @@
 			/>
 		</div>
 	</div>
-    <div>
+	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Club Name</label>
 		<div class="mt-2">
 			<input
@@ -130,7 +162,7 @@
 			/>
 		</div>
 	</div>
-    <div>
+	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Date of Birth</label>
 		<div class="mt-2">
 			<input
@@ -139,13 +171,13 @@
 				name="dob"
 				id="dob"
 				required
-                oninput={handleDateInput}
+				oninput={handleDateInput}
 				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/>
 		</div>
 	</div>
-    <div>
+	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Golf ID</label>
 		<div class="mt-2">
 			<input
@@ -154,7 +186,7 @@
 				name="golfId"
 				id="golfId"
 				required
-                oninput={handleIdInput}
+				oninput={handleIdInput}
 				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/>
@@ -189,14 +221,13 @@
 			<option value="female">Female</option>
 			<option value="nonbinary">Non-binary</option>
 			<option value="prefer_not_to_say">Prefer not to say</option>
-            <option value="Other">Other</option>
-            
+			<option value="Other">Other</option>
 		</select>
-        {#if gender === "Other"}
+		{#if gender === 'Other'}
 			<input
 				type="text"
-				class="mt-2 w-full border-black border-0 border-b sm:text-sm focus:outline-none focus:ring-0 bg-transparent lg:text-base focus:border-blue-400"
-                {disabled}
+				class="mt-2 w-full border-0 border-b border-black bg-transparent focus:border-blue-400 focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
+				{disabled}
 				bind:value={other_gender}
 			/>
 		{/if}
