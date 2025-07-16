@@ -2,24 +2,31 @@ import type { PageServerLoad } from "./$types";
 import type { PublicUserProfile, UserProfile, FriendRequest } from "$lib/types/Database";
 
 export const load: PageServerLoad = async ({ locals: { supabase }}) => {
-    const { data: { user } } = await supabase.auth.getUser();
+    // const { data: { user } } = await supabase.auth.getUser();
+
+    // if (!user) {
+    //     console.error("Error fetching user");
+    //     return { user: null };
+    // }
 
     const { data, error } = await supabase
         .from('users')
         .select('*')
         .single();
 
+    const userId = data.id;
+
     if (error) {
         console.error('Error fetching user profile: ', error);
         return { user: null }
     }
 
-    let friends: UserProfile[] = [];
+    let friends: PublicUserProfile[] = [];
 
     if (data.friends) {
         for (const userId of data.friends) {
             const { data, error } = await supabase
-                .from('users')
+                .from('public_user_profiles')
                 .select('*')
                 .eq('id', userId)
                 .single();
@@ -49,23 +56,21 @@ export const load: PageServerLoad = async ({ locals: { supabase }}) => {
                 .eq('id', request.sender_id)
                 .single<PublicUserProfile>();
 
-            console.log(data);
-            console.log(error);
-
             if (error) {
                 console.log("Error getting sender profile");
                 continue;
             }
 
-            requests.push({
-                sender: data,
-                context: request.context as string,
-                receiver_id: request.receiver_id as string,
-            });
+            if (request.receiver_id == userId) {
+                requests.push({
+                    sender: data,
+                    request_id: request.id,
+                    context: request.context as string,
+                    receiver_id: request.receiver_id as string,
+                });
+            }
         }
     }
-
-    console.log("Friend Requests: ", requests);
 
     return { user: data, friends, requests };
 }

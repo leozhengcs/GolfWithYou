@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import type { PublicUserProfile } from "$lib/types/Database";
+  import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
   import { getAge } from "$lib/utils/date";
   import UserModal from "./UserModal.svelte";
 
-  let { user, self }: { user: PublicUserProfile, self: any } = $props();
+  let { user, self }: { user: PublicUserProfile, self: UserProfile } = $props();
   let showUser = $state(false);
 
   const closeModal = () => {

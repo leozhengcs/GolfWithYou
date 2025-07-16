@@ -3,14 +3,7 @@
     import { onMount, tick } from "svelte";
     import { supabase } from "$lib/supabaseClient";
     import { toast } from "svelte-sonner";
-
-    type Message = {
-        id: string;
-        chat_id: string;
-        sender_id: string;
-        content: string;
-        created_at: string;
-    };
+    import type { Message } from "$lib/types/Chat";
     
     let { id, gender, other_gender, verified, golf_id, name, age, handicap_index, member, src, closeModal, bio, images, self } = $props();
 
@@ -22,8 +15,6 @@
     let hasSentMessage = $state(false);
     let inputRef: HTMLInputElement; // For keeping the text box focused
     let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
-
-    // $inspect(messages);
 
     async function getOrCreateChat() {
         const response = await fetch('/api/chats', {
@@ -150,7 +141,7 @@
     onclick={closeModal} 
     onkeydown={(e) => e.key === 'Esc' ? closeModal() : null}
     transition:fade={{ duration:300 }} 
-    class='absolute w-screen h-screen top-0 left-0 bg-gray-500/50 flex justify-center items-center z-40'
+    class='absolute w-full h-full top-0 left-0 bg-gray-500/50 flex justify-center items-center z-40'
 >
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -190,7 +181,7 @@
                         <div class='flex flex-row items-end gap-5'>
     
                             <div class='w-10 rounded-full overflow-hidden aspect-square'>
-                                <img src="/images/example1.jpg" alt="" class='object-cover w-full h-full'>
+                                <img src="{src ?? "/icons/DefaultProfile.png"}" alt="" class='object-cover w-full h-full'>
                             </div>
                             <div class='bg-gray-200 w-fit rounded-lg p-2'>
                                 <p class='max-w-[500px] text-wrap w-fit p-0 m-0'>{message.content}</p>
@@ -202,7 +193,7 @@
                                 <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>{message.content}</p>
                             </div>
                             <div class="w-10 rounded-full overflow-hidden aspect-square">
-                                <img src="/images/example3.jpg" alt="">
+                                <img src="{self.avatar_url ?? "/icons/DefaultProfile.png"}" alt="">
                             </div>
                         </div>
                     {/if}

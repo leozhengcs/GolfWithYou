@@ -13,7 +13,9 @@ export interface UserProfile {
     bio: string,
     user_images_url: string,
     avatar_url: string,
-    other_gender: string | null
+    other_gender: string | null,
+    friends: string[],
+    
 }
 
 export interface PublicUserProfile {
@@ -33,6 +35,7 @@ export interface PublicUserProfile {
 
 export interface FriendRequest {
     sender: PublicUserProfile,
+    request_id: string,
     receiver_id: string,
     context: string,
 }
