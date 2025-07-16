@@ -13,7 +13,6 @@
   import Step10 from "$lib/components/signup/Step10.svelte";
   import Step11 from "$lib/components/signup/Step11.svelte";
   import Step12 from "$lib/components/signup/Step12.svelte";
-  import { Toaster } from "svelte-sonner";
   import { fly, slide } from "svelte/transition";
 
   let step = $state(0); // Keeps track of which question user is on.

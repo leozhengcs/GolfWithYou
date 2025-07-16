@@ -13,21 +13,21 @@
 	<!-- Login Button -->
 	<button
 		onclick={() => goto('/')}
-		class="absolute top-5 right-5 cursor-pointer p-2 text-lg text-white after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:scale-x-0 after:bg-white after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
+		class="absolute top-5 right-5 cursor-pointer p-2 text-lg text-accent after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
 	>
 		Sign Up
 	</button>
 	<div
-		class="relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg bg-white px-12 py-8 shadow-lg"
+		class="relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg bg-primary px-12 py-8 shadow-lg"
 	>
 		<form method="POST" class="flex flex-col gap-5">
-			<h1 class="text-xl">Login</h1>
+			<h1 class="text-xl text-accent">Login</h1>
 			<div>
 				<input
 					type="text"
 					id="email"
                     name='email'
-					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
+					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm rounded-lg"
 					placeholder="Email"
 					bind:value={email}
 				/>
@@ -35,13 +35,13 @@
 					type="password"
 					id="password"
                     name='password'
-					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
+					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm rounded-lg"
 					placeholder="Password"
 					bind:value={password}
 				/>
 			</div>
 			<button
-				class="inline-block w-fit cursor-pointer rounded-sm border border-blue-300 bg-blue-300 px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-blue-600 focus:ring-3 focus:outline-hidden"
+				class="inline-block w-fit cursor-pointer rounded-sm border border-accent bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-accent focus:ring-3 focus:outline-hidden"
 			>
 				Login
 			</button>

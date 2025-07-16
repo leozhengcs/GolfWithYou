@@ -31,7 +31,7 @@
 			</section>
 	<div class="flex w-full flex-row gap-10 overflow-x-auto">
 		{#each otherUsers as otherUser}
-			<UserCard user={otherUser} self={user}/>
+			<UserCard user={otherUser} self={user!}/>
 		{/each}		
 	</div>
 	<section>
