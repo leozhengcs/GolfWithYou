@@ -41,7 +41,7 @@
   let golfId = $state('');
 
   $effect(() => {
-    if (step == 13) {
+    if (step == 12) {
       formElement.submit();
     }
   })
@@ -78,55 +78,52 @@
   </div>
   {:else if step == 4}
   <div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-    <Step4
+    <!-- <Step4
       bind:dob
       bind:step
-    />
-  </div>
-  {:else if step == 5}
-  <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
+    /> -->
     <Step5
       bind:gender
       bind:otherGender
       bind:step
     />
   </div>
-  {:else if step == 6}
+  {:else if step == 5}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step6
       bind:phone
       bind:step
     />
   </div>
-  {:else if step == 7}
+  {:else if step == 6}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step7
       bind:postalCode
       bind:step
     />
   </div>
-  {:else if step == 8}
+  {:else if step == 7}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step8
       bind:clubName
       bind:step
     />
   </div>
-  {:else if step == 9}
+  {:else if step == 8}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step9
       bind:step
       bind:handicapIndex
     />
   </div>
-  {:else if step == 10}
+  {:else if step == 9}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step10
       bind:golfId
       bind:step
     />
   </div>
-  {:else if step == 11}
+  {:else if step == 10}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step11
       bind:step
@@ -134,12 +131,15 @@
       bind:passwordConfirm
     />
   </div>
-  {:else}
+  {:else if step == 11}
   <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
     <Step12
       bind:step
     />
   </div>
+  <!-- {:else}
+  <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
+  </div> -->
   {/if}
 </div>
 

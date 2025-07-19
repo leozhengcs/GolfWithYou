@@ -17,7 +17,6 @@ export const actions: Actions = {
     // const confirmPassword = formData.get('confirmPassword') as string
     const gender = formData.get('gender') as string
     const otherGender = formData.get('otherGender') as string
-    const dob = formData.get('dob') as string
     const phone = formData.get('phone') as string
     const postalCode = formData.get('postalCode') as string
     const clubName = formData.get('clubName') as string
@@ -39,7 +38,6 @@ export const actions: Actions = {
         full_name: fullName,
         gender, 
         other_gender: otherGender || null, 
-        dob, 
         phone, 
         postal_code: postalCode,
         club_name: clubName,
