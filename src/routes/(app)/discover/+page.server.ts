@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async({ locals: { supabase }}) => {
     const { data, error } = await supabase
-        .from('public_user_profiles')
+        .from('public_user_profile')
         .select('*');
 
     // Policy States can only read own row

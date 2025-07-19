@@ -2,10 +2,11 @@
     import Navbar from "$lib/components/Navbar.svelte";
     import Footer from "$lib/components/Footer.svelte";
 
-    let { children } = $props();
+    let { children, data } = $props();
+    let { profile } = $derived(data);
 </script>
 
-<Navbar/>
+<Navbar {profile}/>
 <div class='flex p-10 pt-32 min-h-screen flex-col overflow-x-clip relative'>
     {@render children()}
 </div>

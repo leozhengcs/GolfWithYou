@@ -1,5 +1,7 @@
 <script lang='ts'>
     import { goto } from "$app/navigation";
+
+    let { profile } = $props();
 </script>
 
 <nav class='w-full flex flex-row justify-between items-center p-5 absolute top-0 z-50 shadow-md bg-primary text-accent h-[75px]'>
@@ -7,8 +9,11 @@
         <img src="/icons/Logo.png" alt="">
     </button>
     <div class='flex flex-row gap-10'>
-        <a class='text-lg' href="/discover">Discover</a>
-        <a class='text-lg' href="/friends">Friends</a>
-        <a class='text-lg' href="/profile">Profile</a>
+        <!-- <a class='text-lg' href="/discover">Discover</a> -->
+        <!-- <a class='text-lg' href="/friends">Friends</a> -->
+        <!-- <a class='text-lg' href="/profile">Profile</a> -->
+        <button onclick={() => goto('/profile')} class='aspect-square w-12 bg-white rounded-full overflow-clip cursor-pointer'>
+            <img src={profile.avatar_url} alt="" class='w-full h-full object-cover object-center'>
+        </button>
     </div>
 </nav>

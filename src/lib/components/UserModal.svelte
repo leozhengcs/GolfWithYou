@@ -5,7 +5,7 @@
     import { toast } from "svelte-sonner";
     import type { Message } from "$lib/types/Chat";
     
-    let { id, gender, other_gender, verified, golf_id, name, age, handicap_index, member, src, closeModal, bio, images, self } = $props();
+    let { id, gender, other_gender, verified, golf_id, name, handicap_index, member, src, closeModal, bio, images, self } = $props();
 
     let messages: Message[] = $state([]);
     let newMessage = $state('');
@@ -65,26 +65,26 @@
             console.error('Send error:', data.error);
         }
 
-        if (!isFriend) {
-            hasSentMessage = true;
-            // Send friend request
-            const res = await fetch('/api/add_friend', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ receiver_id: id, text: m })
-            })
+        // if (!isFriend) {
+        //     hasSentMessage = true;
+        //     // Send friend request
+        //     const res = await fetch('/api/add_friend', {
+        //         method: "POST",
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ receiver_id: id, text: m })
+        //     })
 
-            const data = await res.json();
+        //     const data = await res.json();
 
-            if (!res.ok) {
-                toast.error(data.error);
-                return;
-            }
+        //     if (!res.ok) {
+        //         toast.error(data.error);
+        //         return;
+        //     }
 
-            toast.success(data.data);
-        }
+        //     toast.success(data.data);
+        // }
 
 
         await loadMessages();
@@ -94,7 +94,7 @@
 
     onMount(async () => {
         try {
-            isFriend = self.friends && self.friends.includes(id);
+            // isFriend = self.friends && self.friends.includes(id);
 
             await getOrCreateChat();
             await loadMessages();
@@ -156,7 +156,6 @@
                         {verified ? 'Verified' : 'Not Verified'}
                     </span>
                 </h1>
-                <span class='text-gray-400 text-sm'>{age} Years Old</span>
             </section>
             <section class="flex flex-col">
                 <h1 class="text-xl">User Info</h1>
@@ -193,7 +192,7 @@
                                 <p class='max-w-[300px] text-wrap w-fit p-0 m-0'>{message.content}</p>
                             </div>
                             <div class="w-10 rounded-full overflow-hidden aspect-square">
-                                <img src="{self.avatar_url ?? "/icons/DefaultProfile.png"}" alt="">
+                                <img src="{self.avatar_url ?? "/icons/DefaultProfile.png"}" alt="" class='object-cover w-full h-full'>
                             </div>
                         </div>
                     {/if}
@@ -206,15 +205,13 @@
                     bind:value={newMessage}
                     bind:this={inputRef}
                     class="flex-1 rounded-full px-4 py-2 focus:outline-none focus:ring-0"
-                    placeholder={(!isFriend && hasSentMessage) ? "Friend Request Pending..." : "Type your message..."}
-                    disabled={!isFriend && hasSentMessage}
+                    placeholder="Type your message..."
                 />
                 <button 
                     type='submit' 
                     class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 cursor-pointer"
-                    disabled={!isFriend && hasSentMessage}
                 >
-                    {self.friends && self.friends.includes(id) ? 'Send' : 'Send Friend Request'}
+                    {`Message ${name.split(' ')[0]}`}
                 </button>
             </form>
         </div>

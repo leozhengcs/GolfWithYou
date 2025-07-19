@@ -22,7 +22,6 @@
 {#if showUser}
   <UserModal 
     id={user.id}
-    age={getAge(user.dob)} 
     name={user.full_name} 
     handicap_index={user.handicap_index} 
     member={user.club_name} 
@@ -49,10 +48,6 @@
       <div class='w-fit'>
         <dt class="sr-only">Name</dt>
         <dd class="font-medium">{user.full_name}</dd>
-      </div>
-      <div class='w-fit'>
-        <dt class="sr-only">Age</dt>
-        <dd class="text-sm text-gray-500">{getAge(user.dob)} Years Old</dd>
       </div>
     </div>
 

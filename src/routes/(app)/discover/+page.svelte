@@ -29,12 +29,13 @@
 				<span>Filter</span>
 				</div> -->
 			</section>
-	<div class="flex w-full flex-row gap-10 overflow-x-auto">
+	<div class="flex w-full gap-10">
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!}/>
 		{/each}		
+		<!-- <UserCard user={otherUsers[1]} self={user!}/> -->
 	</div>
-	<section>
+	<!-- <section>
 		<h1 class="text-3xl">Trending in Golf</h1>
-	</section>
+	</section> -->
 </div>
