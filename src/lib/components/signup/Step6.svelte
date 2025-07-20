@@ -41,6 +41,7 @@
 <div class='w-96 flex flex-col gap-5'>
     <section>
         <h1 class='text-3xl'>What's your phone number?</h1>
+        <i class='text-gray-500 text-sm'>This information will be private to you only</i>
     </section>
     <div>
         <input

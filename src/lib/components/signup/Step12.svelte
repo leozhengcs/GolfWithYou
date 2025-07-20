@@ -23,11 +23,11 @@
             <ul class="list-disc list-inside">
                 <li>
                     You have read and understood our 
-                    <a href="/files/privacy-policy" class="text-blue-600 underline hover:text-blue-800" target="_blank">Privacy Policy</a>.
+                    <a href="/files/privacy-policy.pdf" class="text-blue-600 underline hover:text-blue-800" target="_blank">Privacy Policy</a>.
                 </li>
                 <li>
                     You have read and understood our 
-                    <a href="/files/terms-of-use" class="text-blue-600 underline hover:text-blue-800" target="_blank">Terms of Use</a>.
+                    <a href="/files/terms-of-use.pdf" class="text-blue-600 underline hover:text-blue-800" target="_blank">Terms of Use</a>.
                 </li>
                 <li>
                     You agree to be bound by both documents.
