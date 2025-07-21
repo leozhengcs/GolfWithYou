@@ -4,7 +4,6 @@
   import Step1 from "$lib/components/signup/Step1.svelte";
   import Step2 from "$lib/components/signup/Step2.svelte";
   import Step3 from "$lib/components/signup/Step3.svelte";
-  import Step4 from "$lib/components/signup/Step4.svelte";
   import Step5 from "$lib/components/signup/Step5.svelte";
   import Step6 from "$lib/components/signup/Step6.svelte";
   import Step7 from "$lib/components/signup/Step7.svelte";
@@ -31,7 +30,6 @@
   let gender = $state('');
   let otherGender = $state('');
 
-  let dob = $state(''); // YYYY-MM-DD
   let phone = $state(''); // 000-000-0000 Auto formats when typing (Optional)
   let postalCode = $state(''); // 6 Digits with no spaces
   
@@ -150,7 +148,6 @@
   <input type="hidden" name='password' bind:value={password}>
   <input type="hidden" name='confirmPassword' bind:value={passwordConfirm}>
   <input type="hidden" name='otherGender' bind:value={otherGender}>
-  <input type="hidden" name='dob' bind:value={dob}>
   <input type="hidden" name='phone' bind:value={phone}>
   <input type="hidden" name='postalCode' bind:value={postalCode}>
   <input type="hidden" name='clubName' bind:value={clubName}>

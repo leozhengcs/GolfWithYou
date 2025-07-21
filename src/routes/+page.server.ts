@@ -50,6 +50,6 @@ export const actions: Actions = {
       console.log("ERROR: ", insert.error);
     }
 
-    throw redirect(303, '/discover');
+    throw redirect(303, '/discover?avatar=false');
   }
 }

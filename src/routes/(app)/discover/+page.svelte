@@ -1,7 +1,8 @@
 <script lang="ts">
 	import UserCard from '$lib/components/UserCard.svelte';
 	import { onMount } from 'svelte';
-	import { getAge } from '$lib/utils/date.js';
+	import { toast } from "svelte-sonner";
+  	import { page } from "$app/state";
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 
 	let scrollContainer: HTMLElement;
@@ -16,7 +17,15 @@
 
 	onMount(() => {
 		otherUsers = users.filter((u) => u.id !== user?.id);
-	})
+
+		// Remind users w/o avatar to upload one
+		if (page.url.searchParams.get('avatar') == 'false') {
+			toast.info("No User Avatar Image", {
+				description: "Please set an avatar photo in your profile."
+			});
+		}
+	});
+	
 </script>
 
 <div class="flex flex-col gap-10">
