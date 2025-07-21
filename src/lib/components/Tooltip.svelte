@@ -16,8 +16,8 @@
 		const tooltipRect = tooltipEl.getBoundingClientRect();
 		const padding = 10; // space between tooltip and window edge
 
-		let x = event.clientX + 25;
-		let y = event.clientY + 25;
+		let x = event.clientX + 10;
+		let y = event.clientY + 10;
 
 		// Adjust if tooltip would overflow to the right
 		if (x + tooltipRect.width + padding > window.innerWidth) {
@@ -33,7 +33,7 @@
 	}
 
 	function handleMouseEnter(event: MouseEvent) {
-		coords.set({ x: event.clientX + 25, y: event.clientY + 25 }, { instant: true });
+		coords.set({ x: event.clientX + 10, y: event.clientY + 10 }, { instant: true });
         timer = setTimeout(() => {
             visible = true;
         }, 1000);

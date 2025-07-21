@@ -81,7 +81,6 @@ export const actions: Actions = {
                 email: email, 
                 gender: gender, 
                 bio: bio, 
-                dob: dob, 
                 club_name: clubName,
                 handicap_index: handicapIndex,
                 postal_code: postalCode,

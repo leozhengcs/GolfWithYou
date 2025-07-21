@@ -14,7 +14,7 @@
 
 
 	//profile tab
-	let { full_name, bio, gender, dob, club_name, handicap_index, golf_id, other_gender } = $derived(profile!);
+	let { full_name, bio, gender, club_name, handicap_index, golf_id, other_gender } = $derived(profile!);
 
 	//personal tab
 	let { phone, postal_code } = $derived(profile!);
@@ -181,7 +181,6 @@
 	bind:full_name
 	bind:bio
 	bind:gender
-	bind:dob
 	bind:club_name
 	bind:handicap_index
 	bind:golf_id
@@ -217,7 +216,6 @@
 
 <form method="POST" bind:this={formElement}>
   <input type="hidden" name='fullName' bind:value={full_name}/> 
-  <input type="hidden" name='dob' bind:value={dob}/>
   <input type="hidden" name='clubName' bind:value={club_name}/>
   <input type="hidden" name='handicapIndex' bind:value={handicap_index}/>  
   <input type="hidden" name='postalCode' bind:value={postal_code}/>  

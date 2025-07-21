@@ -1,22 +1,24 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
+	import Tooltip from '../Tooltip.svelte';
+
 	let {
 		profile = $bindable(),
 		disabled = $bindable(),
 		handleEdit = $bindable(),
 		handleSubmit = $bindable(),
-        handleFileChange = $bindable(),
-        handleFileUpload = $bindable(),
+		handleFileChange = $bindable(),
+		handleFileUpload = $bindable(),
 
 		full_name = $bindable(),
 		bio = $bindable(),
 		gender = $bindable(),
-		dob = $bindable(),
 		club_name = $bindable(),
 		handicap_index = $bindable(),
 		golf_id = $bindable(),
 		other_gender = $bindable(),
-        imageUploaded = $bindable(),
-        tempUrl = $bindable(),
+		imageUploaded = $bindable(),
+		tempUrl = $bindable()
 	} = $props();
 
 	const handleScoreInput = (e: Event) => {
@@ -38,49 +40,79 @@
 		}
 	};
 
-	const handleDateInput = (e: Event) => {
-		const input = e.target as HTMLInputElement;
-		let raw = input.value;
+	// const handleDateInput = (e: Event) => {
+	// 	const input = e.target as HTMLInputElement;
+	// 	let raw = input.value;
 
-		// Allow user to fully delete the input
-		if (raw.trim() === '') {
-			dob = '';
-			return;
-		}
+	// 	// Allow user to fully delete the input
+	// 	if (raw.trim() === '') {
+	// 		dob = '';
+	// 		return;
+	// 	}
 
-		// Remove all non-digit characters
-		let digits = raw.replace(/\D/g, '');
+	// 	// Remove all non-digit characters
+	// 	let digits = raw.replace(/\D/g, '');
 
-		// Format to YYYY-MM-DD
-		let formatted = '';
-		if (digits.length <= 4) {
-			formatted = digits;
-		} else if (digits.length <= 6) {
-			formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
-		} else {
-			formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
-		}
+	// 	// Format to YYYY-MM-DD
+	// 	let formatted = '';
+	// 	if (digits.length <= 4) {
+	// 		formatted = digits;
+	// 	} else if (digits.length <= 6) {
+	// 		formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
+	// 	} else {
+	// 		formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+	// 	}
 
-		// Limit to 10 characters
-		formatted = formatted.slice(0, 10);
+	// 	// Limit to 10 characters
+	// 	formatted = formatted.slice(0, 10);
 
-		input.value = formatted;
-		dob = formatted;
-	};
+	// 	input.value = formatted;
+	// 	dob = formatted;
+	// };
 
 	const handleIdInput = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 		const digitsOnly = input.value.replace(/\D/g, '');
 		golf_id = digitsOnly;
 	};
+
+	const handleCancel = async () => {
+		const res = await fetch('/api/fetch_user');
+		const data = await res.json();
+		if (!res.ok) {
+			toast.error("Error fetching user, please try again later.");
+			return;
+		}
+
+		full_name = data.user.full_name;
+		bio = data.user.bio;
+		gender = data.user.gender;
+		other_gender = data.user.other_gender;
+		club_name = data.user.club_name;
+		handicap_index = data.user.handicap_index;
+		golf_id = data.user.golf_id;
+		imageUploaded = null;
+		handleEdit();
+	}
 </script>
 
 <section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 p-10 py-5">
 	<h1 class="text-3xl">Profile</h1>
-	<span
-		class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-		>{profile?.verified ? 'Verified' : 'Not Verified'}
-	</span>
+	{#if !profile?.verified}
+		<Tooltip
+			text="Please email golfingwithyou@outlook.com with your account email to get verified."
+		>
+			<span
+				class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
+				>{profile?.verified ? 'Verified' : 'Not Verified'}
+			</span>
+		</Tooltip>
+	{:else}
+		<span
+			class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
+			>{profile?.verified ? 'Verified' : 'Not Verified'}
+		</span>
+	{/if}
 	<div>
 		<label for="image" class="block text-sm/6 font-medium text-gray-900">Upload Icon</label>
 		<div class="mt-2">
@@ -163,21 +195,6 @@
 		</div>
 	</div>
 	<div>
-		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Date of Birth</label>
-		<div class="mt-2">
-			<input
-				bind:value={dob}
-				type="text"
-				name="dob"
-				id="dob"
-				required
-				oninput={handleDateInput}
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-				{disabled}
-			/>
-		</div>
-	</div>
-	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Golf ID</label>
 		<div class="mt-2">
 			<input
@@ -238,7 +255,11 @@
 				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 				onclick={handleEdit}>Edit</button
 			>
-		{:else}
+			{:else}
+			<button
+				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				onclick={handleCancel}>Cancel</button
+			>
 			<button
 				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 				onclick={handleSubmit}>Save</button
