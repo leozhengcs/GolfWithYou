@@ -1,9 +1,12 @@
 <script lang='ts'>
     import Navbar from "$lib/components/Navbar.svelte";
     import Footer from "$lib/components/Footer.svelte";
+    import { injectAnalytics } from '@vercel/analytics/sveltekit'
 
     let { children, data } = $props();
     let { profile } = $derived(data);
+    injectAnalytics();
+    
 </script>
 
 <Navbar {profile}/>
