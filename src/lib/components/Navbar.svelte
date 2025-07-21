@@ -1,5 +1,6 @@
 <script lang='ts'>
     import { goto } from "$app/navigation";
+    import Tooltip from "./Tooltip.svelte";
 
     let { profile } = $props();
 </script>
@@ -12,8 +13,10 @@
         <!-- <a class='text-lg' href="/discover">Discover</a> -->
         <!-- <a class='text-lg' href="/friends">Friends</a> -->
         <!-- <a class='text-lg' href="/profile">Profile</a> -->
-        <button onclick={() => goto('/profile')} class='aspect-square w-12 bg-white rounded-full overflow-clip cursor-pointer'>
-            <img src={profile.avatar_url} alt="" class='w-full h-full object-cover object-center'>
-        </button>
+        <Tooltip text='View Profile'>
+            <button onclick={() => goto('/profile')} class='aspect-square w-12 bg-white rounded-full overflow-clip cursor-pointer flex items-end justify-center'>
+                <img src={profile.avatar_url || "/icons/DefaultProfile.png"} alt="" class={`${profile.avatar_url ? 'w-full h-full' : 'w-10 h-10'} object-cover object-center`}>
+            </button>
+        </Tooltip>
     </div>
 </nav>

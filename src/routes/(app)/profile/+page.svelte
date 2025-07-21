@@ -151,7 +151,7 @@
             >
 				Settings
             </button> -->
-			<button
+			<!-- <button
 				onclick={() => {
 					tab = 'data';
 					disabled = true;
@@ -159,7 +159,7 @@
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
 			>
 				Data and Privacy
-			</button>
+			</button> -->
 			<!-- <button
                 class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
             >
