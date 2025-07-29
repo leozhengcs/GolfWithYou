@@ -32,7 +32,7 @@
 	let otherGender = $state('');
 
 	let phone = $state(''); // 000-000-0000 Auto formats when typing (Optional)
-	let postalCode = $state(''); // 6 Digits with no spaces
+	let postalCode = $state(''); // 6 Digits with no space
 
 	// Information Regarding Golfing
 	let clubName = $state('');
