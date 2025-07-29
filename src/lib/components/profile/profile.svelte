@@ -100,17 +100,17 @@
 	<h1 class="text-3xl">Profile</h1>
 	{#if !profile?.verified}
 		<Tooltip
-			text="Please email golfingwithyou@outlook.com with your account email to get verified."
+			text="Please contact a verified user to verify your profile."
 		>
 			<span
 				class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-				>{profile?.verified ? 'Verified' : 'Not Verified'}
+				>{profile?.verified ? 'Verified' : 'Awaiting Verification'}
 			</span>
 		</Tooltip>
 	{:else}
 		<span
 			class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-			>{profile?.verified ? 'Verified' : 'Not Verified'}
+			>{profile?.verified ? 'Verified' : 'Awaiting Verification'}
 		</span>
 	{/if}
 	<div>

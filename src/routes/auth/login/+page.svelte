@@ -13,35 +13,36 @@
 	<!-- Login Button -->
 	<button
 		onclick={() => goto('/')}
-		class="absolute top-5 right-5 cursor-pointer p-2 text-lg text-accent after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
+		class="text-accent after:bg-accent absolute top-5 right-5 cursor-pointer p-2 text-lg after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:scale-x-0 after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
 	>
 		Sign Up
 	</button>
 	<div
-		class="relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg bg-primary px-12 py-8 shadow-lg"
+		class="bg-primary relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg px-12 py-8 shadow-lg"
 	>
 		<form method="POST" class="flex flex-col gap-5">
-			<h1 class="text-xl text-accent">Login</h1>
+			<h1 class="text-accent text-xl">Login</h1>
 			<div>
 				<input
 					type="text"
 					id="email"
-                    name='email'
-					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm rounded-lg"
+					name="email"
+					class="peer mt-5 w-full rounded-lg border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
 					placeholder="Email"
 					bind:value={email}
 				/>
 				<input
 					type="password"
 					id="password"
-                    name='password'
-					class="peer mt-5 w-full border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm rounded-lg"
+					name="password"
+					class="peer mt-5 w-full rounded-lg border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
 					placeholder="Password"
 					bind:value={password}
 				/>
 			</div>
+			<a href="/auth/forgot-password" class="cursor-pointer text-left text-sm text-gray-400 hover:underline">Forgotten Password?</a>
 			<button
-				class="inline-block w-fit cursor-pointer rounded-sm border border-accent bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-accent focus:ring-3 focus:outline-hidden"
+				class="border-accent bg-accent hover:text-accent inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white hover:bg-transparent focus:ring-3 focus:outline-hidden"
 			>
 				Login
 			</button>

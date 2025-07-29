@@ -27,7 +27,7 @@ export interface PublicUserProfile {
     verified: boolean,
     user_images_url: string,
     avatar_url: string,
-    dob: string,
+    postal_code: string,
     bio: string,
     gender: string,
     other_gender: string

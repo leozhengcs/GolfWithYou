@@ -33,6 +33,7 @@
     gender={user.gender}
     other_gender={user.other_gender}
     verified={user.verified}
+    postal_code={user.postal_code}
     {self}
   />
 {/if}

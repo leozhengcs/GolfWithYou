@@ -25,7 +25,6 @@
 			});
 		}
 	});
-	
 </script>
 
 <div class="flex flex-col gap-10">
@@ -38,11 +37,10 @@
 				<span>Filter</span>
 				</div> -->
 			</section>
-	<div class="flex w-full gap-10">
+	<div class="flex w-full gap-10 flex-wrap">
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!}/>
 		{/each}		
-		<!-- <UserCard user={otherUsers[1]} self={user!}/> -->
 	</div>
 	<!-- <section>
 		<h1 class="text-3xl">Trending in Golf</h1>

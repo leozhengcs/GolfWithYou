@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { PRIVATE_SUPABASE_URL } from "$env/static/private";
 
 export const load: PageServerLoad = async({ locals: { supabase }}) => {
     const { data, error } = await supabase

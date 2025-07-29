@@ -1,0 +1,68 @@
+<script lang="ts">
+  import { toast } from 'svelte-sonner';
+  import { goto } from '$app/navigation';
+	let { data } = $props();
+	let { supabase } = $derived(data);
+
+	let password = $state('');
+	let confirmPassword = $state('');
+
+	const handleSubmit = async () => {
+		// Check if the passwords match and they are safe
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long!");
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+    }
+
+		const { error } = await supabase.auth.updateUser({
+      password: password
+		});
+    
+    if (error) {
+      toast.error(`Error: ${error.message}`);
+    }
+
+    goto('/discover');
+	};
+</script>
+
+<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
+	<div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+		<h2 class="mb-4 text-center text-2xl">Set New Password</h2>
+
+		{#if (password == "peter")}
+			<p class="text-center text-gray-600">Verifying reset link...</p>
+		{:else}
+			<form class="space-y-4">
+				<input
+					type="password"
+					name="password"
+					bind:value={password}
+					placeholder="New password"
+					required
+					class="w-full rounded-lg border border-gray-300 px-4 py-3"
+				/>
+
+				<input
+					type="password"
+					name="passwordConfirm"
+					bind:value={confirmPassword}
+					placeholder="Confirm password"
+					required
+					class="w-full rounded-lg border border-gray-300 px-4 py-3"
+				/>
+
+				<button
+					onclick={handleSubmit}
+					type="button"
+					class="w-full rounded-lg bg-green-600 py-3 text-white hover:bg-green-700 cursor-pointer"
+				>
+					Update Password
+				</button>
+			</form>
+		{/if}
+	</div>
+</div>

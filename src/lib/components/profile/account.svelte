@@ -1,6 +1,11 @@
 <script lang="ts">
+<<<<<<< Updated upstream
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
+=======
+	import { toast } from "svelte-sonner";
+	import Tooltip from "../Tooltip.svelte";
+>>>>>>> Stashed changes
 
 	let {
 		profile = $bindable(),
@@ -26,10 +31,21 @@
 
 <section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 p-10 py-5">
 	<h1 class="text-3xl">Account Details</h1>
-	<span
-		class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-		>{profile?.verified ? 'Verified' : 'Not Verified'}
-	</span>
+	{#if !profile?.verified}
+		<Tooltip
+			text="Please contact a verified user to verify your profile."
+		>
+			<span
+				class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
+				>{profile?.verified ? 'Verified' : 'Awaiting Verification'}
+			</span>
+		</Tooltip>
+	{:else}
+		<span
+			class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
+			>{profile?.verified ? 'Verified' : 'Awaiting Verification'}
+		</span>
+	{/if}
 	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Email Address</label>
 		<div class="mt-2">
