@@ -189,7 +189,7 @@
 			</section>
 			<section class="flex flex-col">
 				<h1 class="text-xl text-black">Bio</h1>
-				<p class="text-sm">{bio.length === 0 ? 'No bio yet.' : bio}</p>
+				<p class="text-sm">{bio && bio.length === 0 ? 'No bio yet.' : bio}</p>
 			</section>
 			<section class="flex flex-col">
 				<h1 class="text-xl">User Images</h1>
