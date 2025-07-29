@@ -55,6 +55,14 @@
 		formElement.submit();
 	}
 
+	async function handleDeleteAccount() {
+		await fetch('/api/deleteAccount',{
+			method: 'POST'
+		});
+
+		goto('/')
+	}
+
 	let imageFile: File | null = $state(null);
 	$inspect(imageFile);
 
@@ -208,6 +216,7 @@
 	bind:email
 	{handleEdit}
 	{handleSubmit}
+	{handleDeleteAccount}
 	/>
 	{:else}
 	<DataTab/>

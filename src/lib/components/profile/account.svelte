@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { toast } from "svelte-sonner";
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	let {
 		profile = $bindable(),
 		disabled = $bindable(),
 		handleEdit = $bindable(),
 		handleSubmit = $bindable(),
+		handleDeleteAccount = $bindable(),
 
 		email = $bindable()
 	} = $props();
+
+	let deleteOverlay = $state(false);
 
 	// const handleCancel = async () => {
 	// 	const res = await fetch('/api/fetch_user');
@@ -40,17 +44,39 @@
 			/>
 		</div>
 	</div>
-	<div class="flex w-full justify-end gap-5">
-		<!-- {#if disabled == true}
-			<button
-				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
-				onclick={handleEdit}>Edit</button
-			>
-		{:else}
-			<button
-				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
-				onclick={handleSubmit}>Save</button
-			>
-		{/if} -->
+	<div>
+		<button
+			class="w-fit cursor-pointer rounded-lg border-1 border-red-200 px-4 py-2 text-sm font-medium text-red-400 transition-all duration-300 hover:bg-red-200 focus:ring-1 focus:outline-hidden"
+			onclick={() => (deleteOverlay = true)}>Delete Account</button
+		>
+		<!-- <button
+			class="w-fit cursor-pointer rounded-lg border-1 border-red-200 px-4 py-2 text-sm font-medium text-red-400 transition-all duration-300 hover:bg-red-200 focus:ring-1 focus:outline-hidden"
+			onclick={handleDeleteAccount}>Delete Account</button
+		> -->
 	</div>
+	{#if deleteOverlay}
+		<div class="fixed inset-0 z-10 flex items-center justify-center bg-black/50">
+			<div
+				class="w-[90%] max-w-md space-y-6 rounded-2xl bg-background p-8 text-center shadow-xl"
+			>
+				<h2 class="text-xl font-semibold">Are you sure?</h2>
+				<div class="flex justify-center gap-4">
+					<button
+						class="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-600 hover:text-white focus:ring-2"
+						onclick={handleDeleteAccount}
+					>
+						Yes
+					</button>
+					<button
+						class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-medium text-black hover:bg-gray-600 hover:text-white"
+						onclick={()=>deleteOverlay=false}
+					>
+						No
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<div class="flex w-full justify-end gap-5"></div>
 </section>

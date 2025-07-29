@@ -34,19 +34,6 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 }
 
 export const actions: Actions = {
-/* 
-  <input type="hidden" name='fullName' bind:value={full_name}/> 
-  <input type="hidden" name='dob' bind:value={dob}/>
-  <input type="hidden" name='clubName' bind:value={club_name}/>
-  <input type="hidden" name='handicapIndex' bind:value={handicap_index}/>  
-  <input type="hidden" name='postalCode' bind:value={postal_code}/>  
-  <input type="hidden" name='phone' bind:value={phone}/>  
-  <input type="hidden" name='gender' bind:value={gender}/> 
-  <input type="hidden" name='otherGender' bind:value={other_gender}/> 
-  <input type="hidden" name='golfID' bind:value={golf_id}/> 
-  <input type="hidden" name='email' bind:value={email}/> 
-  <input type="hidden" name='bio' bind:value={bio}>
-*/
     default: async ({ request, locals: { supabase } }) => {
         const formData = await request.formData()
         const fullName = formData.get('fullName') as string
