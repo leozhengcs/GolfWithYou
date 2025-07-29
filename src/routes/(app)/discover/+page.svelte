@@ -4,6 +4,7 @@
 	import { toast } from "svelte-sonner";
   	import { page } from "$app/state";
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
+	import { previewData } from '$lib/stores/previewData.svelte.js';
 
 	let scrollContainer: HTMLElement;
 	let isDown = $state(false);
@@ -16,6 +17,13 @@
 	let otherUsers: PublicUserProfile[] = $state([]);
 
 	onMount(() => {
+		// Check for messages
+		// if (previewData && Object.keys(previewData).length) {
+		// 	const keys = Object.keys(previewData);
+		// 	keys.forEach((key) => {
+		// 	});
+		// }
+
 		otherUsers = users.filter((u) => u.id !== user?.id);
 
 		// Remind users w/o avatar to upload one

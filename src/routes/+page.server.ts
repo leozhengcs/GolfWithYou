@@ -3,13 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 import type { Actions } from './$types';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { PRIVATE_SUPABASE_URL } from '$env/static/private';
+import { previewData } from '$lib/stores/previewData.svelte';
 
 // TEMPORARY SOLUTION
 
 const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL);
 
 export const actions: Actions = {
-	default: async ({ request, locals: { supabase } }) => {
+	default: async ({ fetch, request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const fullName = formData.get('fullName') as string;
 		const email = formData.get('email') as string;
@@ -23,11 +24,13 @@ export const actions: Actions = {
 		const handicapIndex = Number(formData.get('handicapIndex') as string);
 		const golfId = Number(formData.get('golfId') as string);
 		const profileImage = formData.get('profileImage') as File;
+		console.log('Profile Image Size: ', profileImage.size);
 
 		const { data, error } = await supabase.auth.signUp({
 			email,
 			password
 		});
+
 		if (error) {
 			console.error(error);
 			redirect(303, '/auth/error');
@@ -50,15 +53,26 @@ export const actions: Actions = {
 		]);
 
 		// Try to upload the users profile image
-		const fileExt = profileImage.name.split('.').pop();
-		const fileName = `${data?.user?.id}_profile.${fileExt}`;
-		const filePath = `avatar/${fileName}`;
+		// const fileExt = profileImage.name.split('.').pop();
+		// const fileName = `${data?.user?.id}_profile.${fileExt}`;
+		// const filePath = `avatar/${fileName}`;
 
-    const { data: avatarData, error: uploadError } = await supabase.storage.from('avatar').upload(filePath, profileImage);
+		const imageData = new FormData();
+		imageData.append('type', 'avatar');
+		imageData.append('image', profileImage);
 
-    if (uploadError) {
-      
-    }
+		const res = await fetch('/api/uploadImage', {
+			method: 'POST',
+			body: imageData
+		});
+
+		const imageUploadData = await res.json();
+
+		if (!res.ok) {
+			previewData.set({
+				error: `Error uploading profile picture, please try again in the profile page. ${imageUploadData}`
+			});
+		}
 
 		if (insert.error) {
 			console.log('ERROR: ', insert.error);

@@ -105,7 +105,6 @@
 		//show its uploaded
 		tempUrl = null;
 		imageUploaded = true;
-
 	}
 
 

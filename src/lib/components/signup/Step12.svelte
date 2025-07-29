@@ -1,17 +1,11 @@
 <script lang="ts">
-	import { toast } from "svelte-sonner";
+	import { toast } from 'svelte-sonner';
 
-	let { step = $bindable(), imageFile = $bindable() } = $props();
+	let { step = $bindable(), fileImage = $bindable() } = $props();
 
 	let dragging = $state(false);
 	let image: string | null = $state(null);
 	let fileInput: HTMLInputElement;
-
-	$inspect(imageFile);
-
-	if (imageFile) {
-		image = URL.createObjectURL(imageFile);
-	}
 
 	function handleDrop(event: DragEvent) {
 		event.preventDefault();
@@ -20,7 +14,8 @@
 		const files = event.dataTransfer?.files;
 		if (files && files.length && files[0].type.startsWith('image/')) {
 			image = URL.createObjectURL(files[0]);
-			imageFile = files[0];
+			fileImage = files[0];
+			console.log(fileImage.size);
 		}
 	}
 
@@ -49,7 +44,9 @@
 
 		if (file && file.type.startsWith('image/')) {
 			image = URL.createObjectURL(file);
-			imageFile = file;
+			fileImage = file;
+
+			target.value = '';
 		}
 	}
 </script>

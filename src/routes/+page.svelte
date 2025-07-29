@@ -13,6 +13,7 @@
 	import Step12 from '$lib/components/signup/Step12.svelte';
 	import Step13 from '$lib/components/signup/Step13.svelte';
 	import { fly } from 'svelte/transition';
+	import { goto } from '$app/navigation';
 
 	let step = $state(0); // Keeps track of which question user is on.
 	let formElement: HTMLFormElement;
@@ -39,12 +40,25 @@
 	let golfId = $state('');
 
 	// User Profile image info
-	let imageFile: File | null = $state(null);
+	let fileImage: File | null = $state(null);
 
 	$effect(() => {
 		if (step == 13) {
-			formElement.submit();
-		}
+			(async () => {
+				const formData = new FormData(formElement);
+	
+				if (fileImage) {
+					formData.append('profileImage', fileImage);
+				}
+	
+				await fetch(formElement.action || '/', {
+					method: 'POST',
+					body: formData
+				});
+				// TODO: Add error handling here - Handle submission form failure, avatar upload failure
+				goto('/discover');
+			})();
+		};
 	});
 </script>
 
@@ -99,7 +113,7 @@
 		</div>
 	{:else if step == 11}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step12 bind:step bind:imageFile />
+			<Step12 bind:step bind:fileImage />
 		</div>
 	{:else if step == 12}
 		<Step13 bind:step />
@@ -121,5 +135,4 @@
 	<input type="hidden" name="clubName" bind:value={clubName} />
 	<input type="hidden" name="handicapIndex" bind:value={handicapIndex} />
 	<input type="hidden" name="golfId" bind:value={golfId} />
-	<input type="hidden" name='profileImage' bind:value={imageFile} />
 </form>

@@ -1,11 +1,7 @@
 <script lang="ts">
-<<<<<<< Updated upstream
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
-=======
-	import { toast } from "svelte-sonner";
 	import Tooltip from "../Tooltip.svelte";
->>>>>>> Stashed changes
 
 	let {
 		profile = $bindable(),
