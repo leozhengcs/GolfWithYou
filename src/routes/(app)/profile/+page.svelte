@@ -56,9 +56,11 @@
 	}
 
 	async function handleDeleteAccount() {
-		await fetch('/api/deleteAccount',{
+		const res = await fetch('/api/deleteAccount',{
 			method: 'POST'
 		});
+
+		console.log(res);
 
 		goto('/')
 	}
