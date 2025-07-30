@@ -6,7 +6,7 @@
 	import type { Message } from '$lib/types/Chat';
 
 	let {
-		id,
+		id, //id of opened user modal
 		gender,
 		other_gender,
 		postal_code,
@@ -19,7 +19,7 @@
 		closeModal,
 		bio,
 		images,
-		self
+		self //id of logged in user
 	} = $props();
 
 	let messages: Message[] = $state([]);
@@ -106,6 +106,20 @@
 		inputRef.focus();
 	}
 
+	async function handleVouch() {
+		try {
+			const res = await fetch('/api/vouch_user', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ self, id })
+			});
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+		verified=true;
+	}
+
 	onMount(async () => {
 		try {
 			// isFriend = self.friends && self.friends.includes(id);
@@ -176,6 +190,14 @@
 				>
 					{verified ? 'Verified' : 'Awaiting Verification'}
 				</span>
+				{#if !verified}
+					<button
+						onclick={handleVouch}
+						class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"
+					>
+						Vouch for them
+					</button>
+				{/if}
 			</section>
 			<section class="flex flex-col">
 				<h1 class="text-xl">User Info</h1>
