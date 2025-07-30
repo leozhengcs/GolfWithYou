@@ -22,12 +22,7 @@ export const POST: RequestHandler = async ({ locals: { supabase } }) => {
         console.log(error);
         return new Response(JSON.stringify({ error: "Error deleting user, please try again later." }), { status: 500 });
     }
-
-    await supabase
-        .from('users')
-        .delete()
-        .eq('id', user.id);
-
+    
     return new Response(null, {
         status: 300,
         headers: {
