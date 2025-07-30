@@ -8,7 +8,7 @@ export const actions = {
         }
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "http://localhost:5173/auth/reset-password"
+            redirectTo: "http://golfingwithyou.com/auth/reset-password"
         })
         
         if (error) {
