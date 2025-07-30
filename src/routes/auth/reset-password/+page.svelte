@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { toast } from 'svelte-sonner';
-  import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 	let { data } = $props();
 	let { supabase } = $derived(data);
 
@@ -9,23 +9,23 @@
 
 	const handleSubmit = async () => {
 		// Check if the passwords match and they are safe
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters long!");
-    }
+		if (password.length < 6) {
+			toast.error('Password must be at least 6 characters long!');
+		}
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-    }
+		if (password !== confirmPassword) {
+			toast.error('Passwords do not match!');
+		}
 
 		const { error } = await supabase.auth.updateUser({
-      password: password
+			password: password
 		});
-    
-    if (error) {
-      toast.error(`Error: ${error.message}`);
-    }
 
-    goto('/discover');
+		if (error) {
+			toast.error(`Error: ${error.message}`);
+		}
+
+		goto('/discover');
 	};
 </script>
 
@@ -33,7 +33,7 @@
 	<div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
 		<h2 class="mb-4 text-center text-2xl">Set New Password</h2>
 
-		{#if (password == "peter")}
+		{#if password == 'peter'}
 			<p class="text-center text-gray-600">Verifying reset link...</p>
 		{:else}
 			<form class="space-y-4">
@@ -58,7 +58,7 @@
 				<button
 					onclick={handleSubmit}
 					type="button"
-					class="w-full rounded-lg bg-green-600 py-3 text-white hover:bg-green-700 cursor-pointer"
+					class="w-full cursor-pointer rounded-lg bg-green-600 py-3 text-white hover:bg-green-700"
 				>
 					Update Password
 				</button>

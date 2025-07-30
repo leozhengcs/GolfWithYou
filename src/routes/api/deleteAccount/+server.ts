@@ -24,7 +24,7 @@ export const POST: RequestHandler = async ({ locals: { supabase } }) => {
     }
     
     return new Response(null, {
-        status: 300,
+        status: 303,
         headers: {
             location: '/'
         }

@@ -190,7 +190,7 @@
 				>
 					{verified ? 'Verified' : 'Awaiting Verification'}
 				</span>
-				{#if !verified}
+				{#if !verified && self.verified}
 					<button
 						onclick={handleVouch}
 						class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"

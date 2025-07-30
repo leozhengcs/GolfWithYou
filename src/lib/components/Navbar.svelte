@@ -15,7 +15,7 @@
         <!-- <a class='text-lg' href="/profile">Profile</a> -->
         <Tooltip text='View Profile'>
             <button onclick={() => goto('/profile')} class='aspect-square w-12 bg-white rounded-full overflow-clip cursor-pointer flex items-end justify-center'>
-                <img src={profile.avatar_url || "/icons/DefaultProfile.png"} alt="" class={`${profile.avatar_url ? 'w-full h-full' : 'w-10 h-10'} object-cover object-center`}>
+                <img src={profile && profile.avatar_url || "/icons/DefaultProfile.png"} alt="" class={`${profile && profile.avatar_url ? 'w-full h-full' : 'w-10 h-10'} object-cover object-center`}>
             </button>
         </Tooltip>
     </div>
