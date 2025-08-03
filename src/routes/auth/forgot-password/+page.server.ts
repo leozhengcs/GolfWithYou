@@ -7,11 +7,10 @@ export const actions = {
             return { error: "Please provide a valid email" };
         }
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "https://golfingwithyou.com/auth/reset-password"
-        })
+        const { error } = await supabase.auth.resetPasswordForEmail(email)
         
         if (error) {
+            console.log(error);
             return { error: "Error sending password confirmation email, please try again later."};
         }
         

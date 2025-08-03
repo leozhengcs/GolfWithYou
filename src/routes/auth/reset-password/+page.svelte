@@ -23,6 +23,7 @@
 
 		if (error) {
 			toast.error(`Error: ${error.message}`);
+			return;
 		}
 
 		goto('/discover');
@@ -33,36 +34,32 @@
 	<div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
 		<h2 class="mb-4 text-center text-2xl">Set New Password</h2>
 
-		{#if password == 'peter'}
-			<p class="text-center text-gray-600">Verifying reset link...</p>
-		{:else}
-			<form class="space-y-4">
-				<input
-					type="password"
-					name="password"
-					bind:value={password}
-					placeholder="New password"
-					required
-					class="w-full rounded-lg border border-gray-300 px-4 py-3"
-				/>
+		<form class="space-y-4">
+			<input
+				type="password"
+				name="password"
+				bind:value={password}
+				placeholder="New password"
+				required
+				class="w-full rounded-lg border border-gray-300 px-4 py-3"
+			/>
 
-				<input
-					type="password"
-					name="passwordConfirm"
-					bind:value={confirmPassword}
-					placeholder="Confirm password"
-					required
-					class="w-full rounded-lg border border-gray-300 px-4 py-3"
-				/>
+			<input
+				type="password"
+				name="passwordConfirm"
+				bind:value={confirmPassword}
+				placeholder="Confirm password"
+				required
+				class="w-full rounded-lg border border-gray-300 px-4 py-3"
+			/>
 
-				<button
-					onclick={handleSubmit}
-					type="button"
-					class="w-full cursor-pointer rounded-lg bg-green-600 py-3 text-white hover:bg-green-700"
-				>
-					Update Password
-				</button>
-			</form>
-		{/if}
+			<button
+				onclick={handleSubmit}
+				type="button"
+				class="w-full cursor-pointer rounded-lg bg-green-600 py-3 text-white hover:bg-green-700"
+			>
+				Update Password
+			</button>
+		</form>
 	</div>
 </div>
