@@ -112,7 +112,7 @@
 
 </script>
 
-<div class="grid w-full flex-1 grid-cols-[250px_auto] gap-5 px-52">
+<div class="md:grid w-full flex flex-col flex-1 md:grid-cols-[250px_auto] gap-5 lg:px-52">
 	<section
 		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-gray-300"
 	>

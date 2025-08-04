@@ -45,10 +45,10 @@
 				<span>Filter</span>
 				</div> -->
 			</section>
-	<div class="flex w-full gap-10 flex-wrap">
+	<div class="flex w-full flex-row justify-center md:justify-normal items-center gap-10 flex-wrap">
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!}/>
-		{/each}		
+		{/each}
 	</div>
 	<!-- <section>
 		<h1 class="text-3xl">Trending in Golf</h1>
