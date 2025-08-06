@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { onMount, tick } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import { supabase } from '$lib/supabaseClient';
 	import { toast } from 'svelte-sonner';
+	import { toTitleCase } from '$lib/utils/string';
+	import Tab from './Tab.svelte';
 	import type { Message } from '$lib/types/Chat';
 
 	let {
@@ -30,6 +32,8 @@
 	let hasSentMessage = $state(false);
 	let inputRef: HTMLInputElement; // For keeping the text box focused
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
+	let selectedTab = $state('overview'); // States include 'overview', 'chat', and 'description'
+	const userTabs = ['overview', 'chat', 'description'];
 
 	async function getOrCreateChat() {
 		const response = await fetch('/api/chats', {
@@ -117,10 +121,11 @@
 			console.log(error);
 			return;
 		}
-		verified=true;
+		verified = true;
 	}
 
 	onMount(async () => {
+		document.body.classList.add('overflow-y-hidden');
 		try {
 			// isFriend = self.friends && self.friends.includes(id);
 
@@ -157,6 +162,10 @@
 			console.error('onMount error:', err.message || err);
 		}
 	});
+
+	onDestroy(() => {
+		document.body.classList.remove('overflow-y-hidden');
+	});
 </script>
 
 <div
@@ -166,19 +175,19 @@
 	onclick={closeModal}
 	onkeydown={(e) => (e.key === 'Esc' ? closeModal() : null)}
 	transition:fade={{ duration: 300 }}
-	class="absolute top-0 left-0 z-40 flex h-full w-full items-center justify-center bg-gray-500/50"
+	class="fixed inset-0 z-50 flex h-full w-full flex-col items-center justify-center bg-gray-500/50 md:z-40 md:flex-1 md:flex-row"
 >
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="grid h-[80%] w-[80%] grid-cols-2 rounded-lg bg-white p-6"
+		class="grid w-[90%] grid-cols-1 rounded-t-lg bg-white p-4 md:h-[80%] md:w-[80%] md:grid-cols-2 md:p-6"
 		onclick={(e) => {
 			e.stopPropagation();
 		}}
 		aria-label="User Modal"
 	>
 		<div class="flex flex-col gap-2">
-			<div class="mb-2 aspect-square w-40 overflow-hidden rounded-lg object-cover">
+			<div class="mb-2 aspect-square w-full overflow-hidden rounded-lg object-cover md:w-40">
 				<img {src} alt="" class="h-full w-full object-cover object-center" />
 			</div>
 			<section class="flex flex-col">
@@ -209,15 +218,15 @@
 				<span class="text-sm">Golf Id: <span class="text-gray-400">{golf_id}</span></span>
 				<span class="text-sm">Postal Code: <span class="text-gray-400">{postal_code}</span></span>
 			</section>
-			<section class="flex flex-col">
+			<section class="hidden flex-col md:flex">
 				<h1 class="text-xl text-black">Bio</h1>
 				<p class="text-sm">{bio && bio.length === 0 ? 'No bio yet.' : bio}</p>
 			</section>
-			<section class="flex flex-col">
+			<section class="hidden flex-col md:flex">
 				<h1 class="text-xl">User Images</h1>
 			</section>
 		</div>
-		<div class="relative flex flex-col overflow-y-hidden">
+		<div class="relative hidden flex-col overflow-y-hidden md:flex">
 			<h1 class="h-8 text-2xl">{name}</h1>
 			<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
 				{#each messages as message}
@@ -270,4 +279,43 @@
 			</form>
 		</div>
 	</div>
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="w-full px-4 md:hidden"
+		onclick={(e) => {
+			e.stopPropagation();
+		}}
+	>
+		<div class="relative flex w-fit gap-2 rounded-b-lg px-2">
+			{#each userTabs as tab}
+				<button
+					onclick={() => (selectedTab = tab)}
+					class="tab-notch py-2 text-xs uppercase transition-all duration-350
+					{selectedTab === tab
+						? 'z-10 bg-white text-blue-600'
+						: 'bg-gray-300 text-gray-600 hover:bg-gray-400'}
+				"
+				>
+					{tab}
+				</button>
+			{/each}
+		</div>
+	</div>
 </div>
+
+<style>
+	/* .tab-notch {
+		clip-path: polygon(
+			0% 0%,
+			5% 95%,
+			6% 96%,
+			7% 97%,
+			8% 98%,
+			9% 99%,
+			10% 100%,
+			90% 100%,
+			100% 0%,
+		);
+	} */
+</style>

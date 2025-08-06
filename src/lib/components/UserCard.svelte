@@ -20,6 +20,7 @@
 </script>
 
 {#if showUser}
+<div class='absolute w-full h-full items-center justify-center overflow-clip top-0 left-0'>
   <UserModal 
     id={user.id}
     name={user.full_name} 
@@ -36,6 +37,7 @@
     postal_code={user.postal_code}
     {self}
   />
+</div>
 {/if}
 <button onclick={() => {showUser = true;}} class="w-64 flex-shrink-0 block rounded-lg p-4 shadow-xs shadow-indigo-100 bg-gray-200 cursor-pointer">
   <img
