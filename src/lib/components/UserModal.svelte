@@ -179,54 +179,126 @@
 >
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
-		class="grid w-[90%] grid-cols-1 rounded-t-lg bg-white p-4 md:h-[80%] md:w-[80%] md:grid-cols-2 md:p-6"
-		onclick={(e) => {
-			e.stopPropagation();
-		}}
-		aria-label="User Modal"
-	>
-		<div class="flex flex-col gap-2">
-			<div class="mb-2 aspect-square w-full overflow-hidden rounded-lg object-cover md:w-40">
-				<img {src} alt="" class="h-full w-full object-cover object-center" />
-			</div>
-			<section class="flex flex-col">
-				<h1 class="text-xl">
-					{name}
-				</h1>
-				<span
-					class={`text-xs ${verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-				>
-					{verified ? 'Verified' : 'Awaiting Verification'}
-				</span>
-				{#if !verified && self.verified}
-					<button
-						onclick={handleVouch}
-						class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"
+	{#if selectedTab == 'overview'}
+		<div
+			class="grid h-[85%] w-[90%] grid-cols-1 rounded-lg bg-white p-4 md:h-[80%] md:w-[80%] md:grid-cols-2 md:p-6"
+			onclick={(e) => {
+				e.stopPropagation();
+			}}
+			aria-label="User Modal"
+		>
+			<div class="flex flex-col gap-2">
+				<div class="mb-2 aspect-square w-full overflow-hidden rounded-lg object-cover md:w-40">
+					<img {src} alt="" class="h-full w-full object-cover object-center" />
+				</div>
+				<section class="flex flex-col">
+					<h1 class="text-xl">
+						{name}
+					</h1>
+					<span
+						class={`text-xs ${verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
 					>
-						Vouch for them
-					</button>
-				{/if}
-			</section>
-			<section class="flex flex-col">
-				<h1 class="text-xl">User Info</h1>
-				<span class="text-sm">Club Name: <span class="text-gray-400">{member}</span></span>
-				<span class="text-sm"
-					>Handicap Index: <span class="text-gray-400">{handicap_index}</span></span
+						{verified ? 'Verified' : 'Awaiting Verification'}
+					</span>
+					{#if !verified && self.verified}
+						<button
+							onclick={handleVouch}
+							class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"
+						>
+							Vouch for them
+						</button>
+					{/if}
+				</section>
+				<section class="flex flex-col">
+					<h1 class="text-xl">User Info</h1>
+					<span class="text-sm">Club Name: <span class="text-gray-400">{member}</span></span>
+					<span class="text-sm"
+						>Handicap Index: <span class="text-gray-400">{handicap_index}</span></span
+					>
+					<span class="text-sm">Gender: <span class="text-gray-400">{gender}</span></span>
+					<span class="text-sm">Golf Id: <span class="text-gray-400">{golf_id}</span></span>
+					<span class="text-sm">Postal Code: <span class="text-gray-400">{postal_code}</span></span>
+				</section>
+				<section class="hidden flex-col md:flex">
+					<h1 class="text-xl text-black">Bio</h1>
+					<p class="text-sm">{bio && bio.length === 0 ? 'No bio yet.' : bio}</p>
+				</section>
+				<section class="hidden flex-col md:flex">
+					<h1 class="text-xl">User Images</h1>
+				</section>
+			</div>
+			<div class="relative hidden flex-col overflow-y-hidden md:flex">
+				<h1 class="h-8 text-2xl">{name}</h1>
+				<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
+					{#each messages as message}
+						{#if message.sender_id == id}
+							<div class="flex flex-row items-end gap-5">
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={src ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[500px] p-0 text-wrap">{message.content}</p>
+								</div>
+							</div>
+						{:else}
+							<div class="flex flex-row items-end justify-end gap-5">
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[300px] p-0 text-wrap">{message.content}</p>
+								</div>
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={self.avatar_url ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
+							</div>
+						{/if}
+					{/each}
+					<div bind:this={bottomRef}></div>
+				</div>
+				<form
+					class="bottom-0 z-50 flex w-full items-center gap-4 border-t bg-white pt-4"
+					onsubmit={sendMessage}
 				>
-				<span class="text-sm">Gender: <span class="text-gray-400">{gender}</span></span>
-				<span class="text-sm">Golf Id: <span class="text-gray-400">{golf_id}</span></span>
-				<span class="text-sm">Postal Code: <span class="text-gray-400">{postal_code}</span></span>
-			</section>
-			<section class="hidden flex-col md:flex">
-				<h1 class="text-xl text-black">Bio</h1>
-				<p class="text-sm">{bio && bio.length === 0 ? 'No bio yet.' : bio}</p>
-			</section>
-			<section class="hidden flex-col md:flex">
-				<h1 class="text-xl">User Images</h1>
-			</section>
+					<input
+						bind:value={newMessage}
+						bind:this={inputRef}
+						class="flex-1 rounded-full px-4 py-2 focus:ring-0 focus:outline-none"
+						placeholder="Type your message..."
+					/>
+					<button
+						type="submit"
+						class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+					>
+						{`Message ${name.split(' ')[0]}`}
+					</button>
+				</form>
+			</div>
+			<!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
+			{#each userTabs as tab}
+				<button
+					onclick={() => (selectedTab = tab)}
+					class="py-2 text-xs uppercase transition-all duration-350
+					{selectedTab === tab
+						? 'z-10 bg-white text-blue-600'
+						: 'bg-gray-300 text-gray-600 hover:bg-gray-400'}
+				"
+				>
+					{tab}
+				</button>
+			{/each}
+		</div> -->
 		</div>
-		<div class="relative hidden flex-col overflow-y-hidden md:flex">
+	{:else if selectedTab === 'chat'}
+		<div
+			class="relative flex h-[85%] w-[90%] flex-col rounded-lg bg-white p-5"
+			onclick={(e) => e.stopPropagation()}
+		>
 			<h1 class="h-8 text-2xl">{name}</h1>
 			<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
 				{#each messages as message}
@@ -240,13 +312,13 @@
 								/>
 							</div>
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[500px] p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[500px] p-0 text-xs text-wrap">{message.content}</p>
 							</div>
 						</div>
 					{:else}
 						<div class="flex flex-row items-end justify-end gap-5">
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[300px] p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[300px] p-0 text-xs text-wrap">{message.content}</p>
 							</div>
 							<div class="aspect-square w-10 overflow-hidden rounded-full">
 								<img
@@ -267,35 +339,48 @@
 				<input
 					bind:value={newMessage}
 					bind:this={inputRef}
-					class="flex-1 rounded-full px-4 py-2 focus:ring-0 focus:outline-none"
+					class="flex-1 rounded-full px-4 py-2 text-xs focus:ring-0 focus:outline-none"
 					placeholder="Type your message..."
 				/>
 				<button
 					type="submit"
-					class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+					class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-xs text-white hover:bg-blue-600"
 				>
 					{`Message ${name.split(' ')[0]}`}
 				</button>
 			</form>
 		</div>
-	</div>
+	{:else if selectedTab === 'description'}
+		<div class='relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5' onclick={(e) => e.stopPropagation()}>
+			<section class="flex-col flex">
+				<h1 class="text-base">Bio</h1>
+				<p class="text-xs text-gray-400">{bio && bio.length !== 0 ? bio : "No user bio yet."}</p>
+				{$inspect(bio)}
+			</section>
+			<section class="flex-col flex">
+				<h1 class="text-base">User Images</h1>
+			</section>
+		</div>
+	{/if}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="w-full px-4 md:hidden"
+		class="md:hidden"
 		onclick={(e) => {
 			e.stopPropagation();
 		}}
 	>
-		<div class="relative flex w-fit gap-2 rounded-b-lg px-2">
+		<div class="relative flex w-fit gap-1 rounded-b-lg px-1">
 			{#each userTabs as tab}
 				<button
 					onclick={() => (selectedTab = tab)}
-					class="tab-notch py-2 text-xs uppercase transition-all duration-350
-					{selectedTab === tab
-						? 'z-10 bg-white text-blue-600'
-						: 'bg-gray-300 text-gray-600 hover:bg-gray-400'}
-				"
+					class={`relative rounded-b-md px-4 py-2 text-xs uppercase transition-all duration-300
+				${
+					selectedTab === tab
+						? '-mt-px border border-transparent border-t-white bg-white'
+						: 'border border-transparent bg-gray-300 text-gray-600 hover:bg-gray-400'
+				}
+			`}
 				>
 					{tab}
 				</button>
@@ -303,19 +388,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	/* .tab-notch {
-		clip-path: polygon(
-			0% 0%,
-			5% 95%,
-			6% 96%,
-			7% 97%,
-			8% 98%,
-			9% 99%,
-			10% 100%,
-			90% 100%,
-			100% 0%,
-		);
-	} */
-</style>
