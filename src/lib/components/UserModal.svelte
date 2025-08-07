@@ -355,7 +355,6 @@
 			<section class="flex-col flex">
 				<h1 class="text-base">Bio</h1>
 				<p class="text-xs text-gray-400">{bio && bio.length !== 0 ? bio : "No user bio yet."}</p>
-				{$inspect(bio)}
 			</section>
 			<section class="flex-col flex">
 				<h1 class="text-base">User Images</h1>
