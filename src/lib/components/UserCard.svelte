@@ -1,9 +1,10 @@
 <script lang='ts'>
-  import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
+import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
   import { getAge } from "$lib/utils/date";
+	import type { SupabaseClient } from "@supabase/supabase-js";
   import UserModal from "./UserModal.svelte";
 
-  let { user, self }: { user: PublicUserProfile, self: UserProfile } = $props();
+  let { user, self, supabase }: { user: PublicUserProfile, self: UserProfile, supabase: SupabaseClient } = $props();
   let showUser = $state(false);
 
   const closeModal = () => {
@@ -36,6 +37,7 @@
     verified={user.verified}
     postal_code={user.postal_code}
     {self}
+    {supabase}
   />
 </div>
 {/if}

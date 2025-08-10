@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { onMount, onDestroy, tick } from 'svelte';
-	import { supabase } from '$lib/supabaseClient';
 	import { toast } from 'svelte-sonner';
 	import { toTitleCase } from '$lib/utils/string';
 	import Tab from './Tab.svelte';
 	import type { Message } from '$lib/types/Chat';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 
 	let {
 		id, //id of opened user modal
@@ -21,15 +21,19 @@
 		closeModal,
 		bio,
 		images,
-		self //id of logged in user
+		self, //id of logged in user
+		supabase
 	} = $props();
 
 	let messages: Message[] = $state([]);
+	$inspect(messages);
 	let newMessage = $state('');
 	let chatId = $state('');
-	let channel;
-	let isFriend = $state(false);
-	let hasSentMessage = $state(false);
+	let channel: RealtimeChannel;
+	let user1: string;
+	let user2: string;
+	// let isFriend = $state(false);
+
 	let inputRef: HTMLInputElement; // For keeping the text box focused
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
 	let selectedTab = $state('overview'); // States include 'overview', 'chat', and 'description'
@@ -48,6 +52,8 @@
 
 		if (response.ok) {
 			chatId = res.chatId;
+			user1 = res.user1;
+			user2 = res.user2;
 		} else {
 			console.error('Failed to create chat:', res.error);
 		}
@@ -72,6 +78,22 @@
 		if (m === '') return;
 
 		newMessage = '';
+
+		console.log('SELF: ', self);
+		console.log(self?.id);
+
+		// Send message into the live channel
+		const ack = await channel.send({
+			type: 'broadcast',
+			event: 'chat',
+			payload: {
+				sender_id: self.id,
+				content: m,
+				sent_at: new Date().toISOString()
+			}
+		});
+
+		// Save message into DB
 		const res = await fetch('/api/message', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -126,38 +148,71 @@
 
 	onMount(async () => {
 		document.body.classList.add('overflow-y-hidden');
-		try {
-			// isFriend = self.friends && self.friends.includes(id);
 
+		try {
 			await getOrCreateChat();
 			await loadMessages();
-
-			// Checks if you have aleady sent a message to a non-friend
-			if (!isFriend) {
-				hasSentMessage = messages.some((msg) => msg.sender_id === self.id);
-			}
 
 			const channelName = 'private_chat_' + chatId;
 			const alreadyExists = supabase
 				.getChannels()
-				.some((ch) => ch.topic === `realtime:${channelName}`);
+				.some((ch: { topic: string; }) => ch.topic === `realtime:${channelName}`);
 
-			if (!alreadyExists) {
-				channel = supabase.channel(channelName).on(
-					'postgres_changes',
-					{
-						event: 'INSERT',
-						schema: 'public',
-						table: 'messages',
-						filter: `chat_id=eq.${chatId}`
-					},
-					(payload) => {
-						messages = [...messages, payload.new as Message];
-					}
-				);
+			if (alreadyExists) return;
 
-				channel.subscribe();
+			const { data: session } = await supabase.auth.getSession();
+			
+			if (!session) {
+				toast.error("Error getting user session, please re-login and try again.");
+				return;
+			};
+			
+			await supabase.realtime.setAuth(session.access_token); // Needed for private chat to be private
+
+			channel = supabase.channel(channelName, {
+				config: {
+					private: true,
+					broadcast: { self: true }
+				}
+			});
+
+			// channel.on(
+			// 	'postgres_changes',
+			// 	{
+			// 		event: '*',
+			// 		schema: 'public',
+			// 		table: 'messages',
+			// 		filter: `chat_id=eq.${chatId}`
+			// 	},
+			// 	(payload) => {
+			// 		console.debug('RT payload', payload);
+
+			// 		messages = [...messages, payload.new as Message];
+			// 	}
+			// );
+
+			channel.on('broadcast', { event: 'chat' }, async (payload) => {
+				// console.log('Payload from broadcast: ', payload);
+				// console.log('PAYLOAD CONTENTL', payload.payload.content);
+				messages = [...messages, payload.payload as Message];
+				await tick();
+				bottomRef.scrollIntoView({ behavior: 'smooth' });
+			});
+
+			if (!channel) {
+				console.log('EROR SETTING CHANNEL');
+				return;
 			}
+
+			channel.subscribe();
+
+			// channel.subscribe((status, err) => {
+			// 	console.log('[channel status]', status, 'topic=', channel.topic, 'state=', channel.state, "error: ", err);
+			// });
+
+			// channel.on('broadcast', { event: '*' }, (payload) => {
+			// 	console.log('[broadcast:*] got payload:', payload);
+			// });
 		} catch (err: any) {
 			console.error('onMount error:', err.message || err);
 		}
@@ -165,6 +220,31 @@
 
 	onDestroy(() => {
 		document.body.classList.remove('overflow-y-hidden');
+
+		// TODO: Update last read message by this user
+
+		// const lastRead = [...messages].reverse().find((message) => message.sender_id != self.id);
+
+		// Saves the latest message read
+		// if (self.id == user1) {
+		// 	supabase
+		// 		.from('private_chars')
+		// 		.update({ user1LastRead: lastRead })
+		// 		.eq('id', chatId)
+		// 		.then(({ error }) => {
+		// 			if (error) console.log('Update chat error: ', error);
+		// 		});
+		// } else if (self.id == user2) {
+		// 	supabase
+		// 		.from('private_chats')
+		// 		.update({ user2LastRead: lastRead })
+		// 		.eq('id', chatId)
+		// 		.then(({ error }) => {
+		// 			if (error) console.log('Update chat error: ', error);
+		// 		});
+		// }
+
+		if (channel) supabase.removeChannel(channel); // or supabase.removeAllChannels()
 	});
 </script>
 
@@ -351,12 +431,15 @@
 			</form>
 		</div>
 	{:else if selectedTab === 'description'}
-		<div class='relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5' onclick={(e) => e.stopPropagation()}>
-			<section class="flex-col flex">
+		<div
+			class="relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5"
+			onclick={(e) => e.stopPropagation()}
+		>
+			<section class="flex flex-col">
 				<h1 class="text-base">Bio</h1>
-				<p class="text-xs text-gray-400">{bio && bio.length !== 0 ? bio : "No user bio yet."}</p>
+				<p class="text-xs text-gray-400">{bio && bio.length !== 0 ? bio : 'No user bio yet.'}</p>
 			</section>
-			<section class="flex-col flex">
+			<section class="flex flex-col">
 				<h1 class="text-base">User Images</h1>
 			</section>
 		</div>
