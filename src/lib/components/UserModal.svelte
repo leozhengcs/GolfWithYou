@@ -26,7 +26,6 @@
 	} = $props();
 
 	let messages: Message[] = $state([]);
-	$inspect(messages);
 	let newMessage = $state('');
 	let chatId = $state('');
 	let channel: RealtimeChannel;
@@ -218,31 +217,33 @@
 		}
 	});
 
-	onDestroy(() => {
+	onDestroy(async () => {
 		document.body.classList.remove('overflow-y-hidden');
 
 		// TODO: Update last read message by this user
 
-		// const lastRead = [...messages].reverse().find((message) => message.sender_id != self.id);
+		const lastRead = [...messages].reverse().find((message) => message.sender_id != self.id)?.id;
 
 		// Saves the latest message read
-		// if (self.id == user1) {
-		// 	supabase
-		// 		.from('private_chars')
-		// 		.update({ user1LastRead: lastRead })
-		// 		.eq('id', chatId)
-		// 		.then(({ error }) => {
-		// 			if (error) console.log('Update chat error: ', error);
-		// 		});
-		// } else if (self.id == user2) {
-		// 	supabase
-		// 		.from('private_chats')
-		// 		.update({ user2LastRead: lastRead })
-		// 		.eq('id', chatId)
-		// 		.then(({ error }) => {
-		// 			if (error) console.log('Update chat error: ', error);
-		// 		});
-		// }
+		if (self.id == user1) {
+			const { error } = await supabase
+			.from('private_chats')
+			.update({ user1LastRead: lastRead })
+			.eq('id', chatId)
+
+			if (error) {
+				console.log('Update chat error: ', error);
+			}
+		} else if (self.id == user2) {
+			const { error } = await supabase
+			.from('private_chats')
+			.update({ user2LastRead: lastRead })
+			.eq('id', chatId)
+			
+			if (error) {
+				console.log('Update chat error: ', error);
+			}
+		}
 
 		if (channel) supabase.removeChannel(channel); // or supabase.removeAllChannels()
 	});
@@ -309,7 +310,7 @@
 			</div>
 			<div class="relative hidden flex-col overflow-y-hidden md:flex">
 				<h1 class="h-8 text-2xl">{name}</h1>
-				<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
+				<div class="flex flex-1 flex-col gap-8 overflow-y-auto pr-5">
 					{#each messages as message}
 						{#if message.sender_id == id}
 							<div class="flex flex-row items-end gap-5">

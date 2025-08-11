@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   // Check if chat already exists
   const { data: existing, error: existingError } = await supabase
     .from('private_chats')
-    .select('id')
+    .select('id, user1, user2')
     .or(
       `and(user1.eq.${currentUserId},user2.eq.${otherUserId}),and(user1.eq.${otherUserId},user2.eq.${currentUserId})`
     )
