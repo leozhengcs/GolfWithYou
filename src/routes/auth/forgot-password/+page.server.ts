@@ -14,6 +14,6 @@ export const actions = {
             return { error: "Error sending password confirmation email, please try again later."};
         }
         
-        return { data: "Reset email sent, please check your email"};
+        return { data: "We've sent you a password reset link! Please check your inbox (and spam folder) within 15 minutes."};
     }
 }

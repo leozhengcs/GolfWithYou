@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
-import { EMAIL_USER, EMAIL_PASS } from "$env/static/private"
+import { PRIVATE_EMAIL_USER, PRIVATE_EMAIL_PASS } from '$env/static/private';
+
+// import { PRIVATE_EMAIL}
 
 // const EMAILUSER = EMAIL_USER
 // const EMAILPASS = EMAIL_PASS
@@ -9,19 +11,19 @@ import { EMAIL_USER, EMAIL_PASS } from "$env/static/private"
 
 export async function POST({ request }) {
   const { to, subject, text } = await request.json();
-  console.log('EMAIL_USER:', EMAIL_USER);
+  console.log('EMAIL_USER:', PRIVATE_EMAIL_USER);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: EMAIL_USER,
-      pass: EMAIL_PASS
+      user: PRIVATE_EMAIL_USER,
+      pass: PRIVATE_EMAIL_PASS
     }
   });
 
   try {
     await transporter.sendMail({
-      from: EMAIL_USER,
+      from: PRIVATE_EMAIL_USER,
       to,
       subject,
       text
