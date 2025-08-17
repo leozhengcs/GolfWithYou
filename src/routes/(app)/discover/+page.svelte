@@ -13,7 +13,7 @@
 	let scrollLeft = $state(0);
 
 	let { data } = $props();
-	$inspect(data);
+	// $inspect(data);
 	let { user, users, supabase }: { user: UserProfile | null, users: PublicUserProfile[], supabase: SupabaseClient } = $derived(data);
 
 	let otherUsers: PublicUserProfile[] = $state([]);

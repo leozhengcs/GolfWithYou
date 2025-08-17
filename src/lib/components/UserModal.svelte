@@ -78,9 +78,6 @@
 
 		newMessage = '';
 
-		console.log('SELF: ', self);
-		console.log(self?.id);
-
 		// Send message into the live channel
 		const ack = await channel.send({
 			type: 'broadcast',
@@ -103,6 +100,15 @@
 
 		if (!res.ok) {
 			console.error('Send error:', data.error);
+		} else {
+			const { error } = await supabase
+				.from('private_chats')
+				.update({ lastMessage: data.id })
+				.eq('id', chatId);
+
+			if (error) {
+				console.log('Update chat error: ', error);
+			}
 		}
 
 		// if (!isFriend) {
@@ -155,17 +161,17 @@
 			const channelName = 'private_chat_' + chatId;
 			const alreadyExists = supabase
 				.getChannels()
-				.some((ch: { topic: string; }) => ch.topic === `realtime:${channelName}`);
+				.some((ch: { topic: string }) => ch.topic === `realtime:${channelName}`);
 
 			if (alreadyExists) return;
 
 			const { data: session } = await supabase.auth.getSession();
-			
+
 			if (!session) {
-				toast.error("Error getting user session, please re-login and try again.");
+				toast.error('Error getting user session, please re-login and try again.');
 				return;
-			};
-			
+			}
+
 			await supabase.realtime.setAuth(session.access_token); // Needed for private chat to be private
 
 			channel = supabase.channel(channelName, {
@@ -195,6 +201,34 @@
 				// console.log('PAYLOAD CONTENTL', payload.payload.content);
 				messages = [...messages, payload.payload as Message];
 				await tick();
+
+				const lastRead = messages[messages.length - 1]?.id;
+
+				// Saves the latest message read
+				if (self.id == user1) {
+					console.log("user 1 last read", lastRead)
+					const chatWrite = await supabase
+						.from('private_chats')
+						.update({ user1LastRead: lastRead })
+						.eq('id', chatId);
+
+					console.log(chatWrite);
+
+					if (chatWrite.error) {
+						console.log('Update chat error: ', chatWrite.error);
+					}
+				} else if (self.id == user2) {
+					console.log("user 2")
+					const { error } = await supabase
+						.from('private_chats')
+						.update({ user2LastRead: lastRead })
+						.eq('id', chatId);
+
+					if (error) {
+						console.log('Update chat error: ', error);
+					}
+				}
+				// await tick();
 				bottomRef.scrollIntoView({ behavior: 'smooth' });
 			});
 
@@ -220,26 +254,26 @@
 	onDestroy(async () => {
 		document.body.classList.remove('overflow-y-hidden');
 
-		// TODO: Update last read message by this user
-
-		const lastRead = [...messages].reverse().find((message) => message.sender_id != self.id)?.id;
+		const lastRead = messages[messages.length - 1]?.id;
 
 		// Saves the latest message read
 		if (self.id == user1) {
-			const { error } = await supabase
-			.from('private_chats')
-			.update({ user1LastRead: lastRead })
-			.eq('id', chatId)
+			const chatWrite = await supabase
+				.from('private_chats')
+				.update({ user1LastRead: lastRead })
+				.eq('id', chatId);
 
-			if (error) {
-				console.log('Update chat error: ', error);
+			console.log(chatWrite);
+
+			if (chatWrite.error) {
+				console.log('Update chat error: ', chatWrite.error);
 			}
 		} else if (self.id == user2) {
 			const { error } = await supabase
-			.from('private_chats')
-			.update({ user2LastRead: lastRead })
-			.eq('id', chatId)
-			
+				.from('private_chats')
+				.update({ user2LastRead: lastRead })
+				.eq('id', chatId);
+
 			if (error) {
 				console.log('Update chat error: ', error);
 			}
