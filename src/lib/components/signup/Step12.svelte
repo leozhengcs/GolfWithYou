@@ -77,13 +77,13 @@
 	/>
 	<div class="flex w-full justify-end gap-2">
 		<button
-			class="border-action bg-action hover:text-action inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+			class="border-green-700 bg-green-700 hover:text-green-700 inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 			onclick={() => step--}
 		>
 			Go Back
 		</button>
 		<button
-			class="border-action bg-action hover:text-action inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+			class="border-green-700 bg-green-700 hover:text-green-700 inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 			onclick={() => {
 				if (!image) {
 					toast.error('Please Upload a Profile Image');

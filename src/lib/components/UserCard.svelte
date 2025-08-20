@@ -41,11 +41,11 @@ import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
   />
 </div>
 {/if}
-<button onclick={() => {showUser = true;}} class="w-64 flex-shrink-0 block rounded-lg p-4 shadow-xs shadow-indigo-100 bg-gray-200 cursor-pointer">
+<button onclick={() => {showUser = true;}} class="w-60 h-84 flex-shrink-0 grid auto-rows-auto rounded-2xl p-4 shadow-xs shadow-indigo-50 bg-[#bbdfed] cursor-pointer">
   <img
     alt=""
     src={user.avatar_url ?? '/icons/DefaultProfile.png'}
-    class="h-56 aspect-square rounded-md object-cover object-center"
+    class="h-52 w-full aspect-square rounded-md object-cover object-center"
   />
 
   <div class="mt-2">
@@ -56,27 +56,19 @@ import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
       </div>
     </div>
 
-    <div class="mt-2 flex flex-col gap-5 text-xs">
+    <div class="mt-2 flex flex-col gap-1 text-xs">
       <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-        <div class='w-8'>
-          <img src="/icons/Membership.png" alt="">
-        </div>
-
         <div class="mt-1.5 sm:mt-0 text-left">
-          <p class="text-gray-500">Member of</p>
-          <p class="font-medium">{user.club_name}</p>
+          <!-- <p class="text-gray-500">Member of</p> -->
+          <p class="font-medium text-gray-500">{user.club_name}</p>
         </div>
       </div>
-
       <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-        <div class="w-8">
+        <div class="w-4">
           <img src="/icons/Golf_Ball.png" alt="">
         </div>
-
-        <div class="mt-1.5 sm:mt-0 text-left">
-          <p class="text-gray-500">Handicap Index</p>
-
-          <p class="font-medium">{user.handicap_index}</p>
+        <div class="text-left">
+          <p class="font-medium text-gray-500">{user.handicap_index}</p>
         </div>
       </div>
     </div>

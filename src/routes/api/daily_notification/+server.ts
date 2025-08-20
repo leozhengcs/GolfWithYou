@@ -3,11 +3,30 @@ import { PRIVATE_EMAIL_USER, PRIVATE_EMAIL_PASS } from '$env/static/private';
 
 import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
-import { PRIVATE_SUPABASE_URL } from '$env/static/private';
+import { PRIVATE_SUPABASE_URL, PRIVATE_NOTIFICATION_KEY } from '$env/static/private';
 
 const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL);
 
 export async function POST({ request }) {
+    const authHeader = request.headers.get('Authorization');
+
+    	if (!authHeader || !authHeader.startsWith('Bearer ')) {
+		return new Response(
+			JSON.stringify({ error: 'Missing or invalid Authorization header' }),
+			{ status: 401 }
+		);
+	}
+
+	// Extract the token
+	const token = authHeader.substring('Bearer '.length);
+
+	// Check if token is valid
+	if (token !== PRIVATE_NOTIFICATION_KEY) {
+		return new Response(
+			JSON.stringify({ error: 'Invalid token' }),
+			{ status: 403 }
+		);
+	}
 
     // initalizie nodemailer
     const transporter = nodemailer.createTransport({
@@ -23,7 +42,8 @@ export async function POST({ request }) {
         .from("users")
         .select("id, email")
 
-    console.log(users);
+    // TODO: REMOVE IN PRODUCTION
+    users?.filter((user) => user.email == 'web.insitesolutions@gmail.com');
 
     // for each user find private_chats where they exist and LastRead != lastMessage
     users?.forEach(async (user) => {
@@ -56,21 +76,21 @@ export async function POST({ request }) {
 
         console.log(emailBody);
 
-        // try {
-        //     await transporter.sendMail({
-        //         from: PRIVATE_EMAIL_USER,
-        //         to: user.email,
-        //         subject: 'Unread Messages: Golfing with You',
-        //         text: emailBody
-        //     });
+        try {
+            await transporter.sendMail({
+                from: PRIVATE_EMAIL_USER,
+                to: user.email,
+                subject: 'Unread Messages: Golfing with You',
+                text: emailBody
+            });
 
-        //     return new Response(JSON.stringify({ success: true }), { status: 200 });
-        // } catch (err) {
-        //     if (err instanceof Error) {
-        //         return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
-        //     }
-        //     return new Response(JSON.stringify({ success: false, error: String(err) }), { status: 500 });
-        // }
+            return new Response(JSON.stringify({ success: true }), { status: 200 });
+        } catch (err) {
+            if (err instanceof Error) {
+                return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
+            }
+            return new Response(JSON.stringify({ success: false, error: String(err) }), { status: 500 });
+        }
     })
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });

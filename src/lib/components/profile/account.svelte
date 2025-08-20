@@ -25,7 +25,7 @@
 	// };
 </script>
 
-<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 px-5 md:p-10 py-5">
+<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 bg-gray-300/50 px-5 md:p-10 py-5">
 	<h1 class="text-3xl">Account Details</h1>
 	{#if !profile?.verified}
 		<Tooltip

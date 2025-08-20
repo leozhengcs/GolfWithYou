@@ -11,8 +11,12 @@
     --color-accent: #DF971A;
     --color-action: #6363FF;
     --color-accent-shade: #E9AC43;
+    --color-sky-background: #2596be;
+    --color-footer-green: #3f6d1f;
+    --color-sky: #abc4d4;
 
     --font-sans: jost;
+    --font-fugaz: fugaz;
 }
 
 @font-face {
@@ -20,4 +24,9 @@
     src: url('/fonts/Jost-VariableFont_wght.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: fugaz;
+    src: url('/fonts/FugazOne-Regular.ttf') format('truetype');
 }

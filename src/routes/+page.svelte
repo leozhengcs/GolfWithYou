@@ -117,9 +117,6 @@
 		</div>
 	{:else if step == 12}
 		<Step13 bind:step />
-		<!-- {:else}
-  <div in:fly={{ duration: 300, x: 300, opacity: 0}}>
-  </div> -->
 	{/if}
 </div>
 

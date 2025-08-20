@@ -40,7 +40,7 @@
 			</button>
 		</form>
 		<button
-			class="mt-5 cursor-pointer text-sm text-blue-500 hover:underline"
+			class="mt-5 cursor-pointer text-sm text-gray-400 hover:underline"
 			onclick={() => goto('/auth/login')}
 		>
 			Go Back

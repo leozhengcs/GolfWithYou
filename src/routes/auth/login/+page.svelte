@@ -1,51 +1,55 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { enhance } from '$app/forms';
 
 	let email = $state('');
 	let password = $state('');
 </script>
+<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
+	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
+		<h1 class="mb-6 text-center text-2xl font-bold text-green-800">Welcome Back</h1>
 
-<div
-	class="flex h-screen w-full items-center justify-center bg-cover bg-center"
-	style="background-image:url('/images/signup/signup1.jpg')"
->
-	<div class="absolute inset-0 bg-gray-800/50"></div>
-	<!-- Login Button -->
-	<button
-		onclick={() => goto('/')}
-		class="text-accent after:bg-accent absolute top-5 right-5 cursor-pointer p-2 text-lg after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-full after:origin-center after:-translate-x-1/2 after:scale-x-0 after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
-	>
-		Sign Up
-	</button>
-	<div
-		class="bg-primary relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg px-12 py-8 shadow-lg"
-	>
-		<form method="POST" class="flex flex-col gap-5">
-			<h1 class="text-accent text-xl">Login</h1>
-			<div>
-				<input
-					type="text"
-					id="email"
-					name="email"
-					class="peer mt-5 w-full rounded-lg border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
-					placeholder="Email"
-					bind:value={email}
-				/>
-				<input
-					type="password"
-					id="password"
-					name="password"
-					class="peer mt-5 w-full rounded-lg border-0 border-b border-gray-300 focus:ring-0 focus:outline-none sm:text-sm"
-					placeholder="Password"
-					bind:value={password}
-				/>
-			</div>
-			<a href="/auth/forgot-password" class="cursor-pointer text-left text-sm text-gray-400 hover:underline">Forgotten Password?</a>
+		<p class="mb-4 text-center text-sm text-gray-600">
+			Log in to your account to continue.
+		</p>
+
+		<form method="POST" use:enhance class="space-y-4">
+			<input
+				type="text"
+				name="email"
+				class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+				placeholder="you@example.com"
+				bind:value={email}
+				autocomplete="email"
+			/>
+
+			<input
+				type="password"
+				name="password"
+				class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+				placeholder="••••••••"
+				bind:value={password}
+				autocomplete="current-password"
+			/>
+
 			<button
-				class="border-accent bg-accent hover:text-accent inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white hover:bg-transparent focus:ring-3 focus:outline-hidden"
+				type="submit"
+				class="w-full cursor-pointer rounded-lg bg-green-700 py-3 font-semibold text-white transition hover:bg-green-800"
 			>
 				Login
 			</button>
 		</form>
+
+		<div class="mt-5 flex items-center justify-between text-sm">
+			<a href="/auth/forgot-password" class="cursor-pointer text-gray-400 hover:underline">
+				Forgot your password?
+			</a>
+			<button
+				class="cursor-pointer text-gray-400 hover:underline"
+				onclick={() => goto('/')}
+			>
+				Sign Up
+			</button>
+		</div>
 	</div>
 </div>

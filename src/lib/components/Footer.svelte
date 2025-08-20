@@ -2,7 +2,7 @@
 
 </script>
 
-<footer class='bg-primary w-full p-2 flex justify-between'>
+<footer class='bg-footer-green w-full p-2 flex justify-between'>
     <div>
         <span class='text-xs md:text-sm text-secondary-shade'>© GolfingWithYou 2025. All rights reserved</span>
     </div>

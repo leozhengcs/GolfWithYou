@@ -40,36 +40,6 @@
 		}
 	};
 
-	// const handleDateInput = (e: Event) => {
-	// 	const input = e.target as HTMLInputElement;
-	// 	let raw = input.value;
-
-	// 	// Allow user to fully delete the input
-	// 	if (raw.trim() === '') {
-	// 		dob = '';
-	// 		return;
-	// 	}
-
-	// 	// Remove all non-digit characters
-	// 	let digits = raw.replace(/\D/g, '');
-
-	// 	// Format to YYYY-MM-DD
-	// 	let formatted = '';
-	// 	if (digits.length <= 4) {
-	// 		formatted = digits;
-	// 	} else if (digits.length <= 6) {
-	// 		formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
-	// 	} else {
-	// 		formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
-	// 	}
-
-	// 	// Limit to 10 characters
-	// 	formatted = formatted.slice(0, 10);
-
-	// 	input.value = formatted;
-	// 	dob = formatted;
-	// };
-
 	const handleIdInput = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 		const digitsOnly = input.value.replace(/\D/g, '');
@@ -96,7 +66,7 @@
 	}
 </script>
 
-<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 px-5 md:p-10 py-5">
+<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 bg-gray-300/50 px-5 md:p-10 py-5">
 	<h1 class="text-3xl">Profile</h1>
 	{#if !profile?.verified}
 		<Tooltip
@@ -252,16 +222,16 @@
 	<div class="flex w-full justify-end gap-5">
 		{#if disabled == true}
 			<button
-				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 				onclick={handleEdit}>Edit</button
 			>
 			{:else}
 			<button
-				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 				onclick={handleCancel}>Cancel</button
 			>
 			<button
-				class="border-action bg-action hover:text-action w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
 				onclick={handleSubmit}>Save</button
 			>
 		{/if}

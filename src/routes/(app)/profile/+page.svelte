@@ -114,7 +114,7 @@
 
 <div class="md:grid w-full flex flex-col flex-1 md:grid-cols-[250px_auto] gap-5 lg:px-52">
 	<section
-		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-gray-300"
+		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-gray-300 bg-gray-300/50"
 	>
 		<h1 class="m-5 mb-0 text-gray-600">Settings</h1>
 		<div class="flex h-full flex-col">
@@ -127,11 +127,6 @@
 			>
 				Profile
 			</button>
-			<!-- <button
-                class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-            >
-                Theme
-            </button> -->
 			<button
 				onclick={() => {
 					tab = 'personal';
@@ -141,11 +136,6 @@
 			>
 				Personal Info
 			</button>
-			<!-- <button
-                class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-            >
-                Settings
-            </button> -->
 			<button
 				onclick={() => {
 					tab = 'account';
@@ -155,25 +145,6 @@
 			>
 				Account Details
 			</button>
-			<!-- <button
-                class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-            >
-				Settings
-            </button> -->
-			<!-- <button
-				onclick={() => {
-					tab = 'data';
-					disabled = true;
-				}}
-				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-			>
-				Data and Privacy
-			</button> -->
-			<!-- <button
-                class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-            >
-                Settings
-            </button> -->
 			<button
 				onclick={handleLogout}
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left text-red-400 transition-all duration-100 hover:bg-red-200"
