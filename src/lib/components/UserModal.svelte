@@ -33,7 +33,9 @@
 	let user2: string;
 	// let isFriend = $state(false);
 
+	// svelte-ignore non_reactive_update
 	let inputRef: HTMLInputElement; // For keeping the text box focused
+	// svelte-ignore non_reactive_update
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
 	let selectedTab = $state('overview'); // States include 'overview', 'chat', and 'description'
 	const userTabs = ['overview', 'chat', 'description'];
@@ -206,7 +208,7 @@
 
 				// Saves the latest message read
 				if (self.id == user1) {
-					console.log("user 1 last read", lastRead)
+					console.log('user 1 last read', lastRead);
 					const chatWrite = await supabase
 						.from('private_chats')
 						.update({ user1LastRead: lastRead })
@@ -218,7 +220,7 @@
 						console.log('Update chat error: ', chatWrite.error);
 					}
 				} else if (self.id == user2) {
-					console.log("user 2")
+					console.log('user 2');
 					const { error } = await supabase
 						.from('private_chats')
 						.update({ user2LastRead: lastRead })

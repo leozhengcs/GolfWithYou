@@ -9,7 +9,7 @@
     <button class='w-15 cursor-pointer' onclick={() => goto('/discover')}>
         <img src="/icons/Logo.png" alt="">
     </button>
-    <h1 class='text-4xl text-center font-fugaz text-primary'>Teesaway</h1>
+    <a href='/discover' class='text-4xl text-center font-fugaz text-primary'>Teesaway</a>
     <div class='flex flex-row gap-10'>
         <Tooltip text='View Profile'>
             <button onclick={() => goto('/profile')} class='aspect-square w-12 bg-white rounded-full overflow-clip cursor-pointer flex items-end justify-center'>

@@ -33,11 +33,20 @@
 	});
 </script>
 
-<div class="flex flex-col gap-10">
+<div class="flex flex-col gap-10 relative">
+	<div class='fixed top-20 left-5'>
+		<img src="/images/cloud.png" class='max-w-[800px] -z-10 opacity-40' alt="">
+	</div>
+	<div class='fixed top-40 right-10'>
+		<img src="/images/cloud.png" class='max-w-[800px] -z-10 opacity-40' alt="">
+	</div>
+	<div class='fixed top-80 right-96'>
+	<img src="/images/cloud.png" class='max-w-[800px] -z-10 opacity-40' alt="">
+	</div>
 	<section class="flex flex-row justify-between">
 		<h1 class="text-3xl font-fugaz text-yellow-400">Discover Other Users</h1>
 	</section>
-	<div class="flex w-full flex-row flex-wrap items-center justify-center gap-14 md:justify-between">
+	<div class="flex w-full flex-row flex-wrap items-center justify-center gap-14 md:justify-between z-10">
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!} {supabase} />
 		{/each}
