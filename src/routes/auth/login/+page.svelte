@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 
 	let email = $state('');
 	let password = $state('');
+	let loading = $state(false);
+
+	const setLoading = () => {
+		loading = true;
+	}
 </script>
 <div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
 	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
@@ -12,7 +18,7 @@
 			Log in to your account to continue.
 		</p>
 
-		<form method="POST" class="space-y-4">
+		<form method="POST" class="space-y-4" onsubmit={setLoading}>
 			<input
 				type="text"
 				name="email"
@@ -52,3 +58,6 @@
 		</div>
 	</div>
 </div>
+{#if loading}
+	<LoaderAnimation/>
+{/if}

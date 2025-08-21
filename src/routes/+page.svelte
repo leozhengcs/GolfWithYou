@@ -14,6 +14,12 @@
 	import Step13 from '$lib/components/signup/Step13.svelte';
 	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+
+	let loading = $state(false);
+	let setLoading = () => {
+		loading = true;
+	}
 
 	let step = $state(0); // Keeps track of which question user is on.
 	let formElement: HTMLFormElement;
@@ -120,7 +126,7 @@
 	{/if}
 </div>
 
-<form method="POST" bind:this={formElement}>
+<form method="POST" bind:this={formElement} onsubmit={setLoading}>
 	<input type="hidden" name="fullName" bind:value={fullName} />
 	<input type="hidden" name="email" bind:value={email} />
 	<input type="hidden" name="gender" bind:value={gender} />
@@ -133,3 +139,7 @@
 	<input type="hidden" name="handicapIndex" bind:value={handicapIndex} />
 	<input type="hidden" name="golfId" bind:value={golfId} />
 </form>
+
+{#if loading}
+	<LoaderAnimation/>
+{/if}
