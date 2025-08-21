@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { enhance } from '$app/forms';
 
 	let email = $state('');
 	let password = $state('');
@@ -13,7 +12,7 @@
 			Log in to your account to continue.
 		</p>
 
-		<form method="POST" use:enhance class="space-y-4">
+		<form method="POST" class="space-y-4">
 			<input
 				type="text"
 				name="email"
