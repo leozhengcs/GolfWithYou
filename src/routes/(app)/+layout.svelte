@@ -5,13 +5,16 @@
 	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 	import { navigating, page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
+	import { onlineUsers } from '$lib/stores/users.svelte.js';
 
 	// Page Loader Animations
 	import LoaderDiscover from '$lib/components/loaders/LoaderDiscover.svelte';
 	import LoaderProfile from '$lib/components/loaders/LoaderProfile.svelte';
+	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { children, data } = $props();
-	let { profile } = $derived(data);
+	let { profile, supabase } = $derived(data);
 	injectAnalytics();
 
 	const pickLoader = (path: string) => {
@@ -44,11 +47,33 @@
 			return () => clearTimeout(t);
 		}
 	});
+
+	onMount(() => {
+		if (!data.user) {
+			toast.error('Error getting user, please try logging in again');
+			return;
+		}
+
+		// Setting up user presence
+		const channel = supabase.channel('online-users', { config: { presence: { key: data.user.id } } });
+		channel
+			.on('presence', { event: 'sync' }, () => {
+				const state = channel.presenceState();
+				console.log('Current online users:', state);
+			})
+			.subscribe(async (status) => {
+				if (status === 'SUBSCRIBED') {
+					await channel.track({ online_at: new Date().toISOString(), user_id: data.user!.id });
+				}
+			});
+	});
 </script>
 
 <Navbar {profile} />
 
-<div class="relative flex min-h-screen flex-col overflow-x-clip p-10 xl:p-30 pt-32 bg-sky-background">
+<div
+	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
+>
 	{#if show}
 		<Loader />
 	{:else}

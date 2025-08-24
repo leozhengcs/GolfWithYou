@@ -5,11 +5,6 @@
 	function goHome() {
 		goto('/');
 	}
-
-	function goBack() {
-		if (history.length > 1) history.back();
-		else goto('/');
-	}
 </script>
 
 <svelte:head>
@@ -34,7 +29,7 @@
 		<!-- Helpful actions -->
 		<div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
 			<button
-				onclick={goBack}
+				onclick={() => goto('/login')}
 				class="w-full cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
 			>
 				Back
