@@ -3,7 +3,7 @@
 	import { getAge } from '$lib/utils/date';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import UserModal from './UserModal.svelte';
-	import { onlineUsers } from '$lib/stores/users.svelte.js';
+	import { onlineUsers } from '$lib/stores/users.svelte';
 
 	let {
 		user,

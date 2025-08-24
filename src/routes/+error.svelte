@@ -29,7 +29,7 @@
 		<!-- Helpful actions -->
 		<div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
 			<button
-				onclick={() => goto('/login')}
+				onclick={() => goto('/auth/login')}
 				class="w-full cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
 			>
 				Back

@@ -48,24 +48,58 @@
 		}
 	});
 
+	let channel: ReturnType<typeof supabase.channel> | null = null;
+	let authUnsub: { subscription: { unsubscribe: () => void } } | null = null;
+
+	function startPresence(userId: string) {
+		if (channel && channel.state !== 'closed') return;
+		channel = supabase.channel('online-users', { config: { presence: { key: userId } } });
+
+		channel.on('presence', { event: 'sync' }, () => {
+			const state = channel!.presenceState() as Record<string, unknown[]>;
+			onlineUsers.set(Object.keys(state));
+		});
+
+		channel.subscribe(async (status) => {
+			if (status === 'SUBSCRIBED') {
+				await channel!.track({ online_at: new Date().toISOString() });
+				// optimistic: show self immediately
+				onlineUsers.update((ids) => (ids.includes(userId) ? ids : [...ids, userId]));
+			}
+		});
+	}
+
+	async function stopPresence() {
+		try {
+			await channel?.untrack();
+		} catch {}
+		try {
+			await channel?.unsubscribe();
+		} catch {}
+		channel = null;
+		onlineUsers.set([]);
+	}
+
 	onMount(() => {
 		if (!data.user) {
-			toast.error('Error getting user, please try logging in again');
+			toast.error('Error getting user, please log in again');
 			return;
 		}
 
-		// Setting up user presence
-		const channel = supabase.channel('online-users', { config: { presence: { key: data.user.id } } });
-		channel
-			.on('presence', { event: 'sync' }, () => {
-				const state = channel.presenceState();
-				onlineUsers.set(Object.keys(state))
-			})
-			.subscribe(async (status) => {
-				if (status === 'SUBSCRIBED') {
-					await channel.track({ online_at: new Date().toISOString() });
-				}
-			});
+		startPresence(data.user.id);
+
+		// Go offline quickly on tab close/reload
+		const cleanup = () => {
+			stopPresence();
+		};
+		window.addEventListener('pagehide', cleanup);
+		window.addEventListener('beforeunload', cleanup);
+
+		return () => {
+			window.removeEventListener('pagehide', cleanup);
+			window.removeEventListener('beforeunload', cleanup);
+			stopPresence();
+		};
 	});
 </script>
 

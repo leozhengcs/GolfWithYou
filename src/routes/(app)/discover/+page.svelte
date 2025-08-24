@@ -5,7 +5,7 @@
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { onlineUsers } from '$lib/stores/users.svelte.js';
+	import { onlineUsers } from '$lib/stores/users.svelte';
 
 	let scrollContainer: HTMLElement;
 	let isDown = $state(false);
@@ -29,6 +29,7 @@
 	let unreadMap = $state<Record<string, boolean>>({});
 
 	onMount(() => {
+		console.log($onlineUsers);
 		otherUsers = users.filter((u) => u.id !== user?.id);
 
 		const map: Record<string, boolean> = {};
@@ -71,10 +72,7 @@
 	<section class="flex flex-row justify-between">
 		<h1 class="font-fugaz text-3xl text-yellow-400">Discover Other Users</h1>
 	</section>
-	<div
-		class="z-10 flex w-full flex-row flex-wrap items-center justify-center gap-14 md:justify-between"
-
-	>
+	<div class="grid w-full gap-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 z-10">
 		{#each otherUsers as otherUser}
 			<UserCard
 				user={otherUser}
