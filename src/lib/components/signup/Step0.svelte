@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex h-full w-full items-center justify-center bg-[url('/images/landing.png')] bg-contain bg-center">
-	<div class="absolute inset-0 bg-gray-800/50"></div>
+	<div class="absolute inset-0 bg-gray-800/50 z-5"></div>
 
     <div
 		class="relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg bg-primary/90 px-12 py-8 shadow-lg "

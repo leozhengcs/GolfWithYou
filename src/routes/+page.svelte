@@ -19,7 +19,7 @@
 	let loading = $state(false);
 	let setLoading = () => {
 		loading = true;
-	}
+	};
 
 	let step = $state(0); // Keeps track of which question user is on.
 	let formElement: HTMLFormElement;
@@ -52,11 +52,11 @@
 		if (step == 13) {
 			(async () => {
 				const formData = new FormData(formElement);
-	
+
 				if (fileImage) {
 					formData.append('profileImage', fileImage);
 				}
-	
+
 				await fetch(formElement.action || '/', {
 					method: 'POST',
 					body: formData
@@ -64,13 +64,14 @@
 				// TODO: Add error handling here - Handle submission form failure, avatar upload failure
 				goto('/discover');
 			})();
-		};
+		}
 	});
 </script>
 
 <div
-	class={`flex h-screen w-screen items-center justify-center ${step > 0 ? 'bg-gradient-to-br from-green-100 via-emerald-200 to-green-500' : ''}`}
+	class={`flex h-screen w-screen items-center justify-center ${step > 0 ? 'bg-gradient-to-b from-green-500 via-emerald-350 to-green-100' : ''}`}
 >
+	<p class="absolute font-fugaz text-white top-1/6 text-center text-8xl z-10">Teesaway</p>
 	{#if step == 0}
 		<Step0 bind:step />
 	{:else if step == 1}
@@ -141,5 +142,5 @@
 </form>
 
 {#if loading}
-	<LoaderAnimation/>
+	<LoaderAnimation />
 {/if}
