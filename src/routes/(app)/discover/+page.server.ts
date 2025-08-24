@@ -1,6 +1,9 @@
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async({ locals: { supabase }}) => {
+
+    const { data: { user } } = await supabase.auth.getUser();
+
     const { data, error } = await supabase
         .from('public_user_profile')
         .select('*');
@@ -10,6 +13,12 @@ export const load: PageServerLoad = async({ locals: { supabase }}) => {
         .from('users')
         .select('*')
         .single();
+
+    const userChats = await supabase
+        .from('private_chats')
+        .select('*')
+        .or(`user1.eq.${user?.id},user2.eq.${user?.id}`);
+
 
     if (userQuery.error) {
         console.error("Error fetching user profile ", userQuery.error);
@@ -28,6 +37,7 @@ export const load: PageServerLoad = async({ locals: { supabase }}) => {
 
     return {
         user: userQuery.data,
-        users: filteredData
+        users: filteredData,
+        userChats: userChats.data
     };
 }
