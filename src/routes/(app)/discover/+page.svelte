@@ -38,7 +38,7 @@
 
 			const lastRead = chat.user1 === user?.id ? chat.user1LastRead : chat.user2LastRead;
 
-			const hasUnread = lastRead !=null && lastRead != chat.lastMessage;
+			const hasUnread = lastRead != null && lastRead != chat.lastMessage;
 
 			map[otherUserId] = hasUnread;
 		});
@@ -52,8 +52,10 @@
 			});
 		}
 
-		console.log(map)
+		console.log(map);
 	});
+
+	console.log('online users', $onlineUsers);
 </script>
 
 <div class="relative flex flex-col gap-10">
@@ -71,6 +73,7 @@
 	</section>
 	<div
 		class="z-10 flex w-full flex-row flex-wrap items-center justify-center gap-14 md:justify-between"
+
 	>
 		{#each otherUsers as otherUser}
 			<UserCard

@@ -29,8 +29,7 @@
 	//     document.body.classList.remove('overflow-hidden');
 	//   }
 	// });
-	console.log('online users', $onlineUsers);
-	console.log('checking: ', $onlineUsers.includes(user.id));
+
 </script>
 
 {#if showUser}
