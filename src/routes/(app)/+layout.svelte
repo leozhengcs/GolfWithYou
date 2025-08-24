@@ -107,6 +107,7 @@
 
 <div
 	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
+	onclick={()=>{console.log($onlineUsers)}}
 >
 	{#if show}
 		<Loader />

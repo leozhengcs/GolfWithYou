@@ -9,7 +9,7 @@
 		user,
 		self,
 		supabase,
-		unread
+		unread = $bindable()
 	}: {
 		user: PublicUserProfile;
 		self: UserProfile;
@@ -21,6 +21,12 @@
 	const closeModal = () => {
 		showUser = false;
 	};
+
+	$effect(() => {
+		if (showUser) {
+			unread = false;
+		}
+	})
 
 	// $effect(() => {
 	//   if (showUser) {

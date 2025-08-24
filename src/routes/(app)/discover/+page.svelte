@@ -29,7 +29,6 @@
 	let unreadMap = $state<Record<string, boolean>>({});
 
 	onMount(() => {
-		console.log($onlineUsers);
 		otherUsers = users.filter((u) => u.id !== user?.id);
 
 		const map: Record<string, boolean> = {};
@@ -52,14 +51,15 @@
 				description: 'Please set an avatar photo in your profile.'
 			});
 		}
-
-		console.log(map);
 	});
-
-	console.log('online users', $onlineUsers);
 </script>
 
-<div class="relative flex flex-col gap-10">
+<div
+	class="relative flex flex-col gap-10"
+	onclick={() => {
+		console.log('joined channels: ', supabase.getChannels());
+	}}
+>
 	<div class="fixed top-20 left-5">
 		<img src="/images/cloud.png" class="-z-10 max-w-[800px] opacity-40" alt="" />
 	</div>
@@ -72,7 +72,7 @@
 	<section class="flex flex-row justify-between">
 		<h1 class="font-fugaz text-3xl text-yellow-400">Discover Other Users</h1>
 	</section>
-	<div class="grid w-full gap-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 z-10">
+	<div class="z-10 grid w-full grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 		{#each otherUsers as otherUser}
 			<UserCard
 				user={otherUser}

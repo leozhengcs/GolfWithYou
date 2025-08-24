@@ -29,7 +29,7 @@
 	let messages: Message[] = $state([]);
 	let newMessage = $state('');
 	let chatId = $state('');
-	let channel: RealtimeChannel;
+	let userChannel: RealtimeChannel;
 	let user1: string;
 	let user2: string;
 	// let isFriend = $state(false);
@@ -70,7 +70,7 @@
 			console.error('Load error:', data.error);
 		}
 		await tick(); // Waits for the bottom of the chat anchor element to load.
-		bottomRef.scrollIntoView({ behavior: 'smooth' });
+		bottomRef.scrollIntoView({ behavior: 'instant' });
 	}
 
 	async function sendMessage(event: SubmitEvent) {
@@ -82,7 +82,7 @@
 		newMessage = '';
 
 		// Send message into the live channel
-		const ack = await channel.send({
+		const ack = await userChannel.send({
 			type: 'broadcast',
 			event: 'chat',
 			payload: {
@@ -114,13 +114,12 @@
 			}
 		}
 
-
-		console.log('self.name: ', self)
+		console.log('self.name: ', self);
 
 		if (!(id in $onlineUsers)) {
-			const to = id
-			const subject = `[TeesAway] New message from: ${self.full_name}`
-			const text = ''
+			const to = id;
+			const subject = `[TeesAway] New message from: ${self.full_name}`;
+			const text = '';
 			console.log('send params: ', to, subject, text);
 			const res = await fetch('/api/send_email', {
 				method: 'POST',
@@ -131,27 +130,6 @@
 			const data = await res.json();
 			console.log(data);
 		}
-
-		// if (!isFriend) {
-		//     hasSentMessage = true;
-		//     // Send friend request
-		//     const res = await fetch('/api/add_friend', {
-		//         method: "POST",
-		//         headers: {
-		//             'Content-Type': 'application/json'
-		//         },
-		//         body: JSON.stringify({ receiver_id: id, text: m })
-		//     })
-
-		//     const data = await res.json();
-
-		//     if (!res.ok) {
-		//         toast.error(data.error);
-		//         return;
-		//     }
-
-		//     toast.success(data.data);
-		// }
 
 		await loadMessages();
 		await tick();
@@ -195,29 +173,14 @@
 
 			await supabase.realtime.setAuth(session.access_token); // Needed for private chat to be private
 
-			channel = supabase.channel(channelName, {
+			userChannel = supabase.channel(channelName, {
 				config: {
 					private: true,
 					broadcast: { self: true }
 				}
 			});
 
-			// channel.on(
-			// 	'postgres_changes',
-			// 	{
-			// 		event: '*',
-			// 		schema: 'public',
-			// 		table: 'messages',
-			// 		filter: `chat_id=eq.${chatId}`
-			// 	},
-			// 	(payload) => {
-			// 		console.debug('RT payload', payload);
-
-			// 		messages = [...messages, payload.new as Message];
-			// 	}
-			// );
-
-			channel.on('broadcast', { event: 'chat' }, async (payload) => {
+			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
 				// console.log('Payload from broadcast: ', payload);
 				// console.log('PAYLOAD CONTENTL', payload.payload.content);
 				messages = [...messages, payload.payload as Message];
@@ -253,12 +216,12 @@
 				bottomRef.scrollIntoView({ behavior: 'smooth' });
 			});
 
-			if (!channel) {
+			if (!userChannel) {
 				console.log('EROR SETTING CHANNEL');
 				return;
 			}
 
-			channel.subscribe();
+			userChannel.subscribe();
 
 			// channel.subscribe((status, err) => {
 			// 	console.log('[channel status]', status, 'topic=', channel.topic, 'state=', channel.state, "error: ", err);
@@ -300,7 +263,12 @@
 			}
 		}
 
-		if (channel) supabase.removeChannel(channel); // or supabase.removeAllChannels()
+		if (userChannel) {
+			console.log('User modal closed: ', supabase.getChannels());
+			userChannel.unsubscribe()
+			// supabase.removeChannel(userChannel);
+			console.log('after User modal closed: ', supabase.getChannels());
+		} // or supabase.removeAllChannels()
 	});
 </script>
 
