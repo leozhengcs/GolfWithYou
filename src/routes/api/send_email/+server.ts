@@ -1,9 +1,12 @@
 import nodemailer from 'nodemailer';
-import { PRIVATE_EMAIL_USER, PRIVATE_EMAIL_PASS } from '$env/static/private';
+import { PRIVATE_EMAIL_USER, PRIVATE_EMAIL_PASS, PRIVATE_SUPABASE_URL } from '$env/static/private';
+import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+
 
 export async function POST({ request }) {
   const { to, subject, text } = await request.json();
-//   console.log('EMAIL_USER:', PRIVATE_EMAIL_USER);
+  // console.log('EMAIL_USER:', PRIVATE_EMAIL_USER);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -13,10 +16,17 @@ export async function POST({ request }) {
     }
   });
 
+  const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL)
+  const { data } = await supabaseAdmin
+    .from('users')
+    .select('*')
+    .eq('id', to)
+    .single()
+
   try {
     await transporter.sendMail({
       from: PRIVATE_EMAIL_USER,
-      to,
+      to: data.email,
       subject,
       text
     });

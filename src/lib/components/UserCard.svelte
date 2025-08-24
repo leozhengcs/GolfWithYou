@@ -4,7 +4,7 @@ import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
 	import type { SupabaseClient } from "@supabase/supabase-js";
   import UserModal from "./UserModal.svelte";
 
-  let { user, self, supabase }: { user: PublicUserProfile, self: UserProfile, supabase: SupabaseClient } = $props();
+  let { user, self, supabase, onlineUsers }: { user: PublicUserProfile, self: UserProfile, supabase: SupabaseClient, onlineUsers: any} = $props();
   let showUser = $state(false);
 
   const closeModal = () => {
@@ -38,6 +38,7 @@ import type { PublicUserProfile, UserProfile } from "$lib/types/Database";
     postal_code={user.postal_code}
     {self}
     {supabase}
+    {onlineUsers}
   />
 </div>
 {/if}

@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import { onlineUsers } from '$lib/stores/users.svelte.js';
 
 	let scrollContainer: HTMLElement;
 	let isDown = $state(false);
@@ -48,7 +49,7 @@
 	</section>
 	<div class="flex w-full flex-row flex-wrap items-center justify-center gap-14 md:justify-between z-10">
 		{#each otherUsers as otherUser}
-			<UserCard user={otherUser} self={user!} {supabase} />
+			<UserCard user={otherUser} self={user!} {supabase} {onlineUsers}/>
 		{/each}
 		<div class="grow hidden md:block"></div>
 	</div>

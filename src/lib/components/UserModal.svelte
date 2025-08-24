@@ -22,7 +22,8 @@
 		bio,
 		images,
 		self, //id of logged in user
-		supabase
+		supabase,
+		onlineUsers
 	} = $props();
 
 	let messages: Message[] = $state([]);
@@ -111,6 +112,24 @@
 			if (error) {
 				console.log('Update chat error: ', error);
 			}
+		}
+
+
+		console.log('self.name: ', self)
+
+		if (!(id in $onlineUsers)) {
+			const to = id
+			const subject = `[TeesAway] New message from: ${self.full_name}`
+			const text = ''
+			console.log('send params: ', to, subject, text);
+			const res = await fetch('/api/send_email', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ to, subject, text })
+			});
+
+			const data = await res.json();
+			console.log(data);
 		}
 
 		// if (!isFriend) {
