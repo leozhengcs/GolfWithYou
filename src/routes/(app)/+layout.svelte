@@ -59,11 +59,11 @@
 		channel
 			.on('presence', { event: 'sync' }, () => {
 				const state = channel.presenceState();
-				console.log('Current online users:', state);
+				onlineUsers.set(Object.keys(state))
 			})
 			.subscribe(async (status) => {
 				if (status === 'SUBSCRIBED') {
-					await channel.track({ online_at: new Date().toISOString(), user_id: data.user!.id });
+					await channel.track({ online_at: new Date().toISOString() });
 				}
 			});
 	});
