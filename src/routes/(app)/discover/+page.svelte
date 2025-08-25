@@ -45,7 +45,7 @@
 			const chatWrite = await supabase.from('private_chats').select('*').eq('id', chat.id).single();
 			const resData = chatWrite.data;
 
-			console.log('response:\n', resData);
+			// console.log('response:\n', resData);
 
 			const tempLastRead = resData.user1 === user?.id ? resData.user1LastRead : resData.user2LastRead;
 			const tempUnread = tempLastRead != null && tempLastRead != resData.lastMessage;

@@ -64,6 +64,22 @@
 		const data = await res.json();
 		if (res.ok) {
 			messages = data;
+			console.log("in fetch: ", messages)
+		} else {
+			console.error('Load error:', data.error);
+		}
+		await tick(); // Waits for the bottom of the chat anchor element to load.
+		bottomRef.scrollIntoView({ behavior: 'instant' });
+	}
+
+		async function loadLatestMessage() {
+		const res = await fetch(`/api/fetch_latest_message?chatId=${chatId}`);
+		const data = await res.json();
+		if (res.ok) {
+			console.log("data: ", data)
+			
+			// messages = [...messages, data as Message];
+			return data;
 		} else {
 			console.error('Load error:', data.error);
 		}
@@ -98,6 +114,7 @@
 		});
 
 		const data = await res.json();
+		console.log("data:: ", data)
 
 		if (!res.ok) {
 			console.error('Send error:', data.error);
@@ -110,6 +127,11 @@
 			if (error) {
 				console.log('Update chat error: ', error);
 			}
+
+			// if (){
+
+			// }
+
 		}
 
 		if (!$onlineUsers.includes(id)) {
@@ -147,7 +169,8 @@
 	}
 
 	async function updateLastRead() {
-		const lastRead = messages[messages.length - 1]?.id;
+		const lastRead = await loadLatestMessage();
+		console.log("lastread: ", lastRead)
 
 		// Saves the latest message read
 		if (self.id == user1) {
@@ -208,13 +231,16 @@
 			// adds update user1/2 last read event
 			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
 				messages = [...messages, payload.payload as Message];
-				await tick();
+				// console.log("aa: ", messages[messages.length-1])
+			
+				console.log("bb: ", messages)
+				
 
-				if (payload.payload.sender_id !== self.id) {
+				if (payload.payload.sender_id === self.id) {
 					updateLastRead();
 				}
 
-				bottomRef.scrollIntoView({ behavior: 'smooth' });
+				// bottomRef.scrollIntoView({ behavior: 'smooth' });
 			});
 
 			if (!userChannel) {
