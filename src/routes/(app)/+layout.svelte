@@ -49,10 +49,10 @@
 	});
 
 	let channel: ReturnType<typeof supabase.channel> | null = null;
-	let authUnsub: { subscription: { unsubscribe: () => void } } | null = null;
+	// let authUnsub: { subscription: { unsubscribe: () => void } } | null = null;
 
 	function startPresence(userId: string) {
-		if (channel && channel.state !== 'closed') return;
+		// if (channel && channel.state !== 'closed') return;
 		channel = supabase.channel('online-users', { config: { presence: { key: userId } } });
 
 		channel.on('presence', { event: 'sync' }, () => {
@@ -61,6 +61,7 @@
 		});
 
 		channel.subscribe(async (status) => {
+			console.log('USER STATUS:', status);
 			if (status === 'SUBSCRIBED') {
 				await channel!.track({ online_at: new Date().toISOString() });
 				// optimistic: show self immediately
@@ -81,6 +82,14 @@
 	}
 
 	onMount(() => {
+		// Sets the auth token for when you login
+		(async () => {
+			const {
+				data: { session }
+			} = await supabase.auth.getSession();
+			if (session) await supabase.realtime.setAuth(session.access_token);
+		})();
+
 		if (!data.user) {
 			toast.error('Error getting user, please log in again');
 			return;

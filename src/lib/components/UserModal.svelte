@@ -115,6 +115,7 @@
 		}
 
 		console.log('self.name: ', self);
+		console.log('self.name: ', self);
 
 		if (!(id in $onlineUsers)) {
 			const to = id;
@@ -263,12 +264,13 @@
 			}
 		}
 
-		if (userChannel) {
-			console.log('User modal closed: ', supabase.getChannels());
-			userChannel.unsubscribe()
-			// supabase.removeChannel(userChannel);
-			console.log('after User modal closed: ', supabase.getChannels());
-		} // or supabase.removeAllChannels()
+		const topic = `realtime:private_chat_${chatId}`;
+		// find exactly the chat channel
+		const ch = supabase
+			.getChannels()
+			.find((c: { topic: string; }) => c.topic === `realtime:${topic}` || c.topic === topic);
+		ch?.untrack?.();
+		ch?.unsubscribe();
 	});
 </script>
 
