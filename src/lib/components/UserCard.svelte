@@ -9,7 +9,7 @@
 		user,
 		self,
 		supabase,
-		unread = $bindable(),
+		unread,
 	}: {
 		user: PublicUserProfile;
 		self: UserProfile;
@@ -27,6 +27,8 @@
 			unread = false;
 		}
 	})
+
+	$inspect(unread);
 </script>
 
 {#if showUser}

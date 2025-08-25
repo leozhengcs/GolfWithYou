@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     .single();
 
     if (error) {
-        return json({ error: error.message }, { status: 500 });
+      return json({ error: error.message }, { status: 500 });
     }
 
     return json(data);

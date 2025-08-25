@@ -1,11 +1,12 @@
 <script lang="ts">
 	import UserCard from '$lib/components/UserCard.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { chatMap, unreadMap } from '$lib/stores/globalStates.svelte.js';
+	import { get } from 'svelte/store';
 
 	let { data } = $props();
 	let {
@@ -22,13 +23,12 @@
 
 	let otherUsers: PublicUserProfile[] = $state([]);
 
+	console.log("CHATTERS: ", $chatMap);
+
 	async function createChatChannel(chat: any) {
 		const channelName = 'private_chat_' + chat.id;
-		const alreadyExists = supabase
-			.getChannels()
-			.some((ch: { topic: string }) => ch.topic === `realtime:${channelName}`);
-
-		if (alreadyExists) return;
+		const otherUserId = chat.user1 === user?.id ? chat.user2 : chat.user1;
+		console.log('Other user Id: ', otherUserId);
 
 		let chatChannel = supabase.channel(channelName, {
 			config: {
@@ -37,29 +37,57 @@
 			}
 		});
 
-		const otherUserId = chat.user1 === user?.id ? chat.user2 : chat.user1;
-		const lastRead = chat.user1 === user?.id ? chat.user1LastRead : chat.user2LastRead;
-		const hasUnread = lastRead != null && lastRead != chat.lastMessage;
+		chatMap.update((m) => ({
+			...m,
+			[otherUserId]: {
+				chatChannel,
+				status: 'pending',
+				lastMessageId: null,
+				lastSenderId: null,
+				unread: false,
+				updatedAt: Date.now()
+			}
+		}));
 
-		chatChannel.on('broadcast', { event: 'chat' }, async (payload) => {
-			const chatWrite = await supabase.from('private_chats').select('*').eq('id', chat.id).single();
-			const resData = chatWrite.data;
+		chatChannel.on('broadcast', { event: 'chat' }, ({ payload: { message_id, sender_id } }) => {
+			console.log('ACTIVITY DETECTED\n\n\n');
+			if (sender_id === user!.id) return; // No need to toast self
+			console.log('Made it past');
+			// Get own last read
+			const lastRead = get(chatMap)[chat.id] ?? null;
+			const hasUnread = sender_id !== user!.id && message_id != null && lastRead !== message_id;
+			console.log('last read: ', lastRead);
+			console.log('messafe id: ', message_id);
+			console.log('sender id: ', sender_id);
+			console.log('Activity detected in chat: ', chat.id);
 
-			// console.log('response:\n', resData);
+			chatMap.update((m) => ({
+				...m,
+				[otherUserId]: {
+					...m[otherUserId]!,
+					lastMessageId: message_id ?? null,
+					lastSenderId: sender_id ?? null,
+					unread: hasUnread,
+					updatedAt: Date.now()
+				}
+			}));
 
-			const tempLastRead = resData.user1 === user?.id ? resData.user1LastRead : resData.user2LastRead;
-			const tempUnread = tempLastRead != null && tempLastRead != resData.lastMessage;
-
-			if(tempUnread){
-				toast.error("New message!");
-				unreadMap.update((current) => ({ ...current, [otherUserId]: tempUnread }));
+			if (hasUnread) {
+				toast.info('New message!');
+				// unreadMap.update((current) => ({ ...current, [otherUserId]: tempUnread }));
+				chatMap.update((current) => ({ ...current, [otherUserId]: chatChannel }));
+				unreadMap.update((current) => ({ ...current, [otherUserId]: hasUnread }));
 			}
 		});
 
-		chatChannel.subscribe();
-
-		unreadMap.update((current) => ({ ...current, [otherUserId]: hasUnread }));
-		chatMap.update((current) => ({ ...current, [otherUserId]: chatChannel }));
+		chatChannel.subscribe((status) => {
+			if (status === 'SUBSCRIBED') {
+				chatMap.update((m) => ({
+					...m,
+					[otherUserId]: { ...m[otherUserId]!, status: 'subscribed', updatedAt: Date.now() }
+				}));
+			}
+		});
 	}
 
 	onMount(() => {
@@ -91,12 +119,26 @@
 		};
 
 		init();
+
+		return () => {
+			userChats?.forEach((chat) => {
+				const topic = `realtime:private_chat_${chat.id}`;
+				// find exactly the chat channel
+				const ch = supabase
+					.getChannels()
+					.find((c: { topic: string }) => c.topic === `realtime:${topic}` || c.topic === topic);
+				ch?.untrack?.();
+				ch?.unsubscribe();
+			});
+		};
 	});
+
+	// onDestroy(() => {
+
+	// });
 </script>
 
-<div
-	class="relative flex flex-col gap-10"
->
+<div class="relative flex flex-col gap-10">
 	<div class="fixed top-20 left-5">
 		<img src="/images/cloud.png" class="-z-10 max-w-[800px] opacity-40" alt="" />
 	</div>
@@ -111,12 +153,7 @@
 	</section>
 	<div class="z-10 grid w-full grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 		{#each otherUsers as otherUser}
-			<UserCard
-				user={otherUser}
-				self={user!}
-				{supabase}
-				unread={$unreadMap[otherUser.id] || false}
-			/>
+			<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
 		{/each}
 		<div class="hidden grow md:block"></div>
 	</div>

@@ -64,27 +64,24 @@
 		const data = await res.json();
 		if (res.ok) {
 			messages = data;
-			console.log("in fetch: ", messages)
 		} else {
 			console.error('Load error:', data.error);
 		}
 		await tick(); // Waits for the bottom of the chat anchor element to load.
-		bottomRef.scrollIntoView({ behavior: 'instant' });
+		bottomRef.scrollIntoView({ behavior: 'smooth' });
 	}
 
-		async function loadLatestMessage() {
+	async function loadLatestMessage() {
 		const res = await fetch(`/api/fetch_latest_message?chatId=${chatId}`);
 		const data = await res.json();
 		if (res.ok) {
-			console.log("data: ", data)
-			
-			// messages = [...messages, data as Message];
+			// console.log('data: ', data);
 			return data;
 		} else {
 			console.error('Load error:', data.error);
 		}
 		await tick(); // Waits for the bottom of the chat anchor element to load.
-		bottomRef.scrollIntoView({ behavior: 'instant' });
+		bottomRef.scrollIntoView({ behavior: 'smooth' });
 	}
 
 	async function sendMessage(event: SubmitEvent) {
@@ -95,26 +92,14 @@
 
 		newMessage = '';
 
-		// Send message into the live channel
-		const ack = await userChannel.send({
-			type: 'broadcast',
-			event: 'chat',
-			payload: {
-				sender_id: self.id,
-				content: m,
-				sent_at: new Date().toISOString()
-			}
-		});
-
 		// Save message into DB
 		const res = await fetch('/api/message', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ chat_id: chatId, content: m })
 		});
-
 		const data = await res.json();
-		console.log("data:: ", data)
+		console.log('data:: ', data);
 
 		if (!res.ok) {
 			console.error('Send error:', data.error);
@@ -127,18 +112,26 @@
 			if (error) {
 				console.log('Update chat error: ', error);
 			}
-
-			// if (){
-
-			// }
-
 		}
+		
+		// Send message into the live channel
+		const ack = await userChannel.send({
+			type: 'broadcast',
+			event: 'chat',
+			payload: {
+				sender_id: self.id,
+				content: m,
+				message_id: data.id,
+				sent_at: new Date().toISOString()
+			}
+		});
+		
 
 		if (!$onlineUsers.includes(id)) {
 			const to = id;
 			const subject = `[TeesAway] New message from: ${self.full_name}`;
 			const text = '';
-			console.log('send params: ', to, subject, text);
+			// console.log('send params: ', to, subject, text);
 			const res = await fetch('/api/send_email', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -146,7 +139,7 @@
 			});
 
 			const data = await res.json();
-			console.log('email response\n', data);
+			// console.log('email response\n', data);
 		}
 
 		await loadMessages();
@@ -170,14 +163,14 @@
 
 	async function updateLastRead() {
 		const lastRead = await loadLatestMessage();
-		console.log("lastread: ", lastRead)
+		console.log('lastread: ', lastRead);
 
 		// Saves the latest message read
 		if (self.id == user1) {
-			console.log('user 1 last read', lastRead);
+			console.log('user 1 last read', lastRead.id);
 			const chatWrite = await supabase
 				.from('private_chats')
-				.update({ user1LastRead: lastRead })
+				.update({ user1LastRead: lastRead.id })
 				.eq('id', chatId);
 
 			console.log(chatWrite);
@@ -188,7 +181,7 @@
 		} else if (self.id == user2) {
 			const { error } = await supabase
 				.from('private_chats')
-				.update({ user2LastRead: lastRead })
+				.update({ user2LastRead: lastRead.id })
 				.eq('id', chatId);
 
 			if (error) {
@@ -232,15 +225,11 @@
 			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
 				messages = [...messages, payload.payload as Message];
 				// console.log("aa: ", messages[messages.length-1])
-			
-				console.log("bb: ", messages)
-				
 
-				if (payload.payload.sender_id === self.id) {
-					updateLastRead();
-				}
+				// console.log('bb: ', messages);
+				updateLastRead();
 
-				// bottomRef.scrollIntoView({ behavior: 'smooth' });
+				bottomRef.scrollIntoView({ behavior: 'smooth' });
 			});
 
 			if (!userChannel) {
@@ -254,11 +243,19 @@
 		window.addEventListener('beforeunload', updateLastRead);
 	});
 
-	onDestroy(async () => {
-		document.body.classList.remove('overflow-y-hidden');
+	// onDestroy(async () => {
+	// 	document.body.classList.remove('overflow-y-hidden');
 
-		updateLastRead();
-	});
+	// 	updateLastRead();
+
+	// 	const topic = `realtime:private_chat_${chatId}`;
+	// 	// find exactly the chat channel
+	// 	const ch = supabase
+	// 		.getChannels()
+	// 		.find((c: { topic: string }) => c.topic === `realtime:${topic}` || c.topic === topic);
+	// 	ch?.untrack?.();
+	// 	ch?.unsubscribe();
+	// });
 </script>
 
 <div
