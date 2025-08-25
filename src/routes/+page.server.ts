@@ -24,7 +24,6 @@ export const actions: Actions = {
 		const handicapIndex = Number(formData.get('handicapIndex') as string);
 		const golfId = Number(formData.get('golfId') as string);
 		const profileImage = formData.get('profileImage') as File;
-		console.log('Profile Image Size: ', profileImage.size);
 
 		const { data, error } = await supabase.auth.signUp({
 			email,

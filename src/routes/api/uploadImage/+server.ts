@@ -36,7 +36,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         return json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // console.log(request)
     const body = await request.formData();
     const image = body.get('image') as File;
     const type = body.get('type') as string;
@@ -45,7 +44,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         return json({ error: 'Missing image type.' }, { status: 400 });
     }
 
-    // console.log("in file check")
     if (type == "avatar") {
         const filePath = `avatar/${user.id}`;
 
@@ -61,14 +59,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
             .from('user-images')
             .getPublicUrl(filePath);
 
-        console.log("url: ", urlData.publicUrl)
-
         const { data, error } = await supabaseAdmin
             .from('users')
             .update({ avatar_url: urlData.publicUrl })
             .eq('id', user.id);
-
-        console.log("url2: ", urlData.publicUrl)
 
         if (error) {
             return json({ error: error.message }, { status: 500 });

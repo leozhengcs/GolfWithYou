@@ -57,10 +57,6 @@ export const actions: Actions = {
             };
         }
 
-        console.log("fd: ", formData);
-        // console.log("hihu  ", user.id);
-
-
         const { data, error } = await supabaseAdmin
             .from('users')
             .update({ 

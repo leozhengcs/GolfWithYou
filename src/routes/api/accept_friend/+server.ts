@@ -34,7 +34,6 @@ export const POST: RequestHandler = async ({ request, locals: { supabase, user }
     ? currentFriends
     : [...currentFriends, receiver_id];
     
-    console.log("Updated Friends: ", updatedFriends);
 
     const { error: updateError } = await adminClient
         .from('users')

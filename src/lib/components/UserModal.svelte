@@ -4,7 +4,7 @@
 	import { toast } from 'svelte-sonner';
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
-	import { chatMap } from '$lib/stores/globalStates.svelte';
+	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte';
 
 	let {
 		id, //id of opened user modal
@@ -75,7 +75,6 @@
 		const res = await fetch(`/api/fetch_latest_message?chatId=${chatId}`);
 		const data = await res.json();
 		if (res.ok) {
-			// console.log('data: ', data);
 			return data;
 		} else {
 			console.error('Load error:', data.error);
@@ -99,7 +98,6 @@
 			body: JSON.stringify({ chat_id: chatId, content: m })
 		});
 		const data = await res.json();
-		console.log('data:: ', data);
 
 		if (!res.ok) {
 			console.error('Send error:', data.error);
@@ -113,7 +111,7 @@
 				console.log('Update chat error: ', error);
 			}
 		}
-		
+
 		// Send message into the live channel
 		const ack = await userChannel.send({
 			type: 'broadcast',
@@ -125,13 +123,11 @@
 				sent_at: new Date().toISOString()
 			}
 		});
-		
 
 		if (!$onlineUsers.includes(id)) {
 			const to = id;
 			const subject = `[TeesAway] New message from: ${self.full_name}`;
 			const text = '';
-			// console.log('send params: ', to, subject, text);
 			const res = await fetch('/api/send_email', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -139,7 +135,6 @@
 			});
 
 			const data = await res.json();
-			// console.log('email response\n', data);
 		}
 
 		await loadMessages();
@@ -163,17 +158,13 @@
 
 	async function updateLastRead() {
 		const lastRead = await loadLatestMessage();
-		console.log('lastread: ', lastRead);
 
 		// Saves the latest message read
 		if (self.id == user1) {
-			console.log('user 1 last read', lastRead.id);
 			const chatWrite = await supabase
 				.from('private_chats')
 				.update({ user1LastRead: lastRead.id })
 				.eq('id', chatId);
-
-			console.log(chatWrite);
 
 			if (chatWrite.error) {
 				console.log('Update chat error: ', chatWrite.error);
@@ -190,14 +181,18 @@
 		}
 	}
 	onMount(async () => {
-		// console.log(chatChannel)
 		document.body.classList.add('overflow-y-hidden');
-
+		unreadMap.update((m)=>({
+			...m,
+			[id]: false
+		}));
 		try {
 			await getOrCreateChat();
 			await loadMessages();
 
 			const channelName = 'private_chat_' + chatId;
+			$openedModal = chatId;
+
 			const alreadyExists = supabase
 				.getChannels()
 				.some((ch: { topic: string }) => ch.topic === `realtime:${channelName}`);
@@ -224,9 +219,7 @@
 			// adds update user1/2 last read event
 			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
 				messages = [...messages, payload.payload as Message];
-				// console.log("aa: ", messages[messages.length-1])
 
-				// console.log('bb: ', messages);
 				updateLastRead();
 
 				bottomRef.scrollIntoView({ behavior: 'smooth' });
@@ -241,21 +234,25 @@
 		}
 
 		window.addEventListener('beforeunload', updateLastRead);
+		window.addEventListener('beforeunload', () => {
+			$openedModal = '';
+		});
 	});
 
-	// onDestroy(async () => {
-	// 	document.body.classList.remove('overflow-y-hidden');
+	onDestroy(async () => {
+		$openedModal = '';
+		// 	document.body.classList.remove('overflow-y-hidden');
 
-	// 	updateLastRead();
+		// 	updateLastRead();
 
-	// 	const topic = `realtime:private_chat_${chatId}`;
-	// 	// find exactly the chat channel
-	// 	const ch = supabase
-	// 		.getChannels()
-	// 		.find((c: { topic: string }) => c.topic === `realtime:${topic}` || c.topic === topic);
-	// 	ch?.untrack?.();
-	// 	ch?.unsubscribe();
-	// });
+		// 	const topic = `realtime:private_chat_${chatId}`;
+		// 	// find exactly the chat channel
+		// 	const ch = supabase
+		// 		.getChannels()
+		// 		.find((c: { topic: string }) => c.topic === `realtime:${topic}` || c.topic === topic);
+		// 	ch?.untrack?.();
+		// 	ch?.unsubscribe();
+	});
 </script>
 
 <div

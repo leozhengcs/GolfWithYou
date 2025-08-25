@@ -17,3 +17,4 @@ export const globalState = writable({
 
 export const unreadMap = writable<Record<string, boolean>>({});
 export const chatMap = writable<Record<string, ChatState>>({});
+export const openedModal = writable<string|null>(null);

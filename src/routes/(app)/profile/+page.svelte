@@ -60,8 +60,6 @@
 			method: 'POST'
 		});
 
-		console.log(res);
-
 		goto('/')
 	}
 
@@ -79,7 +77,6 @@
 
 		if (target?.files && target.files[0]) {
 			imageFile = target.files[0];
-			console.log('if:  ', imageFile);
 			tempUrl = URL.createObjectURL(imageFile);
 		}
 	}

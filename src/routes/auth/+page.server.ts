@@ -19,8 +19,6 @@ export const actions: Actions = {
     const handicapIndex = formData.get('handicapIndex') as string
     const golfId = formData.get('golfId') as string
 
-    console.log("IN SIGNUP")
-
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) {
       console.error(error)

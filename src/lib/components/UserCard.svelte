@@ -9,7 +9,7 @@
 		user,
 		self,
 		supabase,
-		unread,
+		unread
 	}: {
 		user: PublicUserProfile;
 		self: UserProfile;
@@ -26,9 +26,9 @@
 		if (showUser) {
 			unread = false;
 		}
-	})
+	});
 
-	$inspect(unread);
+	// $inspect(unread);
 </script>
 
 {#if showUser}
@@ -58,15 +58,13 @@
 	onclick={() => {
 		showUser = true;
 	}}
-	class="grid h-84 w-60 flex-shrink-0 cursor-pointer auto-rows-auto rounded-2xl bg-[#bbdfed] p-4 shadow-xs shadow-indigo-50"
+	class={`grid h-84 w-60 flex-shrink-0 cursor-pointer auto-rows-auto rounded-2xl bg-[#bbdfed] p-4 transform transition duration-200 hover:scale-105 ${
+		$onlineUsers.includes(user.id) ? 'outline-6 outline-green-500' : ''
+	}`}
 >
 	<div class="relative w-full">
-		{#if $onlineUsers.includes(user.id)}
-			<span class="absolute top-0 left-0 h-5 w-5 rounded-full border border-white bg-green-500"
-			></span>
-		{/if}
 		{#if unread}
-			<span class="absolute top-0 right-0 h-5 w-5 rounded-full border border-white bg-red-500"
+			<span class="absolute top-0 right-0 h-6 w-6 rounded-full border border-white bg-red-500"
 			></span>
 		{/if}
 		<img

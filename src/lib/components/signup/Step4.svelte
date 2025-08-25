@@ -22,10 +22,6 @@
 
 	  	if (date.getTime() > now.getTime()) return false;
 
-
-		// console.log(date.getFullYear(), year)
-		// console.log(date.getMonth(), month)
-		// console.log(date.getUTCDate(), day)
 		return (
 			date.getFullYear() === year &&
 			date.getMonth() + 1 === month &&
@@ -34,7 +30,6 @@
     }
 
 	const handleSubmit = () => {
-		console.log(!isValidDate(dob))
 		if (!dob || !isValidDate(dob)) {
 			invalidDob = dob;
 			toast.error("Please enter a valid date in YYYY-MM-DD format.");

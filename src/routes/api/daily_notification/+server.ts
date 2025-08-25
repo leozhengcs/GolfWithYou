@@ -50,14 +50,12 @@ export async function POST({ request }) {
 
         // initialize array of unread users
         let unreads: string[] = []
-        console.log('Current user: ', user);
 
         const { data: chats } = await supabaseAdmin
             .from("private_chats")
             .select("*")
             .or(`user1.eq.${user.id},user2.eq.${user.id}`);
 
-        console.log(chats);
 
         // Add unread users
         chats?.forEach(async (chat) => {
@@ -74,7 +72,6 @@ export async function POST({ request }) {
             emailBody += `${unreadUser}\n`
         });
 
-        console.log(emailBody);
 
         try {
             await transporter.sendMail({

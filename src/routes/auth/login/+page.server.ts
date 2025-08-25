@@ -19,7 +19,7 @@ export const actions = {
 		const { data, error: userError } = await supabase.from('users').select('*').single();
 
 		if (!userError) {
-			hasAvatar = data.avatar_url == null;
+			hasAvatar = data.avatar_url != null;
 		}
 
 		throw redirect(303, `/discover?avatar=${hasAvatar}`);

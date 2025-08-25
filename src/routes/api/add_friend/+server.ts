@@ -20,12 +20,10 @@ export const POST: RequestHandler = async ({ request, locals: { supabase } }) =>
         context: text
     }]);
 
-    // console.log(error);
 
     if (error) {
         return json({ error: "Error making friend request, please try again later." }, { status: 500 });
     }
 
-    // console.log("Server Data: ", data);
     return json({ data: "Sent Friend Request", error: null }, { status: 200 });
 }

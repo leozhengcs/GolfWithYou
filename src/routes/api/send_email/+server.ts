@@ -6,7 +6,6 @@ import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 
 export async function POST({ request }) {
   const { to, subject, text } = await request.json();
-  // console.log('EMAIL_USER:', PRIVATE_EMAIL_USER);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',

@@ -5,7 +5,7 @@
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { chatMap, unreadMap } from '$lib/stores/globalStates.svelte.js';
+	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte.js';
 	import { get } from 'svelte/store';
 
 	let { data } = $props();
@@ -23,12 +23,9 @@
 
 	let otherUsers: PublicUserProfile[] = $state([]);
 
-	console.log("CHATTERS: ", $chatMap);
-
 	async function createChatChannel(chat: any) {
 		const channelName = 'private_chat_' + chat.id;
 		const otherUserId = chat.user1 === user?.id ? chat.user2 : chat.user1;
-		console.log('Other user Id: ', otherUserId);
 
 		let chatChannel = supabase.channel(channelName, {
 			config: {
@@ -36,6 +33,15 @@
 				broadcast: { self: true }
 			}
 		});
+		
+		if (user?.id == chat.user1 && chat.user1LastRead != chat.lastMessage ||
+			user?.id == chat.user2 && chat.user2LastRead != chat.lastMessage
+		) {
+			unreadMap.update((m) => ({
+				...m,
+				[otherUserId]: true
+			}));
+		}
 
 		chatMap.update((m) => ({
 			...m,
@@ -50,16 +56,9 @@
 		}));
 
 		chatChannel.on('broadcast', { event: 'chat' }, ({ payload: { message_id, sender_id } }) => {
-			console.log('ACTIVITY DETECTED\n\n\n');
-			if (sender_id === user!.id) return; // No need to toast self
-			console.log('Made it past');
 			// Get own last read
 			const lastRead = get(chatMap)[chat.id] ?? null;
 			const hasUnread = sender_id !== user!.id && message_id != null && lastRead !== message_id;
-			console.log('last read: ', lastRead);
-			console.log('messafe id: ', message_id);
-			console.log('sender id: ', sender_id);
-			console.log('Activity detected in chat: ', chat.id);
 
 			chatMap.update((m) => ({
 				...m,
@@ -71,8 +70,7 @@
 					updatedAt: Date.now()
 				}
 			}));
-
-			if (hasUnread) {
+			if (chat.id != $openedModal) {
 				toast.info('New message!');
 				// unreadMap.update((current) => ({ ...current, [otherUserId]: tempUnread }));
 				chatMap.update((current) => ({ ...current, [otherUserId]: chatChannel }));
@@ -107,9 +105,6 @@
 			userChats?.forEach((chat) => {
 				createChatChannel(chat);
 			});
-
-			console.log('UnreadMap:\n', $unreadMap);
-			console.log('chatMap:\n', $chatMap);
 
 			if (page.url.searchParams.get('avatar') == 'false') {
 				toast.info('No User Avatar Image', {

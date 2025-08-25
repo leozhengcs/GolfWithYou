@@ -15,7 +15,6 @@
 		if (files && files.length && files[0].type.startsWith('image/')) {
 			image = URL.createObjectURL(files[0]);
 			fileImage = files[0];
-			console.log(fileImage.size);
 		}
 	}
 
