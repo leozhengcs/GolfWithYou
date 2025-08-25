@@ -1,11 +1,15 @@
 <script lang='ts'>
     import { goto } from "$app/navigation";
+	import { chatMap, unreadMap } from "$lib/stores/globalStates.svelte";
+	import { onlineUsers } from "$lib/stores/users.svelte";
     import Tooltip from "./Tooltip.svelte";
 
     let { profile } = $props();
 </script>
 
-<nav class='w-full flex flex-row justify-between items-center p-5 absolute top-0 z-50 shadow-md bg-sky h-[90px]'>
+<nav class='w-full flex flex-row justify-between items-center p-5 absolute top-0 z-50 shadow-md bg-sky h-[90px]'
+	onclick={()=>{console.log($onlineUsers);			console.log('UnreadMap:\n', $unreadMap);
+			console.log('chatMap:\n', $chatMap);}}>
     <button class='w-15 cursor-pointer' onclick={() => goto('/discover')}>
         <img src="/icons/Logo.png" alt="">
     </button>

@@ -2,10 +2,9 @@
 	import { fade } from 'svelte/transition';
 	import { onMount, onDestroy, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { toTitleCase } from '$lib/utils/string';
-	import Tab from './Tab.svelte';
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
+	import { chatMap } from '$lib/stores/globalStates.svelte';
 
 	let {
 		id, //id of opened user modal
@@ -32,7 +31,6 @@
 	let userChannel: RealtimeChannel;
 	let user1: string;
 	let user2: string;
-	// let isFriend = $state(false);
 
 	// svelte-ignore non_reactive_update
 	let inputRef: HTMLInputElement; // For keeping the text box focused
@@ -114,9 +112,7 @@
 			}
 		}
 
-		console.log('self.name: ', self);
-
-		if (!(id in $onlineUsers)) {
+		if (!$onlineUsers.includes(id)) {
 			const to = id;
 			const subject = `[TeesAway] New message from: ${self.full_name}`;
 			const text = '';
@@ -128,7 +124,7 @@
 			});
 
 			const data = await res.json();
-			console.log(data);
+			console.log('email response\n', data);
 		}
 
 		await loadMessages();
@@ -150,98 +146,12 @@
 		verified = true;
 	}
 
-	onMount(async () => {
-		document.body.classList.add('overflow-y-hidden');
-
-		try {
-			await getOrCreateChat();
-			await loadMessages();
-
-			const channelName = 'private_chat_' + chatId;
-			const alreadyExists = supabase
-				.getChannels()
-				.some((ch: { topic: string }) => ch.topic === `realtime:${channelName}`);
-
-			if (alreadyExists) return;
-
-			const { data: session } = await supabase.auth.getSession();
-
-			if (!session) {
-				toast.error('Error getting user session, please re-login and try again.');
-				return;
-			}
-
-			await supabase.realtime.setAuth(session.access_token); // Needed for private chat to be private
-
-			userChannel = supabase.channel(channelName, {
-				config: {
-					private: true,
-					broadcast: { self: true }
-				}
-			});
-
-			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
-				// console.log('Payload from broadcast: ', payload);
-				// console.log('PAYLOAD CONTENTL', payload.payload.content);
-				messages = [...messages, payload.payload as Message];
-				await tick();
-
-				const lastRead = messages[messages.length - 1]?.id;
-
-				// Saves the latest message read
-				if (self.id == user1) {
-					console.log('user 1 last read', lastRead);
-					const chatWrite = await supabase
-						.from('private_chats')
-						.update({ user1LastRead: lastRead })
-						.eq('id', chatId);
-
-					console.log(chatWrite);
-
-					if (chatWrite.error) {
-						console.log('Update chat error: ', chatWrite.error);
-					}
-				} else if (self.id == user2) {
-					console.log('user 2');
-					const { error } = await supabase
-						.from('private_chats')
-						.update({ user2LastRead: lastRead })
-						.eq('id', chatId);
-
-					if (error) {
-						console.log('Update chat error: ', error);
-					}
-				}
-				// await tick();
-				bottomRef.scrollIntoView({ behavior: 'smooth' });
-			});
-
-			if (!userChannel) {
-				console.log('EROR SETTING CHANNEL');
-				return;
-			}
-
-			userChannel.subscribe();
-
-			// channel.subscribe((status, err) => {
-			// 	console.log('[channel status]', status, 'topic=', channel.topic, 'state=', channel.state, "error: ", err);
-			// });
-
-			// channel.on('broadcast', { event: '*' }, (payload) => {
-			// 	console.log('[broadcast:*] got payload:', payload);
-			// });
-		} catch (err: any) {
-			console.error('onMount error:', err.message || err);
-		}
-	});
-
-	onDestroy(async () => {
-		document.body.classList.remove('overflow-y-hidden');
-
+	async function updateLastRead() {
 		const lastRead = messages[messages.length - 1]?.id;
 
 		// Saves the latest message read
 		if (self.id == user1) {
+			console.log('user 1 last read', lastRead);
 			const chatWrite = await supabase
 				.from('private_chats')
 				.update({ user1LastRead: lastRead })
@@ -262,13 +172,66 @@
 				console.log('Update chat error: ', error);
 			}
 		}
+	}
+	onMount(async () => {
+		// console.log(chatChannel)
+		document.body.classList.add('overflow-y-hidden');
 
-		if (userChannel) {
-			console.log('User modal closed: ', supabase.getChannels());
-			userChannel.unsubscribe()
-			// supabase.removeChannel(userChannel);
-			console.log('after User modal closed: ', supabase.getChannels());
-		} // or supabase.removeAllChannels()
+		try {
+			await getOrCreateChat();
+			await loadMessages();
+
+			const channelName = 'private_chat_' + chatId;
+			const alreadyExists = supabase
+				.getChannels()
+				.some((ch: { topic: string }) => ch.topic === `realtime:${channelName}`);
+
+			const { data: session } = await supabase.auth.getSession();
+
+			if (!session) {
+				toast.error('Error getting user session, please re-login and try again.');
+				return;
+			}
+
+			await supabase.realtime.setAuth(session.access_token); // Needed for private chat to be private
+
+			userChannel = supabase.channel(channelName, {
+				config: {
+					private: true,
+					broadcast: { self: true }
+				}
+			});
+			if (!alreadyExists) {
+				userChannel.subscribe();
+			}
+
+			// adds update user1/2 last read event
+			userChannel.on('broadcast', { event: 'chat' }, async (payload) => {
+				messages = [...messages, payload.payload as Message];
+				await tick();
+
+				if (payload.payload.sender_id !== self.id) {
+					updateLastRead();
+				}
+
+				bottomRef.scrollIntoView({ behavior: 'smooth' });
+			});
+
+			if (!userChannel) {
+				console.log('EROR SETTING CHANNEL');
+				return;
+			}
+		} catch (err: any) {
+			console.error('onMount error:', err.message || err);
+		}
+
+		window.addEventListener('beforeunload', updateLastRead);
+	});
+
+	onDestroy(async () => {
+		document.body.classList.remove('overflow-y-hidden');
+
+		updateLastRead();
 	});
 </script>
 

@@ -92,11 +92,9 @@
 		const cleanup = () => {
 			stopPresence();
 		};
-		window.addEventListener('pagehide', cleanup);
 		window.addEventListener('beforeunload', cleanup);
 
 		return () => {
-			window.removeEventListener('pagehide', cleanup);
 			window.removeEventListener('beforeunload', cleanup);
 			stopPresence();
 		};
@@ -107,7 +105,6 @@
 
 <div
 	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
-	onclick={()=>{console.log($onlineUsers)}}
 >
 	{#if show}
 		<Loader />
