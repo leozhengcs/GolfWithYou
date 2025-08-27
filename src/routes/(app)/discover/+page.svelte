@@ -7,6 +7,8 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte.js';
 	import { get } from 'svelte/store';
+	import { fade, fly } from 'svelte/transition';
+	import { backOut, bounceOut } from 'svelte/easing';
 
 	let { data } = $props();
 	let {
@@ -33,9 +35,10 @@
 				broadcast: { self: true }
 			}
 		});
-		
-		if (user?.id == chat.user1 && chat.user1LastRead != chat.lastMessage ||
-			user?.id == chat.user2 && chat.user2LastRead != chat.lastMessage
+
+		if (
+			(user?.id == chat.user1 && chat.user1LastRead != chat.lastMessage) ||
+			(user?.id == chat.user2 && chat.user2LastRead != chat.lastMessage)
 		) {
 			unreadMap.update((m) => ({
 				...m,
@@ -134,19 +137,25 @@
 </script>
 
 <div class="relative flex flex-col gap-10">
-	<div class="fixed top-20 left-5">
+	<div class="fixed top-20 left-5" in:fly={{ x: -600, duration: 1500, easing: (t) => backOut(t) }}>
+		<img src="/images/cloud.png" class="z-10 max-w-[800px] opacity-40" alt="" />
+	</div>
+	<div
+		class="fixed top-40 right-10"
+		in:fly={{ x: 800, duration: 1500, easing: (t) => backOut(t) }}
+	>
 		<img src="/images/cloud.png" class="-z-10 max-w-[800px] opacity-40" alt="" />
 	</div>
-	<div class="fixed top-40 right-10">
+	<div
+		class="fixed top-80 right-96"
+		in:fly={{ x: 600, duration: 1500, easing: (t) => backOut(t) }}
+	>
 		<img src="/images/cloud.png" class="-z-10 max-w-[800px] opacity-40" alt="" />
 	</div>
-	<div class="fixed top-80 right-96">
-		<img src="/images/cloud.png" class="-z-10 max-w-[800px] opacity-40" alt="" />
-	</div>
-	<section class="flex flex-row justify-between">
+	<!-- <section class="flex flex-row justify-between">
 		<h1 class="font-fugaz text-3xl text-yellow-400">Discover Other Users</h1>
-	</section>
-	<div class="z-10 grid w-full grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+	</section> -->
+	<div class="z-10 grid w-full grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" in:fade={{ delay: 1500, duration: 1000 }}>
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
 		{/each}

@@ -21,7 +21,8 @@ export const actions = {
 		if (!userError) {
 			hasAvatar = data.avatar_url != null;
 		}
+		return { success: true, hasAvatar };
 
-		throw redirect(303, `/discover?avatar=${hasAvatar}`);
+		// throw redirect(303, `/discover?avatar=${hasAvatar}`);
 	}
 };

@@ -71,7 +71,7 @@
 <div
 	class={`flex h-screen w-screen items-center justify-center ${step > 0 ? 'bg-gradient-to-b from-green-500 via-emerald-350 to-green-100' : ''}`}
 >
-	<p class="absolute font-fugaz text-white top-1/6 text-center text-8xl z-10">Teesaway</p>
+	<p class="absolute font-fugaz text-primary top-1/6 text-center text-8xl z-10">Teesaway</p>
 	{#if step == 0}
 		<Step0 bind:step />
 	{:else if step == 1}
