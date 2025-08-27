@@ -3,8 +3,9 @@
 		<img src="/images/croppedgreens.png" class="" alt="" />
         <img src="/images/croppedflag.png" class="absolute bottom-1/4 left-3/5 z-20 max-w-[20%]" alt="" />
 	</div>
-	<div class="flex justify-between bg-[#3f6d1f] p-5">
-		<div class="relative z-20">
+	<div class="relative z-20 justify-between bg-[#3f6d1f] p-5">
+		<div class='flex justify-between'>
+			<div class="relative z-20">
 			<span class="text-xs text-white md:text-xl">© Teesaway 2025. All rights reserved</span>
 		</div>
 		<div class="relative z-10 flex gap-5">
@@ -20,6 +21,7 @@
 				rel="noopener"
 				class="text-secondary-shade text-xs underline md:text-sm">Privacy Policy</a
 			>
+		</div>
 		</div>
 	</div>
 </footer>
