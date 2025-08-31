@@ -28,9 +28,9 @@
 <div
 	class="flex h-full w-full items-center justify-center"
 >
-    <div class='w-96 flex flex-col gap-5'>
+    <div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
         <section>
-            <h1 class='text-3xl'>What's your Golf Canada user ID?</h1>
+            <h1 class='text-2xl md:text-3xl'>What's your Golf Canada user ID?</h1>
         </section>
         <div>
             <input

@@ -25,10 +25,10 @@
 <div
 	class="flex h-full w-full items-center justify-center"
 >
-    <div class='w-96 flex flex-col gap-5'>
+    <div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
         <section>
-            <h1 class='text-3xl'>Now some questions regarding your membership</h1>
-            <span class='text-lg'>What's your golf club name?</span>
+            <h1 class='text-2xl md:text-3xl'>Now some questions regarding your membership</h1>
+            <span class='text-sm'>What's your golf club name?</span>
         </section>
         <div>
             <input

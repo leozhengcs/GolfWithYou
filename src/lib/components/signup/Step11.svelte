@@ -20,9 +20,9 @@
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
-	<div class="flex w-96 flex-col gap-10">
+	<div class="flex w-96 flex-col gap-10 px-10 md:px-0">
 		<div class="flex flex-col gap-2">
-			<span class="text-xl">Please enter a password for your account.</span>
+			<span class="text-base">Please enter a password for your account.</span>
 			<div>
 				<input
 					type="password"
@@ -35,7 +35,7 @@
 		</div>
 		<div class="flex flex-col gap-2">
 			<section>
-				<span class="text-xl">Please enter it again to confirm</span>
+				<span class="text-base">Please enter it again to confirm</span>
 			</section>
 			<div>
 				<input

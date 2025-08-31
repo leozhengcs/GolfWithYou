@@ -40,10 +40,10 @@
 <div
 	class="flex h-full w-full items-center justify-center"
 >
-    <div class='w-96 flex flex-col gap-5'>
+    <div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
         <section>
-            <h1 class='text-3xl'>Almost done!</h1>
-            <span class='text-lg'>What's your handicap index?</span>
+            <h1 class='text-2xl md:text-3xl'>Almost done!</h1>
+            <span class='text-sm'>What's your handicap index?</span>
         </section>
         <div>
             <input

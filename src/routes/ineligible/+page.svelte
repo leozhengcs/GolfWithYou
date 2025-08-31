@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex h-screen w-full items-center justify-center bg-green-50">
-	<div class="w-96 flex flex-col gap-5 text-center">
+	<div class="w-96 flex flex-col gap-5 text-center px-10 md:px-0">
 		<section>
 			<h1 class="text-3xl font-semibold text-red-600">You're Not Eligible to Sign Up</h1>
 		</section>

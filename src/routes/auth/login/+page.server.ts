@@ -8,8 +8,7 @@ export const actions = {
 		const { error: supabaseError } = await supabase.auth.signInWithPassword({ email, password });
 
 		if (supabaseError) {
-			console.error(supabaseError);
-			error(401, {
+			throw error(401, {
 				message: 'Invalid username/password',
 			});
 		}
@@ -21,6 +20,7 @@ export const actions = {
 		if (!userError) {
 			hasAvatar = data.avatar_url != null;
 		}
+
 		return { success: true, hasAvatar };
 
 		// throw redirect(303, `/discover?avatar=${hasAvatar}`);

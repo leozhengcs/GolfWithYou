@@ -24,11 +24,11 @@
 
 </script>
 
-<div class='w-96 flex flex-col gap-5'>
+<div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
     <section class='flex flex-col'>
-        <h1 class='text-3xl'>A few more questions!</h1>
-        <span class='text-lg'>What's your postal code?</span>
-        <i class='text-gray-500 text-sm'>This information will be private to you only</i>
+        <h1 class='text-2xl md:text-3xl'>A few more questions!</h1>
+        <span class='text-sm'>What's your postal code?</span>
+        <i class='text-gray-500 text-sm'>*This information will be private to you only</i>
     </section>
     <div>
         <input

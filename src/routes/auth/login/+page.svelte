@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 	import { fade } from 'svelte/transition';
+	import { toast } from 'svelte-sonner';
 
 	let email = $state('');
 	let password = $state('');
@@ -11,29 +12,34 @@
 	let finished = $state(false);
 
 	// This function handles the enhanced form submission
-    const handleFormSubmit:SubmitFunction = () => {
-        loading = true;
+	const handleFormSubmit: SubmitFunction = () => {
+		loading = true;
 
-        return async ({ result }) => {
-            // This callback runs after the server action completes
-            if (result.type === 'success') {
-                finished = true;
-                // Wait for the fade transition to complete (1000ms)
-                await new Promise(r => setTimeout(r, 1000));
-                // Now, perform the client-side redirect
-                goto(`/discover?avatar=${result.data?.hasAvatar}`);
-            } else if (result.type === 'failure') {
-                // Handle failure
-                loading = false;
-                // You might display the error message to the user
-                console.error(result.data?.message);
-            }
-        };
-    };
+		return async ({ result }) => {
+			console.log('Form result: ', result);
+			// This callback runs after the server action completes
+			if (result.type === 'success') {
+				finished = true;
+				// Wait for the fade transition to complete (1000ms)
+				await new Promise((r) => setTimeout(r, 1000));
+				// Now, perform the client-side redirect
+				goto(`/discover?avatar=${result.data?.hasAvatar}`);
+			} else if (result.type === 'error') {
+				// Handle failure
+				loading = false;
+				toast.error(result.error?.message);
+				// console.error(result.error?.message);
+			}
+		};
+	};
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
-	<p class="font-fugaz text-primary absolute top-1/6 z-10 text-center text-8xl">Teesaway</p>
+	<p
+		class="font-fugaz text-primary absolute top-1/8 z-10 text-center text-5xl md:top-1/6 md:text-8xl"
+	>
+		Teesaway
+	</p>
 	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
 		<h1 class="mb-6 text-center text-2xl font-bold text-green-800">Welcome Back</h1>
 

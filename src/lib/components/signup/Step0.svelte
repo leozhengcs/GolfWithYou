@@ -7,7 +7,7 @@
 	<div class="absolute inset-0 bg-gray-800/50 z-5"></div>
 
     <div
-		class="relative z-10 flex h-auto w-96 flex-col items-center gap-10 rounded-lg bg-primary/90 px-12 py-8 shadow-lg "
+		class="relative z-10 flex h-auto w-80 md:w-96 flex-col items-center gap-10 rounded-lg bg-primary/90 px-12 py-8 shadow-lg "
 	>
 		<section class="flex w-fit flex-col items-center">
 			<h1 class="text-center text-4xl text-nowrap text-accent">Golfing With You</h1>

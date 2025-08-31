@@ -19,6 +19,6 @@
 </script>
 
 <Toaster position='bottom-right' duration={3000} richColors closeButton/>
-<main class='bg-background'>
+<main class='bg-background overflow-x-clip'>
 	{@render children()}
 </main>

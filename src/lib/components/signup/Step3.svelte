@@ -21,10 +21,10 @@
 	}
 </script>
 
-<div class='w-96 flex flex-col gap-5'>
+<div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
 	<section>
-		<h1 class='text-3xl'>Let's get started!</h1>
-		<span class='text-lg'>When's your full name?</span>
+		<h1 class='text-2xl md:text-3xl'>Let's get started!</h1>
+		<span class='text-sm'>When's your full name?</span>
 	</section>
 	<div>
 		<input

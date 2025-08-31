@@ -70,9 +70,9 @@
     }
 </script>
 
-<div class='w-96 flex flex-col gap-5'>
+<div class='w-96 flex flex-col gap-5 px-10 md:px-0'>
 	<section>
-		<h1 class='text-3xl'>When is your birthday?</h1>
+		<h1 class='text-2xl md:text-3xl'>When is your birthday?</h1>
 	</section>
 	<div>
 		<input
