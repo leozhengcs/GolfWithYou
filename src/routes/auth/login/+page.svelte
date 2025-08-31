@@ -36,7 +36,7 @@
 
 <div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
 	<p
-		class="font-fugaz text-primary absolute top-1/8 z-10 text-center text-5xl md:top-1/6 md:text-8xl"
+		class="font-fugaz text-primary absolute top-1/12 z-10 text-center text-5xl md:top-1/12 md:text-8xl"
 	>
 		Teesaway
 	</p>
