@@ -6,7 +6,7 @@
 	<div class="relative z-20 justify-between bg-[#3f6d1f] p-5">
 		<div class='flex justify-between'>
 			<div class="relative z-20">
-			<span class="text-xs text-white md:text-xl">© Teesaway 2025. All rights reserved</span>
+			<span class="text-xs text-white">© Teesaway 2025. All rights reserved</span>
 		</div>
 		<div class="relative z-10 flex gap-5">
 			<a

@@ -5,6 +5,7 @@
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte';
+	import LoaderChat from './loaders/LoaderChat.svelte';
 
 	let {
 		id, //id of opened user modal
@@ -31,6 +32,8 @@
 	let userChannel: RealtimeChannel;
 	let user1: string;
 	let user2: string;
+
+	let loading = $state(true);
 
 	// svelte-ignore non_reactive_update
 	let inputRef: HTMLInputElement; // For keeping the text box focused
@@ -68,7 +71,10 @@
 			console.error('Load error:', data.error);
 		}
 		await tick(); // Waits for the bottom of the chat anchor element to load.
-		bottomRef.scrollIntoView({ behavior: 'smooth' });
+		loading = false;
+		if (bottomRef) {
+			bottomRef.scrollIntoView({ behavior: 'smooth' });
+		}
 	}
 
 	async function loadLatestMessage() {
@@ -241,17 +247,6 @@
 
 	onDestroy(async () => {
 		$openedModal = '';
-		// 	document.body.classList.remove('overflow-y-hidden');
-
-		// 	updateLastRead();
-
-		// 	const topic = `realtime:private_chat_${chatId}`;
-		// 	// find exactly the chat channel
-		// 	const ch = supabase
-		// 		.getChannels()
-		// 		.find((c: { topic: string }) => c.topic === `realtime:${topic}` || c.topic === topic);
-		// 	ch?.untrack?.();
-		// 	ch?.unsubscribe();
 	});
 </script>
 
@@ -314,6 +309,9 @@
 					<h1 class="text-xl">User Images</h1>
 				</section>
 			</div>
+			{#if loading}
+				<LoaderChat />
+			{:else}
 			<div class="relative hidden flex-col overflow-y-hidden md:flex">
 				<h1 class="h-8 text-2xl">{name}</h1>
 				<div class="flex flex-1 flex-col gap-8 overflow-y-auto pr-5">
@@ -366,6 +364,7 @@
 					</button>
 				</form>
 			</div>
+			{/if}
 			<!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
 			{#each userTabs as tab}
 				<button
