@@ -188,7 +188,7 @@
 	}
 	onMount(async () => {
 		document.body.classList.add('overflow-y-hidden');
-		unreadMap.update((m)=>({
+		unreadMap.update((m) => ({
 			...m,
 			[id]: false
 		}));
@@ -261,7 +261,7 @@
 >
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	{#if selectedTab == 'overview'}
+	{#if selectedTab === 'overview'}
 		<div
 			class="grid h-[85%] w-[90%] grid-cols-1 rounded-lg bg-white p-4 md:h-[80%] md:w-[80%] md:grid-cols-2 md:p-6"
 			onclick={(e) => {
@@ -309,9 +309,6 @@
 					<h1 class="text-xl">User Images</h1>
 				</section>
 			</div>
-			{#if loading}
-				<LoaderChat />
-			{:else}
 			<div class="relative hidden flex-col overflow-y-hidden md:flex">
 				<h1 class="h-8 text-2xl">{name}</h1>
 				<div class="flex flex-1 flex-col gap-8 overflow-y-auto pr-5">
@@ -364,7 +361,6 @@
 					</button>
 				</form>
 			</div>
-			{/if}
 			<!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
 			{#each userTabs as tab}
 				<button
@@ -382,63 +378,67 @@
 		</div>
 	{:else if selectedTab === 'chat'}
 		<div
-			class="relative flex h-[85%] w-[90%] flex-col rounded-lg bg-white p-5"
+			class="relative flex h-[85%] w-[90%] flex-col rounded-lg bg-white p-5 md:hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<h1 class="h-8 text-2xl">{name}</h1>
-			<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
-				{#each messages as message}
-					{#if message.sender_id == id}
-						<div class="flex flex-row items-end gap-5">
-							<div class="aspect-square w-10 overflow-hidden rounded-full">
-								<img
-									src={src ?? '/icons/DefaultProfile.png'}
-									alt=""
-									class="h-full w-full object-cover"
-								/>
+			{#if loading}
+				<LoaderChat />
+			{:else}
+				<div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
+					{#each messages as message}
+						{#if message.sender_id == id}
+							<div class="flex flex-row items-end gap-5">
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={src ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[500px] p-0 text-xs text-wrap">{message.content}</p>
+								</div>
 							</div>
-							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[500px] p-0 text-xs text-wrap">{message.content}</p>
+						{:else}
+							<div class="flex flex-row items-end justify-end gap-5">
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[300px] p-0 text-xs text-wrap">{message.content}</p>
+								</div>
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={self.avatar_url ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
 							</div>
-						</div>
-					{:else}
-						<div class="flex flex-row items-end justify-end gap-5">
-							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[300px] p-0 text-xs text-wrap">{message.content}</p>
-							</div>
-							<div class="aspect-square w-10 overflow-hidden rounded-full">
-								<img
-									src={self.avatar_url ?? '/icons/DefaultProfile.png'}
-									alt=""
-									class="h-full w-full object-cover"
-								/>
-							</div>
-						</div>
-					{/if}
-				{/each}
-				<div bind:this={bottomRef}></div>
-			</div>
-			<form
-				class="bottom-0 z-50 flex w-full items-center gap-4 border-t bg-white pt-4"
-				onsubmit={sendMessage}
-			>
-				<input
-					bind:value={newMessage}
-					bind:this={inputRef}
-					class="flex-1 rounded-full px-4 py-2 text-xs focus:ring-0 focus:outline-none"
-					placeholder="Type your message..."
-				/>
-				<button
-					type="submit"
-					class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-xs text-white hover:bg-blue-600"
+						{/if}
+					{/each}
+					<div bind:this={bottomRef}></div>
+				</div>
+				<form
+					class="bottom-0 z-50 flex w-full items-center gap-4 border-t bg-white pt-4"
+					onsubmit={sendMessage}
 				>
-					{`Message ${name.split(' ')[0]}`}
-				</button>
-			</form>
+					<input
+						bind:value={newMessage}
+						bind:this={inputRef}
+						class="flex-1 rounded-full px-4 py-2 text-xs focus:ring-0 focus:outline-none"
+						placeholder="Type your message..."
+					/>
+					<button
+						type="submit"
+						class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-xs text-white hover:bg-blue-600"
+					>
+						{`Message ${name.split(' ')[0]}`}
+					</button>
+				</form>
+			{/if}
 		</div>
 	{:else if selectedTab === 'description'}
 		<div
-			class="relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5"
+			class="relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5 md:hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<section class="flex flex-col">
