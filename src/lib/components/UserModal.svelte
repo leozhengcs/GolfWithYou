@@ -75,18 +75,17 @@
 		if (bottomRef) {
 			bottomRef.scrollIntoView({ behavior: 'smooth' });
 		}
+
+		await updateLastRead();
 	}
 
 	async function loadLatestMessage() {
 		const res = await fetch(`/api/fetch_latest_message?chatId=${chatId}`);
 		const data = await res.json();
-		if (res.ok) {
-			return data;
-		} else {
+		if (!res.ok) {
 			console.error('Load error:', data.error);
 		}
-		await tick(); // Waits for the bottom of the chat anchor element to load.
-		bottomRef.scrollIntoView({ behavior: 'smooth' });
+		return data;
 	}
 
 	async function sendMessage(event: SubmitEvent) {
@@ -165,6 +164,14 @@
 	async function updateLastRead() {
 		const lastRead = await loadLatestMessage();
 
+		if (lastRead) {
+			await tick();
+			if (bottomRef) {
+				bottomRef.scrollIntoView({ behavior: 'smooth' });
+			}
+		}
+
+		console.log("Self id: ", self.id, "\nUser 1 ID: ", user1, "\nUser 2 ID: ", user2);
 		// Saves the latest message read
 		if (self.id == user1) {
 			const chatWrite = await supabase
@@ -180,6 +187,8 @@
 				.from('private_chats')
 				.update({ user2LastRead: lastRead.id })
 				.eq('id', chatId);
+
+			console.log("Updated user 2: ", lastRead.id);
 
 			if (error) {
 				console.log('Update chat error: ', error);
