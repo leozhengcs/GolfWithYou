@@ -1,4 +1,8 @@
 // src/routes/api/messages/+server.ts
+/*
+  GET Endpoint - Must pass in a `chatId` query parameter which then fetches the messages based on if the user is authenticated.
+  POST Endpoint - Inserts a message into the messages table by providing the `chat_id` and message `content`.
+*/  
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

@@ -130,17 +130,17 @@
 			}
 		});
 
-		if (!$onlineUsers.includes(id)) {
-			const to = id;
-			const subject = `[TeesAway] New message from: ${self.full_name}`;
-			const text = '';
-			const res = await fetch('/api/send_email', {
+		const to = id;
+		const subject = `[TeesAway] New message from: ${self.full_name}`;
+		const text = '';
+
+		// Only send email if user is not online
+		if ($onlineUsers.includes(id)) {
+			await fetch('/api/send_email', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ to, subject, text })
 			});
-
-			const data = await res.json();
 		}
 
 		await loadMessages();
@@ -228,7 +228,9 @@
 
 				updateLastRead();
 
-				bottomRef.scrollIntoView({ behavior: 'smooth' });
+				if (bottomRef) {
+					bottomRef.scrollIntoView({ behavior: 'smooth' });
+				}
 			});
 
 			if (!userChannel) {
@@ -246,6 +248,7 @@
 	});
 
 	onDestroy(async () => {
+		document.body.classList.remove('overflow-y-hidden');
 		$openedModal = '';
 	});
 </script>
@@ -257,24 +260,32 @@
 	onclick={closeModal}
 	onkeydown={(e) => (e.key === 'Esc' ? closeModal() : null)}
 	transition:fade={{ duration: 300 }}
-	class="fixed inset-0 z-50 flex h-full w-full flex-col items-center justify-center bg-gray-500/50 md:z-40 md:flex-1 md:flex-row"
+	class="fixed inset-0 z-[60] flex h-full w-full flex-col items-center justify-center bg-gray-500/50 md:z-40 md:flex-1 md:flex-row"
 >
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	{#if selectedTab === 'overview'}
-		<div
-			class="grid h-[85%] w-[90%] grid-cols-1 rounded-lg bg-white p-4 md:h-[80%] md:w-[80%] md:grid-cols-2 md:p-6"
-			onclick={(e) => {
-				e.stopPropagation();
-			}}
-			aria-label="User Modal"
-		>
-			<div class="flex flex-col gap-2">
-				<div class="mb-2 aspect-square w-full overflow-hidden rounded-lg object-cover md:w-40">
-					<img {src} alt="" class="h-full w-full object-cover object-center" />
+	<!-- TODO: Clean up if statements to remove selectedTab dependency -->
+	<!-- {#if selectedTab === 'overview'} -->
+	<div
+		class="grid h-[85%] w-[90%] grid-cols-1 rounded-lg bg-white p-5 md:h-[80%] md:w-[80%] md:grid-cols-[30%_70%] md:p-6"
+		onclick={(e) => {
+			e.stopPropagation();
+		}}
+		aria-label="User Modal"
+	>
+		<div class="flex flex-col gap-2 md:mr-5">
+			<div class="flex w-full flex-row md:flex-col gap-5">
+				<div
+					class="mb-2 flex aspect-square h-full items-center justify-center overflow-hidden"
+				>
+					<img
+						{src}
+						alt=""
+						class="h-12 w-12 rounded-full object-cover object-center md:h-40 md:w-40 md:rounded-none"
+					/>
 				</div>
 				<section class="flex flex-col">
-					<h1 class="text-xl">
+					<h1 class="text-lg md:text-xl">
 						{name}
 					</h1>
 					<span
@@ -291,7 +302,8 @@
 						</button>
 					{/if}
 				</section>
-				<section class="flex flex-col">
+			</div>
+			<!-- <section class="flex flex-col">
 					<h1 class="text-xl">User Info</h1>
 					<span class="text-sm">Club Name: <span class="text-gray-400">{member}</span></span>
 					<span class="text-sm"
@@ -307,10 +319,13 @@
 				</section>
 				<section class="hidden flex-col md:flex">
 					<h1 class="text-xl">User Images</h1>
-				</section>
-			</div>
-			<div class="relative hidden flex-col overflow-y-hidden md:flex">
-				<h1 class="h-8 text-2xl">{name}</h1>
+				</section> -->
+		</div>
+		{#if loading}
+			<LoaderChat />
+		{:else}
+			<div class="relative flex-col gap-5 overflow-y-hidden flex">
+				<h1 class="h-8 text-2xl hidden md:block">{name}</h1>
 				<div class="flex flex-1 flex-col gap-8 overflow-y-auto pr-5">
 					{#each messages as message}
 						{#if message.sender_id == id}
@@ -361,7 +376,8 @@
 					</button>
 				</form>
 			</div>
-			<!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
+		{/if}
+		<!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
 			{#each userTabs as tab}
 				<button
 					onclick={() => (selectedTab = tab)}
@@ -375,8 +391,8 @@
 				</button>
 			{/each}
 		</div> -->
-		</div>
-	{:else if selectedTab === 'chat'}
+	</div>
+	<!-- {:else if selectedTab === 'chat'}
 		<div
 			class="relative flex h-[85%] w-[90%] flex-col rounded-lg bg-white p-5 md:hidden"
 			onclick={(e) => e.stopPropagation()}
@@ -449,10 +465,10 @@
 				<h1 class="text-base">User Images</h1>
 			</section>
 		</div>
-	{/if}
+	{/if} -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
+	<!-- <div
 		class="md:hidden"
 		onclick={(e) => {
 			e.stopPropagation();
@@ -474,5 +490,5 @@
 				</button>
 			{/each}
 		</div>
-	</div>
+	</div> -->
 </div>

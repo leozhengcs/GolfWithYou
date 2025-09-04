@@ -4,6 +4,7 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import UserModal from './UserModal.svelte';
 	import { onlineUsers } from '$lib/stores/users.svelte';
+	import { navbarState } from '$lib/stores/navbarState.svelte';
 
 	let {
 		user,
@@ -21,7 +22,7 @@
 	const closeModal = () => {
 		showUser = false;
 	};
-
+	
 	$effect(() => {
 		if (showUser) {
 			unread = false;

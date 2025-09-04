@@ -164,10 +164,10 @@
 	<!-- <section class="flex flex-row justify-between">
 		<h1 class="font-fugaz text-3xl text-yellow-400">Discover Other Users</h1>
 	</section> -->
-	<div class="z-20 grid w-full grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" in:fade={{ delay: 1500, duration: 1000 }}>
+	<div class="z-[60] grid w-full place-items-center grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" in:fade={{ delay: 1500, duration: 1000 }}>
 		{#each otherUsers as otherUser}
 			<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
 		{/each}
-		<div class="hidden grow md:block"></div>
+		<!-- <div class="hidden grow md:block"></div> -->
 	</div>
 </div>

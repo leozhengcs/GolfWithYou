@@ -12,6 +12,7 @@
 	import LoaderProfile from '$lib/components/loaders/LoaderProfile.svelte';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
+	import { navbarState } from '$lib/stores/navbarState.svelte';
 
 	let { children, data } = $props();
 	let { profile, supabase } = $derived(data);
@@ -82,6 +83,7 @@
 	}
 
 	onMount(() => {
+		navbarState.show = true;
 		// Sets the auth token for when you login
 		(async () => {
 			const {
@@ -110,7 +112,9 @@
 	});
 </script>
 
-<Navbar {profile} />
+{#if navbarState.show}
+	<Navbar {profile} />
+{/if}
 
 <div
 	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"

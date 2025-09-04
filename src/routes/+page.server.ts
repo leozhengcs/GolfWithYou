@@ -51,26 +51,23 @@ export const actions: Actions = {
 			}
 		]);
 
-		// Try to upload the users profile image
-		// const fileExt = profileImage.name.split('.').pop();
-		// const fileName = `${data?.user?.id}_profile.${fileExt}`;
-		// const filePath = `avatar/${fileName}`;
-
-		const imageData = new FormData();
-		imageData.append('type', 'avatar');
-		imageData.append('image', profileImage);
-
-		const res = await fetch('/api/uploadImage', {
-			method: 'POST',
-			body: imageData
-		});
-
-		const imageUploadData = await res.json();
-
-		if (!res.ok) {
-			previewData.set({
-				error: `Error uploading profile picture, please try again in the profile page. ${imageUploadData}`
+		if (profileImage) {
+			const imageData = new FormData();
+			imageData.append('type', 'avatar');
+			imageData.append('image', profileImage);
+	
+			const res = await fetch('/api/uploadImage', {
+				method: 'POST',
+				body: imageData
 			});
+	
+			const imageUploadData = await res.json();
+	
+			if (!res.ok) {
+				previewData.set({
+					error: `Error uploading profile picture, please try again in the profile page. ${imageUploadData}`
+				});
+			}
 		}
 
 		if (insert.error) {

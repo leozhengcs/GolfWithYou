@@ -23,17 +23,17 @@
 		class="from-sky absolute top-0 z-50 flex h-[100px] w-full flex-row items-center justify-between bg-gradient-to-b to-transparent p-5"
 		in:fade={{ duration: 1500 }}
 	>
-		<button class="w-15 cursor-pointer" onclick={() => goto('/discover')}>
-            <div >
-                <img src="/icons/Logo.png" alt=""/>
-            </div>
+		<button class="cursor-pointer flex flex-row gap-2 items-center justify-center" onclick={() => goto('/discover')}>
+			<div class='w-15'>
+				<img src="/icons/Logo.png" alt="" />
+			</div>
+			<a href="/discover" class="font-fugaz text-center text-3xl text-white">Tees Away</a>
 		</button>
-		<a href="/discover" class="font-fugaz text-primary text-center text-5xl">Teesaway</a>
 		<div class="flex flex-row gap-10">
 			<Tooltip text="View Profile">
 				<button
 					onclick={() => goto('/profile')}
-					class="flex aspect-square w-12 cursor-pointer items-end justify-center overflow-clip rounded-full bg-white transition-shadow duration-300 hover:brightness-110 hover:shadow-xl"
+					class="flex aspect-square w-12 cursor-pointer items-end justify-center overflow-clip rounded-full bg-white transition-shadow duration-300 hover:shadow-xl hover:brightness-110"
 				>
 					<img
 						src={(profile && profile.avatar_url) || '/icons/DefaultProfile.png'}
