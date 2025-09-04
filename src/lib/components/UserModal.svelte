@@ -135,7 +135,7 @@
 		const text = '';
 
 		// Only send email if user is not online
-		if ($onlineUsers.includes(id)) {
+		if (!$onlineUsers.includes(id)) {
 			await fetch('/api/send_email', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
