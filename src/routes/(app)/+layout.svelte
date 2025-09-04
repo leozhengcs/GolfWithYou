@@ -69,6 +69,10 @@
 			console.log('JOIN diff', e);
 			refresh();
 		});
+		  channel.on('presence', { event: 'leave' }, (e) => {
+			console.log("LEAVE diff: ", e);
+			refresh();
+		  });
 
 		// channel.on('presence', { event: 'sync' }, () => {
 		// 	const state = channel!.presenceState() as Record<string, unknown[]>;
