@@ -54,12 +54,26 @@
 
 	function startPresence(userId: string) {
 		// if (channel && channel.state !== 'closed') return;
-		channel = supabase.channel('online-users', { config: { presence: { key: userId } } });
+		channel = supabase.channel('online-users', {
+			config: { presence: { key: userId }, broadcast: { self: true } }
+		});
 
-		channel.on('presence', { event: 'sync' }, () => {
+		const refresh = () => {
 			const state = channel!.presenceState() as Record<string, unknown[]>;
 			onlineUsers.set(Object.keys(state));
+			console.log('STATE', JSON.stringify(state, null, 2));
+		};
+
+		channel.on('presence', { event: 'sync' }, refresh);
+		channel.on('presence', { event: 'join' }, (e) => {
+			console.log('JOIN diff', e);
+			refresh();
 		});
+
+		// channel.on('presence', { event: 'sync' }, () => {
+		// 	const state = channel!.presenceState() as Record<string, unknown[]>;
+		// 	onlineUsers.set(Object.keys(state));
+		// });
 
 		channel.subscribe(async (status) => {
 			console.log('USER STATUS:', status);
