@@ -19,47 +19,47 @@
 	};
 </script>
 
-<div class="flex h-full w-full items-center justify-center">
-	<div class="flex w-96 flex-col gap-10 px-10 md:px-0">
-		<div class="flex flex-col gap-2">
-			<span class="text-base">Please enter a password for your account.</span>
-			<div>
-				<input
-					type="password"
-					id="password"
-					placeholder="Password"
-					class="peer mt-0.5 w-full border-0 border-b border-black bg-transparent focus:border-blue-400 focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
-					bind:value={password}
-				/>
-			</div>
+<div
+	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+>
+	<div class="flex flex-col gap-2">
+		<span class="text-base text-white">Please enter a password for your account.</span>
+		<div>
+			<input
+				type="password"
+				id="password"
+				placeholder="Password"
+				class="peer mt-0.5 w-full border-0 border-b border-white/30 bg-transparent text-white focus:border-white focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
+				bind:value={password}
+			/>
 		</div>
-		<div class="flex flex-col gap-2">
-			<section>
-				<span class="text-base">Please enter it again to confirm</span>
-			</section>
-			<div>
-				<input
-					type="password"
-					id="passwordConfirm"
-					placeholder="Confirm Password"
-					class="peer mt-0.5 w-full border-0 border-b border-black bg-transparent focus:border-blue-400 focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
-					bind:value={passwordConfirm}
-				/>
-			</div>
+	</div>
+	<div class="flex flex-col gap-2">
+		<section>
+			<span class="text-base text-white">Please enter it again to confirm</span>
+		</section>
+		<div>
+			<input
+				type="password"
+				id="passwordConfirm"
+				placeholder="Confirm Password"
+				class="peer mt-0.5 w-full border-0 border-b border-white/30 bg-transparent text-white focus:border-white focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
+				bind:value={passwordConfirm}
+			/>
 		</div>
-		<div class="flex w-full justify-end gap-2">
-			<button
-				class="border-green-700 bg-green-700 hover:text-green-700 inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
-				onclick={() => step--}
-			>
-				Go Back
-			</button>
-			<button
-				class="border-green-700 bg-green-700 hover:text-green-700 inline-block w-fit cursor-pointer rounded-sm border px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
-				onclick={handleSubmit}
-			>
-				Continue
-			</button>
-		</div>
+	</div>
+	<div class="flex w-full justify-end gap-2">
+		<button
+			class="inline-block w-fit cursor-pointer rounded-sm border border-white/30 bg-transparent px-4 py-2 text-sm font-medium text-white/30 transition-all duration-300 hover:bg-white/30 hover:text-white focus:ring-1 focus:outline-hidden"
+			onclick={() => step--}
+		>
+			Go Back
+		</button>
+		<button
+			class="inline-block w-fit cursor-pointer rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden"
+			onclick={handleSubmit}
+		>
+			Continue
+		</button>
 	</div>
 </div>

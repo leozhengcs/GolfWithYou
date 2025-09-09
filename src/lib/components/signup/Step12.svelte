@@ -50,8 +50,10 @@
 	}
 </script>
 
-<div class="flex flex-col gap-5 px-10 md:px-0">
-	<h1 class="text-2xl md:text-3xl">Please Upload a Profile for Other to see you!</h1>
+<div
+	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+>
+	<h1 class="text-2xl text-white md:text-3xl">Please Upload a Profile for Others to see you!</h1>
 	<div
 		class={`cursor-pointer rounded-md border-2 border-dashed px-6 py-10 text-center text-gray-500 transition-colors duration-300 outline-none focus:ring-2 focus:ring-offset-2 ${
 			dragging ? 'border-gray-400 bg-gray-100' : 'border-gray-300'
@@ -76,27 +78,27 @@
 	/>
 	<div class="flex w-full justify-end gap-2">
 		<button
-			class="inline-block w-fit cursor-pointer rounded-sm border border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent hover:text-green-700 focus:ring-1 focus:outline-hidden"
+			class="inline-block w-fit cursor-pointer rounded-sm border border-white/30 bg-transparent px-4 py-2 text-sm font-medium text-white/30 transition-all duration-300 hover:bg-white/30 hover:text-white focus:ring-1 focus:outline-hidden"
 			onclick={() => step--}
 		>
 			Go Back
 		</button>
 		<button
-			class="inline-block w-fit cursor-pointer rounded-sm border border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent hover:text-green-700 focus:ring-1 focus:outline-hidden"
-			onclick={() => {
-				step++;
-			}}
+			class="inline-block w-fit cursor-pointer rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden"
+			onclick={() => step++}
 		>
 			Continue
 		</button>
 	</div>
 
 	{#if image}
-		<p>Preview:</p>
-		<img
-			src={image}
-			alt=""
-			class="aspect-square h-56 w-56 rounded-md border-1 border-black object-cover object-center"
-		/>
+		<div class='w-full flex flex-col justify-center items-center'>
+			<p class='text-white'>Preview</p>
+			<img
+				src={image}
+				alt=""
+				class="aspect-square h-56 w-56 rounded-md border-1 border-black object-cover object-center"
+			/>
+		</div>
 	{/if}
 </div>

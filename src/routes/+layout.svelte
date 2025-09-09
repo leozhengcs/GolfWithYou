@@ -3,6 +3,7 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { Toaster } from 'svelte-sonner';
+	import Navbar from '$lib/components/Navbar.svelte';
 
 	let { data, children } = $props();
 	let { session, supabase } = $derived(data);
@@ -19,6 +20,7 @@
 </script>
 
 <Toaster position='bottom-right' duration={3000} richColors closeButton/>
-<main class='bg-background overflow-x-clip'>
+<Navbar />
+<main class="w-screen h-screen bg-[url('/images/landing.png')] bg-cover bg-center p-12 shadow-[inset_0_0_400px_rgba(0,0,0,1)] overflow-x-clip">
 	{@render children()}
 </main>

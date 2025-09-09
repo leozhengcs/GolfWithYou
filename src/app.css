@@ -3,30 +3,38 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-    --color-background: #EBEBEB;
-    --color-primary: #344E41;
-    --color-secondary: #588157;
-    --color-primary-shade: #3A5A40;
-    --color-secondary-shade: #A3B18A;
-    --color-accent: #DF971A;
-    --color-action: #6363FF;
-    --color-accent-shade: #E9AC43;
-    --color-sky-background: #2596be;
-    --color-footer-green: #3f6d1f;
-    --color-sky: #abc4d4;
+	--color-background: #ebebeb;
+	--color-primary: #344e41;
+	--color-secondary: #588157;
+	--color-primary-shade: #3a5a40;
+	--color-secondary-shade: #a3b18a;
+	--color-accent: #df971a;
+	--color-action: #6363ff;
+	--color-accent-shade: #e9ac43;
+	--color-sky-background: #2596be;
+	--color-footer-green: #3f6d1f;
+	--color-sky: #abc4d4;
 
-    --font-sans: jost;
-    --font-fugaz: fugaz;
+	--font-sans: jost;
+	--font-fugaz: fugaz;
+	--font-roboto: roboto;
 }
 
 @font-face {
-    font-family: jost;
-    src: url('/fonts/Jost-VariableFont_wght.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+	font-family: roboto;
+	src: url('/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: fugaz;
-    src: url('/fonts/FugazOne-Regular.ttf') format('truetype');
+	font-family: jost;
+	src: url('/fonts/Jost-VariableFont_wght.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: fugaz;
+	src: url('/fonts/FugazOne-Regular.ttf') format('truetype');
 }
