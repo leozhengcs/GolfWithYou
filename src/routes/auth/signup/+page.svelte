@@ -13,8 +13,9 @@
 	import Step12 from '$lib/components/signup/Step12.svelte';
 	import Step13 from '$lib/components/signup/Step13.svelte';
 	import { fly } from 'svelte/transition';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let loading = $state(false);
 
@@ -56,10 +57,16 @@
 					formData.append('profileImage', fileImage);
 				}
 
-				await fetch(formElement.action || '/', {
+				const res = await fetch(formElement.action || '/', {
 					method: 'POST',
 					body: formData
 				});
+
+				if (!res.ok) {
+					return toast.error("Error signing up, please try again later");
+				}
+
+				await invalidate('supabase:auth');
 				// TODO: Add error handling here - Handle submission form failure, avatar upload failure
 				goto('/discover');
 			})();

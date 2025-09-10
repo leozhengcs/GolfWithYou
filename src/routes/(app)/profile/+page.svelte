@@ -64,6 +64,9 @@
 		const res = await fetch('/api/deleteAccount', {
 			method: 'POST'
 		});
+		if (!res.ok) return toast.error('Logout failed');
+
+		await invalidate('supabase:auth');
 
 		goto('/');
 	}
