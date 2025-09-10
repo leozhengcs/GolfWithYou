@@ -51,7 +51,7 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="mx-auto flex max-w-lg md:min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<h1 class="text-2xl text-white md:text-3xl">Please Upload a Profile for Others to see you!</h1>
 	<div

@@ -10,22 +10,23 @@
 		showNav = true;
 	});
 
-	let { profile = null } = $props();
+	const { profile } = $props();
+
 </script>
 
 {#if showNav}
 	<nav
-		class="absolute top-0 left-0 z-50 flex h-[100px] w-full select-none flex-row items-center justify-between p-5 px-20 bg-transparent"
+		class="absolute top-0 left-0 z-50 flex h-[100px] w-full select-none flex-row items-center justify-between p-5 px-10 md:px-20 bg-transparent"
 		in:fade={{ duration: 500 }}
 	>
 		<button
 			class="flex cursor-pointer flex-row items-center justify-center gap-2"
 			onclick={() => goto('/discover')}
 		>
-			<div class="w-16">
+			<div class="w-8 md:w-16">
 				<img src="/icons/Logo.png" alt="" />
 			</div>
-			<a href="/discover" class="font-fugaz text-center text-2xl text-white">Tees Away</a>
+			<a href="/discover" class="font-fugaz text-center text-base md:text-2xl text-white">Tees Away</a>
 		</button>
 		<div class="flex justify-between gap-10">
 			{#if profile}
@@ -44,8 +45,8 @@
 					</Tooltip>
 				</div>
 			{:else}
-				<button class="text-xl font-bold text-white cursor-pointer hover:-translate-y-1 duration-300" onclick={() => goto('/auth/signup')}>Sign up</button>
-				<button class='text-xl font-bold rounded-full cursor-pointer bg-white p-2 px-4 hover:-translate-y-1 duration-300'>Log In</button>
+				<button class="hidden md:block text-xl font-bold text-white cursor-pointer hover:-translate-y-1 duration-300" onclick={() => goto('/auth/signup')}>Sign up</button>
+				<button class='text-sm md:text-xl font-bold rounded-full cursor-pointer bg-white p-1 md:p-2 px-2 md:px-4 hover:-translate-y-1 duration-300' onclick={() => goto('/auth/login')}>Log In</button>
 			{/if}
 		</div>
 	</nav>

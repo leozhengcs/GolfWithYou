@@ -19,10 +19,10 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="mx-auto flex max-w-lg md:min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<section>
-		<h1 class="text-2xl text-white md:text-3xl">What's your golf club name?</h1>
+		<h1 class="text-xl text-white md:text-3xl">What's your golf club name?</h1>
 	</section>
 	<div>
 		<input

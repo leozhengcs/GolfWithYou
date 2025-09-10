@@ -19,10 +19,10 @@
 </script>
 
 <div
-	class="min-w-md mx-auto flex max-w-lg flex-col gap-5 rounded-xl bg-black/30 p-6 shadow-lg backdrop-blur-xs p-10"
+	class="md:min-w-md mx-auto flex max-w-lg flex-col gap-5 rounded-xl bg-black/30 shadow-lg backdrop-blur-xs p-10"
 >
 	<section>
-		<h1 class="text-2xl text-white md:text-3xl">What's your email address?</h1>
+		<h1 class="text-xl text-white md:text-3xl">What's your email address?</h1>
 		<i class="text-sm text-white/30">This information will be private to you only*</i>
 	</section>
 	<div>

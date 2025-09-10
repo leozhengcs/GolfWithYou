@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="mx-auto flex max-w-lg md:min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<section>
 		<h1 class="text-2xl md:text-3xl text-white">Privacy Acknowledgement & User Agreement</h1>

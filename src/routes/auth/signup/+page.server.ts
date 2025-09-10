@@ -4,7 +4,7 @@ import type { Actions } from '../$types';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { PRIVATE_SUPABASE_URL } from '$env/static/private';
 import { previewData } from '$lib/stores/previewData.svelte';
-import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+import { navbarState } from '$lib/stores/navbarState.svelte';
 
 // TEMPORARY SOLUTION
 
@@ -76,8 +76,6 @@ export const actions: Actions = {
 		if (insert.error) {
             console.log('ERROR: ', insert.error);
 		}
-
-        console.log("PROFILE UPLAODED");
 
 		throw redirect(303, '/discover');
 	}

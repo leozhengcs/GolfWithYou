@@ -1,6 +1,5 @@
 <!-- +layout.svelte (Svelte 5 / runes) -->
 <script lang="ts">
-	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 	import { navigating, page } from '$app/state';
@@ -15,7 +14,7 @@
 	import { navbarState } from '$lib/stores/navbarState.svelte';
 
 	let { children, data } = $props();
-	let { profile, supabase } = $derived(data);
+	let { supabase } = $derived(data);
 	injectAnalytics();
 
 	const pickLoader = (path: string) => {
@@ -129,10 +128,6 @@
 		};
 	});
 </script>
-
-{#if navbarState.show}
-	<Navbar {profile} />
-{/if}
 
 <div
 	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"

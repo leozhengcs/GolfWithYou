@@ -1,20 +1,23 @@
 <script lang="ts">
 	import type { UserProfile } from '$lib/types/Database';
-	import { goto } from '$app/navigation';
-	import { toTitleCase } from "$lib/utils/string";
+	import { goto, invalidateAll, invalidate } from '$app/navigation';
+	import { toTitleCase } from '$lib/utils/string';
 
-	import ProfileTab from "$lib/components/profile/profile.svelte";
-	import PersonalTab from "$lib/components/profile/personal.svelte";
-	import AccountTab from "$lib/components/profile/account.svelte";
-	import DataTab from "$lib/components/profile/data.svelte";
+	import ProfileTab from '$lib/components/profile/profile.svelte';
+	import PersonalTab from '$lib/components/profile/personal.svelte';
+	import AccountTab from '$lib/components/profile/account.svelte';
+	import DataTab from '$lib/components/profile/data.svelte';
 	import { toast } from 'svelte-sonner';
+	import type { SupabaseClient } from '@supabase/supabase-js';
 
 	let { data } = $props();
-	let { profile }: { profile: UserProfile | null } = $derived(data);
-
+	let { profile, supabase }: { profile: UserProfile | null; supabase: SupabaseClient } =
+		$derived(data);
 
 	//profile tab
-	let { full_name, bio, gender, club_name, handicap_index, golf_id, other_gender } = $derived(profile!);
+	let { full_name, bio, gender, club_name, handicap_index, golf_id, other_gender } = $derived(
+		profile!
+	);
 
 	//personal tab
 	let { phone, postal_code } = $derived(profile!);
@@ -29,16 +32,18 @@
 	let tab = $state('profile');
 
 	const handleLogout = async () => {
-		await fetch('/api/logout', {
-			method: 'POST'
-		});
+		await supabase.auth.signOut();
 
+		const res = await fetch('/api/logout', { method: 'POST' });
+		if (!res.ok) return toast.error('Logout failed');
+
+		await invalidate('supabase:auth');
 		goto('/');
 	};
 
 	function handleEdit() {
 		disabled = !disabled;
-	};
+	}
 
 	function handleSubmit() {
 		if (other_gender) {
@@ -47,20 +52,20 @@
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!email || !emailRegex.test(email)) {
-            toast.error("Invalid Email, please enter a valid email");
-            return;
-        }
+		if (!email || !emailRegex.test(email)) {
+			toast.error('Invalid Email, please enter a valid email');
+			return;
+		}
 
 		formElement.submit();
 	}
 
 	async function handleDeleteAccount() {
-		const res = await fetch('/api/deleteAccount',{
+		const res = await fetch('/api/deleteAccount', {
 			method: 'POST'
 		});
 
-		goto('/')
+		goto('/');
 	}
 
 	let imageFile: File | null = $state(null);
@@ -105,11 +110,9 @@
 		tempUrl = null;
 		imageUploaded = true;
 	}
-
-
 </script>
 
-<div class="md:grid w-full flex flex-col flex-1 md:grid-cols-[250px_auto] gap-5 lg:px-52">
+<div class="flex w-full flex-1 flex-col gap-5 md:grid md:grid-cols-[250px_auto] lg:px-52">
 	<section
 		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-gray-300 bg-gray-300/50"
 	>
@@ -151,56 +154,56 @@
 		</div>
 	</section>
 
-	{#if tab=="profile"}
-	<ProfileTab
-	bind:profile
-	bind:disabled
-	bind:full_name
-	bind:bio
-	bind:gender
-	bind:club_name
-	bind:handicap_index
-	bind:golf_id
-	bind:other_gender
-	bind:imageUploaded
-	bind:tempUrl
-	{handleEdit}
-	{handleSubmit}
-	{handleFileChange}
-	{handleFileUpload}
-	/>
-	{:else if tab=="personal"}
-	<PersonalTab
-	bind:profile
-	bind:disabled
-	bind:postal_code
-	bind:phone
-	{handleEdit}
-	{handleSubmit}
-	/>
-	{:else if tab=="account"}
-	<AccountTab
-	bind:profile
-	bind:disabled
-	bind:email
-	{handleEdit}
-	{handleSubmit}
-	{handleDeleteAccount}
-	/>
+	{#if tab == 'profile'}
+		<ProfileTab
+			bind:profile
+			bind:disabled
+			bind:full_name
+			bind:bio
+			bind:gender
+			bind:club_name
+			bind:handicap_index
+			bind:golf_id
+			bind:other_gender
+			bind:imageUploaded
+			bind:tempUrl
+			{handleEdit}
+			{handleSubmit}
+			{handleFileChange}
+			{handleFileUpload}
+		/>
+	{:else if tab == 'personal'}
+		<PersonalTab
+			bind:profile
+			bind:disabled
+			bind:postal_code
+			bind:phone
+			{handleEdit}
+			{handleSubmit}
+		/>
+	{:else if tab == 'account'}
+		<AccountTab
+			bind:profile
+			bind:disabled
+			bind:email
+			{handleEdit}
+			{handleSubmit}
+			{handleDeleteAccount}
+		/>
 	{:else}
-	<DataTab/>
+		<DataTab />
 	{/if}
 </div>
 
 <form method="POST" bind:this={formElement}>
-  <input type="hidden" name='fullName' bind:value={full_name}/> 
-  <input type="hidden" name='clubName' bind:value={club_name}/>
-  <input type="hidden" name='handicapIndex' bind:value={handicap_index}/>  
-  <input type="hidden" name='postalCode' bind:value={postal_code}/>  
-  <input type="hidden" name='phone' bind:value={phone}/>  
-  <input type="hidden" name='gender' bind:value={gender}/> 
-  <input type="hidden" name='otherGender' bind:value={other_gender}/> 
-  <input type="hidden" name='golfID' bind:value={golf_id}/> 
-  <input type="hidden" name='email' bind:value={email}/> 
-  <input type="hidden" name='bio' bind:value={bio}>
+	<input type="hidden" name="fullName" bind:value={full_name} />
+	<input type="hidden" name="clubName" bind:value={club_name} />
+	<input type="hidden" name="handicapIndex" bind:value={handicap_index} />
+	<input type="hidden" name="postalCode" bind:value={postal_code} />
+	<input type="hidden" name="phone" bind:value={phone} />
+	<input type="hidden" name="gender" bind:value={gender} />
+	<input type="hidden" name="otherGender" bind:value={other_gender} />
+	<input type="hidden" name="golfID" bind:value={golf_id} />
+	<input type="hidden" name="email" bind:value={email} />
+	<input type="hidden" name="bio" bind:value={bio} />
 </form>

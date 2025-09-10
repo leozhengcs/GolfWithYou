@@ -70,9 +70,9 @@
     }
 </script>
 
-<div class='min-w-md max-w-lg mx-auto rounded-xl bg-black/30 backdrop-blur-xs shadow-lg flex flex-col gap-5 p-10'>
+<div class='md:min-w-md max-w-lg mx-auto rounded-xl bg-black/30 backdrop-blur-xs shadow-lg flex flex-col gap-5 p-10'>
 	<section>
-		<h1 class='text-2xl md:text-3xl'>When is your birthday?</h1>
+		<h1 class='text-xl md:text-3xl'>When is your birthday?</h1>
 	</section>
 	<div>
 		<input

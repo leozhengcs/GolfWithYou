@@ -15,10 +15,10 @@
 	}
 </script>
 
-<div class='min-w-md max-w-lg mx-auto rounded-xl bg-black/30 backdrop-blur-xs shadow-lg flex flex-col gap-5 p-10 select-none'>
+<div class='md:min-w-md max-w-lg mx-auto rounded-xl bg-black/30 backdrop-blur-xs shadow-lg flex flex-col gap-5 p-10 select-none'>
 	<section>
-		<h1 class='text-2xl md:text-3xl text-white'>Before we get started</h1>
-		<span class='text-sm md:text-base text-white'>Are you a private golf club member?</span>
+		<h1 class='text-xl md:text-3xl text-white'>Before we get started</h1>
+		<span class='text-sm md:text-base text-white/75'>Are you a private golf club member?</span>
 	</section>
 	<div>
 		<select

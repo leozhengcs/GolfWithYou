@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import { toast } from 'svelte-sonner';
 
 	let email = $state('');
@@ -32,24 +32,25 @@
 			}
 		};
 	};
+
+	$effect(() => {
+		if (finished) {
+			(async () => {
+				await invalidate('supabase:auth');
+			})();
+		}
+	})
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
-	<p
-		class="font-fugaz text-primary absolute top-1/12 z-10 text-center text-5xl md:top-1/12 md:text-8xl"
-	>
-		Teesaway
-	</p>
-	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
-		<h1 class="mb-6 text-center text-2xl font-bold text-green-800">Welcome Back</h1>
-
-		<p class="mb-4 text-center text-sm text-gray-600">Log in to your account to continue.</p>
+<div class="flex w-full h-full items-center justify-center">
+	<div class="max-w-sm mx-auto p-6 rounded-xl bg-black/30 backdrop-blur-xs shadow-lg flex flex-col gap-5" out:fly={{ duration: 500, y: -100}} in:fly={{ delay: 200, duration: 1000, y: -100 }}>
+		<h1 class="text-xl md:text-3xl text-white font-roboto">Log in</h1>
 
 		<form method="POST" class="space-y-4" use:enhance={handleFormSubmit}>
 			<input
 				type="text"
 				name="email"
-				class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+				class="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 focus:ring-1 focus:ring-white focus:outline-none text-white"
 				placeholder="you@example.com"
 				bind:value={email}
 				autocomplete="email"
@@ -58,7 +59,7 @@
 			<input
 				type="password"
 				name="password"
-				class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+				class="w-full rounded-lg border border-white/30 bg-transparent px-4 py-3 focus:ring-1 focus:ring-white focus:outline-none text-white"
 				placeholder="••••••••"
 				bind:value={password}
 				autocomplete="current-password"
@@ -66,7 +67,7 @@
 
 			<button
 				type="submit"
-				class="w-full cursor-pointer rounded-lg bg-green-700 py-3 font-semibold text-white transition hover:bg-green-800"
+				class="inline-block rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all w-full"
 			>
 				Login
 			</button>
@@ -74,14 +75,12 @@
 
 		<div class="mt-5 flex items-center justify-between text-sm">
 			<a href="/auth/forgot-password" class="cursor-pointer text-gray-400 hover:underline">
-				Forgot your password?
+				Forgot Password?
 			</a>
-			<button class="cursor-pointer text-gray-400 hover:underline" onclick={() => goto('/')}>
-				Sign Up
-			</button>
 		</div>
 	</div>
 </div>
+
 {#if loading}
 	<LoaderAnimation />
 {/if}
