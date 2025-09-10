@@ -17,9 +17,6 @@
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 
 	let loading = $state(false);
-	let setLoading = () => {
-		loading = true;
-	};
 
 	let step = $state(1); // Keeps track of which question user is on.
 	let formElement: HTMLFormElement;
@@ -50,6 +47,8 @@
 
 	$effect(() => {
 		if (step == 13) {
+			loading = true;
+
 			(async () => {
 				const formData = new FormData(formElement);
 
@@ -124,7 +123,7 @@
 	{/if}
 </div>
 
-<form method="POST" bind:this={formElement} onsubmit={setLoading}>
+<form method="POST" bind:this={formElement}>
 	<input type="hidden" name="fullName" bind:value={fullName} />
 	<input type="hidden" name="email" bind:value={email} />
 	<input type="hidden" name="gender" bind:value={gender} />
