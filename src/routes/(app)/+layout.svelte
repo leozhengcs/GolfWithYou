@@ -24,7 +24,7 @@
 	};
 
 	// Start by showing a loader on initial load, based on current page
-	let show = $state(true);
+	let show = $state(false);
 	let Loader = $state<typeof LoaderDiscover>(pickLoader(page.url.pathname));
 
 	const HIDE_DELAY_MS = 200;
@@ -38,7 +38,6 @@
 	// Show/hide during client-side navigations
 	$effect(() => {
 		if (navigating.to) {
-			// NEW nav in progress → pick loader by destination path
 			Loader = pickLoader(navigating.to.url.pathname); // note: .pathname, no .url
 			show = true;
 		} else {
@@ -49,7 +48,6 @@
 	});
 
 	let channel: ReturnType<typeof supabase.channel> | null = null;
-	// let authUnsub: { subscription: { unsubscribe: () => void } } | null = null;
 
 	function startPresence(userId: string) {
 		// if (channel && channel.state !== 'closed') return;
@@ -79,7 +77,7 @@
 		// });
 
 		channel.subscribe(async (status) => {
-			console.log('USER STATUS:', status);
+			// console.log('USER STATUS:', status);
 			if (status === 'SUBSCRIBED') {
 				await channel!.track({ online_at: new Date().toISOString() });
 				// optimistic: show self immediately
@@ -130,7 +128,7 @@
 </script>
 
 <div
-	class="bg-sky-background relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
+	class="bg-[#2f3e46] relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
 >
 	{#if show}
 		<Loader />

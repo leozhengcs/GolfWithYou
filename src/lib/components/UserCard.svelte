@@ -1,10 +1,9 @@
 <script lang="ts">
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database';
-	import { getAge } from '$lib/utils/date';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import UserModal from './UserModal.svelte';
 	import { onlineUsers } from '$lib/stores/users.svelte';
-	import { navbarState } from '$lib/stores/navbarState.svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	let {
 		user,
@@ -22,7 +21,7 @@
 	const closeModal = () => {
 		showUser = false;
 	};
-	
+
 	$effect(() => {
 		if (showUser) {
 			unread = false;
@@ -59,7 +58,7 @@
 	onclick={() => {
 		showUser = true;
 	}}
-	class={`grid h-75 w-60 flex-shrink-0 transform cursor-pointer auto-rows-auto rounded-2xl bg-[#bbdfed] p-4 transition duration-200 hover:scale-105 ${
+	class={`grid h-76 w-60 flex-shrink-0 transform cursor-pointer auto-rows-auto rounded-2xl bg-[#CAD2C5] p-4 transition duration-200 hover:scale-105 ${
 		$onlineUsers.includes(user.id) ? 'outline-6 outline-green-500' : ''
 	}`}
 >
@@ -71,7 +70,7 @@
 		<img
 			alt=""
 			src={user.avatar_url ?? '/icons/DefaultProfile.png'}
-			class="aspect-square h-52 w-full rounded-md object-cover object-center"
+			class="h-48 w-full rounded-md object-cover object-center"
 		/>
 
 		<div class="mt-2">
