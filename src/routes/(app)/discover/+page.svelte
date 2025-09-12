@@ -7,8 +7,8 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte.js';
 	import { get } from 'svelte/store';
-	import { fade, fly } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
+	import LoaderDiscover from '$lib/components/loaders/LoaderDiscover.svelte';
 
 	let { data } = $props();
 	let {
@@ -24,6 +24,7 @@
 	} = $derived(data);
 
 	let otherUsers: PublicUserProfile[] = $state([]);
+	let loading = $state(true);
 
 	async function createChatChannel(chat: any) {
 		const channelName = 'private_chat_' + chat.id;
@@ -116,7 +117,11 @@
 			}
 		};
 
-		init();
+		(async () => {
+			await init();
+		})();
+
+		loading = false;
 
 		return () => {
 			userChats?.forEach((chat) => {
@@ -136,7 +141,7 @@
 	// });
 </script>
 
-<div class="relative flex flex-col top-12 mb-[-7%]">
+<div class="relative top-12 mb-[-7%] flex flex-col">
 	<!-- <div class="fixed top-[-10%] left-[60%]" in:fly={{ x: 550, duration: 1500, easing: (t) => cubicOut(t) }}>
 		<img src="/images/cloud.png" class="z-10 max-w-[800px] opacity-40" alt="" />
 	</div>
@@ -164,9 +169,16 @@
 	<!-- <section class="flex flex-row justify-between">
 		<h1 class="font-fugaz text-3xl text-yellow-400">Discover Other Users</h1>
 	</section> -->
-	<div class="z-[60] grid w-full place-items-center grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-20 md:pb-32" in:fade={{ delay: 1500, duration: 1000 }}>
-		{#each otherUsers as otherUser}
-			<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
-		{/each}
-	</div>
+	{#if loading}
+		<LoaderDiscover />
+	{:else}
+		<div
+			class="z-[60] grid w-full grid-cols-1 place-items-center gap-10 pb-20 sm:grid-cols-2 md:grid-cols-3 md:pb-32 lg:grid-cols-4"
+			in:fade={{ duration: 1000 }}
+		>
+			{#each otherUsers as otherUser}
+				<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
+			{/each}
+		</div>
+	{/if}
 </div>
