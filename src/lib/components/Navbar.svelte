@@ -16,7 +16,7 @@
 
 {#if showNav}
 	<nav
-		class="absolute top-0 left-0 z-50 flex h-[100px] w-full select-none flex-row items-center justify-between p-5 px-10 md:px-20 bg-transparent"
+		class="absolute top-0 left-0 z-50 flex h-[100px] w-full select-none flex-row items-center justify-between p-5 px-10 md:px-20"
 		in:fade={{ duration: 500 }}
 	>
 		<button

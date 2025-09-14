@@ -25,7 +25,8 @@
 		images,
 		self, //id of logged in user
 		supabase,
-		onlineUsers
+		onlineUsers,
+		selectedTab = $bindable()
 	} = $props();
 
 	let messages: Message[] = $state([]);
@@ -37,12 +38,13 @@
 	let showIcon = $state(false);
 
 	let loading = $state(true);
+	let openChat = () => (selectedTab = 'chat');
+	let openProfile = () => (selectedTab = 'profile');
 
 	// svelte-ignore non_reactive_update
 	let inputRef: HTMLInputElement; // For keeping the text box focused
 	// svelte-ignore non_reactive_update
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
-	let selectedTab = $state('profile'); // States include 'overview', 'chat', and 'description'
 	const userTabs = ['profile', 'chat'];
 
 	async function getOrCreateChat() {
@@ -85,8 +87,8 @@
 	async function loadLatestMessage() {
 		const res = await fetch(`/api/fetch_latest_message?chatId=${chatId}`);
 		const data = await res.json();
-		if (!res.ok) {
-			console.error('Load error:', data.error);
+		if (res.status === 401) {
+			console.error('Unauthorized error, please contact support.');
 		}
 		return data;
 	}
@@ -174,7 +176,7 @@
 			}
 		}
 
-		console.log('Self id: ', self.id, '\nUser 1 ID: ', user1, '\nUser 2 ID: ', user2);
+		// console.log('Self id: ', self.id, '\nUser 1 ID: ', user1, '\nUser 2 ID: ', user2);
 		// Saves the latest message read
 		if (self.id == user1) {
 			const chatWrite = await supabase
@@ -191,7 +193,7 @@
 				.update({ user2LastRead: lastRead.id })
 				.eq('id', chatId);
 
-			console.log('Updated user 2: ', lastRead.id);
+			// console.log('Updated user 2: ', lastRead.id);
 
 			if (error) {
 				console.log('Update chat error: ', error);
@@ -199,12 +201,12 @@
 		}
 	}
 	onMount(async () => {
-		console.log(bio);
 		document.body.classList.add('overflow-y-hidden');
 		unreadMap.update((m) => ({
 			...m,
 			[id]: false
 		}));
+		
 		try {
 			await getOrCreateChat();
 			await loadMessages();
@@ -284,7 +286,7 @@
 			<button
 				onclick={() => (selectedTab = 'chat')}
 				aria-label="Chat"
-				class="absolute right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 md:hidden"
+				class="fixed right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 md:hidden text-ellipsis"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

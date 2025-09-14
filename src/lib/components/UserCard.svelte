@@ -3,7 +3,7 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import UserModal from './UserModal.svelte';
 	import { onlineUsers } from '$lib/stores/users.svelte';
-	import Tooltip from './Tooltip.svelte';
+	import { onMount } from 'svelte';
 
 	let {
 		user,
@@ -16,7 +16,9 @@
 		supabase: SupabaseClient;
 		unread: boolean;
 	} = $props();
+
 	let showUser = $state(false);
+	let selectedTab = $state('profile');
 
 	const closeModal = () => {
 		showUser = false;
@@ -26,9 +28,14 @@
 		if (showUser) {
 			unread = false;
 		}
+		if (unread) {
+			console.log('CHAT');
+
+			selectedTab = 'chat';
+		}
 	});
 
-	// $inspect(unread);
+	$inspect(selectedTab);
 </script>
 
 {#if showUser}
@@ -50,6 +57,7 @@
 			{self}
 			{supabase}
 			{onlineUsers}
+			{selectedTab}
 		/>
 	</div>
 {/if}

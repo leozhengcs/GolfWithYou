@@ -7,7 +7,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   const chatId = url.searchParams.get('chatId');
 
   if (!chatId) {
-    return json({ error: 'Missing chatId' }, { status: 400 });
+    return json("No Existing Chat or Missing Chat ID", { status: 200 });
   }
 
   const { data: user, error: authError } = await supabase.auth.getUser();
