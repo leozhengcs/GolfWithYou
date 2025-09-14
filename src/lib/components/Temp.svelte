@@ -1,240 +1,203 @@
-<!-- <div
-    role="button"
-    tabindex="0"
-    aria-label="Close Modal"
-    onclick={closeModal}
-    onkeydown={(e) => (e.key === 'Esc' ? closeModal() : null)}
-    transition:fade={{ duration: 300 }}
-    class="fixed inset-0 z-[60] flex h-full w-full flex-col items-center justify-center bg-gray-500/50 md:z-40 md:flex-1 md:flex-row"
-> -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <!-- TODO: Clean up if statements to remove selectedTab dependency -->
-    <!-- {#if selectedTab === 'overview'} -->
-    <div
-        class="grid h-[85%] w-[90%] grid-cols-1 rounded-lg bg-white p-5 md:h-[80%] md:w-[80%] md:grid-cols-[30%_70%] md:p-6"
-        onclick={(e) => {
-            e.stopPropagation();
-        }}
-        aria-label="User Modal"
-    >
-        <div class="flex flex-col gap-2 md:mr-5">
-            <div class="flex w-full flex-row md:flex-col gap-5">
-                <div
-                    class="mb-2 flex aspect-square h-full items-center justify-center overflow-hidden"
-                >
-                    <img
-                        {src}
-                        alt=""
-                        class="h-12 w-12 rounded-full object-cover object-center md:h-40 md:w-40 md:rounded-none"
-                    />
-                </div>
-                <section class="flex flex-col">
-                    <h1 class="text-lg md:text-xl">
-                        {name}
-                    </h1>
-                    <span
-                        class={`text-xs ${verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
-                    >
-                        {verified ? 'Verified' : 'Awaiting Verification'}
-                    </span>
-                    {#if !verified && self.verified}
-                        <button
-                            onclick={handleVouch}
-                            class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"
-                        >
-                            Vouch for them
-                        </button>
-                    {/if}
-                </section>
-            </div>
-            <!-- <section class="flex flex-col">
-                    <h1 class="text-xl">User Info</h1>
-                    <span class="text-sm">Club Name: <span class="text-gray-400">{member}</span></span>
-                    <span class="text-sm"
-                        >Handicap Index: <span class="text-gray-400">{handicap_index}</span></span
-                    >
-                    <span class="text-sm">Gender: <span class="text-gray-400">{gender}</span></span>
-                    <span class="text-sm">Golf Id: <span class="text-gray-400">{golf_id}</span></span>
-                    <span class="text-sm">Postal Code: <span class="text-gray-400">{postal_code}</span></span>
-                </section>
-                <section class="hidden flex-col md:flex">
-                    <h1 class="text-xl text-black">Bio</h1>
-                    <p class="text-sm">{bio && bio.length === 0 ? 'No bio yet.' : bio}</p>
-                </section>
-                <section class="hidden flex-col md:flex">
-                    <h1 class="text-xl">User Images</h1>
-                </section> -->
-        </div>
-        
-        {#if loading}
-            <LoaderChat />
-        {:else}
-            <div class="relative flex-col gap-5 overflow-y-hidden flex">
-                <h1 class="h-8 text-2xl hidden md:block">{name}</h1>
-                <div class="flex flex-1 flex-col gap-8 overflow-y-auto pr-5">
-                    {#each messages as message}
-                        {#if message.sender_id == id}
-                            <div class="flex flex-row items-end gap-5">
-                                <div class="aspect-square w-10 overflow-hidden rounded-full">
-                                    <img
-                                        src={src ?? '/icons/DefaultProfile.png'}
-                                        alt=""
-                                        class="h-full w-full object-cover"
-                                    />
-                                </div>
-                                <div class="w-fit rounded-lg bg-gray-200 p-2">
-                                    <p class="m-0 w-fit max-w-[500px] p-0 text-wrap">{message.content}</p>
-                                </div>
-                            </div>
-                        {:else}
-                            <div class="flex flex-row items-end justify-end gap-5">
-                                <div class="w-fit rounded-lg bg-gray-200 p-2">
-                                    <p class="m-0 w-fit max-w-[300px] p-0 text-wrap">{message.content}</p>
-                                </div>
-                                <div class="aspect-square w-10 overflow-hidden rounded-full">
-                                    <img
-                                        src={self.avatar_url ?? '/icons/DefaultProfile.png'}
-                                        alt=""
-                                        class="h-full w-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                        {/if}
-                    {/each}
-                    <div bind:this={bottomRef}></div>
-                </div>
-                <form
-                    class="bottom-0 z-50 flex w-full items-center gap-4 border-t bg-white pt-4"
-                    onsubmit={sendMessage}
-                >
-                    <input
-                        bind:value={newMessage}
-                        bind:this={inputRef}
-                        class="flex-1 rounded-full px-4 py-2 focus:ring-0 focus:outline-none"
-                        placeholder="Type your message..."
-                    />
-                    <button
-                        type="submit"
-                        class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                    >
-                        {`Message ${name.split(' ')[0]}`}
-                    </button>
-                </form>
-            </div>
-        {/if}
-        <!-- <div class="relative flex w-fit gap-2 rounded-b-lg">
-            {#each userTabs as tab}
-                <button
-                    onclick={() => (selectedTab = tab)}
-                    class="py-2 text-xs uppercase transition-all duration-350
-                    {selectedTab === tab
-                        ? 'z-10 bg-white text-blue-600'
-                        : 'bg-gray-300 text-gray-600 hover:bg-gray-400'}
-                "
-                >
-                    {tab}
-                </button>
-            {/each}
-        </div> -->
-    </div>
-    <!-- {:else if selectedTab === 'chat'}
-        <div
-            class="relative flex h-[85%] w-[90%] flex-col rounded-lg bg-white p-5 md:hidden"
-            onclick={(e) => e.stopPropagation()}
-        >
-            <h1 class="h-8 text-2xl">{name}</h1>
-            {#if loading}
-                <LoaderChat />
-            {:else}
-                <div class="flex flex-1 flex-col gap-5 overflow-y-auto pr-5">
-                    {#each messages as message}
-                        {#if message.sender_id == id}
-                            <div class="flex flex-row items-end gap-5">
-                                <div class="aspect-square w-10 overflow-hidden rounded-full">
-                                    <img
-                                        src={src ?? '/icons/DefaultProfile.png'}
-                                        alt=""
-                                        class="h-full w-full object-cover"
-                                    />
-                                </div>
-                                <div class="w-fit rounded-lg bg-gray-200 p-2">
-                                    <p class="m-0 w-fit max-w-[500px] p-0 text-xs text-wrap">{message.content}</p>
-                                </div>
-                            </div>
-                        {:else}
-                            <div class="flex flex-row items-end justify-end gap-5">
-                                <div class="w-fit rounded-lg bg-gray-200 p-2">
-                                    <p class="m-0 w-fit max-w-[300px] p-0 text-xs text-wrap">{message.content}</p>
-                                </div>
-                                <div class="aspect-square w-10 overflow-hidden rounded-full">
-                                    <img
-                                        src={self.avatar_url ?? '/icons/DefaultProfile.png'}
-                                        alt=""
-                                        class="h-full w-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                        {/if}
-                    {/each}
-                    <div bind:this={bottomRef}></div>
-                </div>
-                <form
-                    class="bottom-0 z-50 flex w-full items-center gap-4 border-t bg-white pt-4"
-                    onsubmit={sendMessage}
-                >
-                    <input
-                        bind:value={newMessage}
-                        bind:this={inputRef}
-                        class="flex-1 rounded-full px-4 py-2 text-xs focus:ring-0 focus:outline-none"
-                        placeholder="Type your message..."
-                    />
-                    <button
-                        type="submit"
-                        class="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-xs text-white hover:bg-blue-600"
-                    >
-                        {`Message ${name.split(' ')[0]}`}
-                    </button>
-                </form>
-            {/if}
-        </div>
-    {:else if selectedTab === 'description'}
-        <div
-            class="relative flex h-[85%] w-[90%] flex-col gap-5 rounded-lg bg-white p-5 md:hidden"
-            onclick={(e) => e.stopPropagation()}
-        >
-            <section class="flex flex-col">
-                <h1 class="text-base">Bio</h1>
-                <p class="text-xs text-gray-400">{bio && bio.length !== 0 ? bio : 'No user bio yet.'}</p>
-            </section>
-            <section class="flex flex-col">
-                <h1 class="text-base">User Images</h1>
-            </section>
-        </div>
-    {/if} -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <!-- <div
-        class="md:hidden"
-        onclick={(e) => {
-            e.stopPropagation();
-        }}
-    >
-        <div class="relative flex w-fit gap-1 rounded-b-lg px-1">
-            {#each userTabs as tab}
-                <button
-                    onclick={() => (selectedTab = tab)}
-                    class={`relative rounded-b-md px-4 py-2 text-xs uppercase transition-all duration-300
-                ${
-                    selectedTab === tab
-                        ? '-mt-px border border-transparent border-t-white bg-white'
-                        : 'border border-transparent bg-gray-300 text-gray-600 hover:bg-gray-400'
-                }
-            `}
-                >
-                    {tab}
-                </button>
-            {/each}
-        </div>
-    </div> -->
-<!-- </div> -->
+
+<div
+	class="fixed inset-0 z-[60] flex h-screen w-screen flex-col overflow-y-auto bg-[#DFDFDF] shadow-2xl"
+	in:fly={{ duration: 500, x: 500, easing: circOut }}
+	out:fly={{ duration: 500, x: 500, easing: circOut }}
+>
+	{#if selectedTab === 'profile'}
+		<div class="absolute top-5 left-2 z-50">
+			<Back
+				onclick={closeModal}
+				onkeydown={(e: { key: string }) => (e.key === 'Esc' ? closeModal() : null)}
+			/>
+		</div>
+		<!-- Profile Section -->
+		<div class="relative flex h-full w-full flex-col p-5">
+			<!-- Chat Button -->
+			<button
+				onclick={() => (selectedTab = 'chat')}
+				aria-label="Chat"
+				class="fixed right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 md:hidden text-ellipsis"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="size-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+					/>
+				</svg>
+			</button>
+			<div class="flex h-52 w-full flex-col items-center justify-center gap-2">
+				<img
+					{src}
+					alt=""
+					class="h-24 w-24 rounded-full object-cover object-center md:h-40 md:w-40 md:rounded-none"
+				/>
+				<section class="flex flex-col">
+					<h1 class="text-lg md:text-xl">
+						{name}
+					</h1>
+					<p
+						class={`text-center text-xs ${verified ? 'bg-green-500' : 'bg-red-500'} mx-auto rounded-lg p-1 text-white`}
+					>
+						{verified ? 'Verified' : 'Awaiting Verification'}
+					</p>
+					{#if !verified && self.verified}
+						<button
+							onclick={handleVouch}
+							class="bg-action z-50 mt-2 w-fit rounded-lg p-1 text-xs text-white"
+						>
+							Vouch for them
+						</button>
+					{/if}
+				</section>
+			</div>
+			<section class="flex-col md:flex">
+				<p class="text-sm">{bio && bio.length !== 0 ? bio : 'No bio yet'}</p>
+			</section>
+			<div class="flex flex-col gap-2 py-5">
+				<div>
+					<div class="w-full px-2">
+						<span class="text-sm">Golf ID</span>
+					</div>
+					<div class="w-full rounded-lg bg-[#EEEEEE] p-2">
+						<p class="text-sm">{golf_id}</p>
+					</div>
+				</div>
+				<div>
+					<div class="w-full px-2">
+						<span class="text-sm">Member Of</span>
+					</div>
+					<div class="w-full rounded-lg bg-[#EEEEEE] p-2">
+						<p class="text-sm">{member}</p>
+					</div>
+				</div>
+				<div>
+					<div class="w-full px-2">
+						<span class="text-sm">Handicap Index</span>
+					</div>
+					<div class="w-full rounded-lg bg-[#EEEEEE] p-2">
+						<p class="text-sm">{handicap_index}</p>
+					</div>
+				</div>
+				<div>
+					<div class="w-full px-2">
+						<span class="text-sm">Gender</span>
+					</div>
+					<div class="w-full rounded-lg bg-[#EEEEEE] p-2">
+						<p class="text-sm">{gender}</p>
+					</div>
+				</div>
+			</div>
+
+			<section class="flex-col md:flex">
+				<h1 class="text-sm">Featured Photos</h1>
+			</section>
+		</div>
+	{:else}
+		<!-- Chat Section -->
+		<div
+			class="fixed inset-0 flex flex-col bg-[#DFDFDF] shadow-2xl"
+			in:fly={{ duration: 500, x: 500, easing: circOut }}
+			out:fly={{ duration: 500, x: 500, easing: circOut }}
+		>
+			<!-- Header -->
+			<div class="z-50 flex h-20 w-full flex-row items-center gap-5 px-5 py-4 shadow-lg">
+				<Back onclick={() => (selectedTab = 'profile')} />
+				<div class="aspect-square w-12 overflow-hidden rounded-full">
+					<img {src} alt="" class="object-cover object-center" />
+				</div>
+				<h1 class="text-lg">
+					{name}
+				</h1>
+			</div>
+			<!-- Body -->
+			<div class="relative flex min-h-0 flex-1 flex-col gap-5 overflow-y-hidden">
+				<div class="flex flex-1 flex-col gap-8 overflow-y-auto px-5">
+					{#each messages as message}
+						{#if message.sender_id == id}
+							<div class="flex flex-row items-end gap-5">
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={src ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[500px] p-0 text-wrap">{message.content}</p>
+								</div>
+							</div>
+						{:else}
+							<div class="flex flex-row items-end justify-end gap-5">
+								<div class="w-fit rounded-lg bg-gray-200 p-2">
+									<p class="m-0 w-fit max-w-[300px] p-0 text-wrap">{message.content}</p>
+								</div>
+								<div class="aspect-square w-10 overflow-hidden rounded-full">
+									<img
+										src={self.avatar_url ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								</div>
+							</div>
+						{/if}
+					{/each}
+					<div bind:this={bottomRef}></div>
+				</div>
+			</div>
+			<form
+				class="sticky bottom-0 z-50 flex w-full items-center gap-4 px-5 pt-4"
+				onsubmit={sendMessage}
+			>
+				{#if loading}
+					<LoaderChat />
+				{:else}
+					<div
+						class="group flex w-full items-center"
+						onfocusin={() => (showIcon = true)}
+						onfocusout={() => (showIcon = false)}
+					>
+						<input
+							bind:value={newMessage}
+							bind:this={inputRef}
+							class="w-full flex-1 rounded-full bg-[#EEEEEE] px-4 py-2 pr-12 focus:border-transparent focus:outline-none"
+							placeholder={`Message ${name}`}
+						/>
+						<button
+							type="submit"
+							class="pointer-events-none absolute top-1/2 right-5 flex h-8 w-12 -translate-1/4 items-center
+					   justify-center rounded-full bg-[#52796F] text-white opacity-0 transition-opacity
+					duration-200 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+						>
+							{#if showIcon}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="h-6 w-6"
+								>
+									<path d="M22 2L11 13" transition:draw={{ delay: 300, duration: 500 }} />
+									<path d="M22 2L15 22l-4-9-9-4z" transition:draw={{ duration: 500 }} />
+								</svg>
+							{/if}
+							<!-- {`Message ${name.split(' ')[0]}`} -->
+						</button>
+						<div class="h-20"></div>
+					</div>
+				{/if}
+			</form>
+		</div>
+	{/if}
+</div>

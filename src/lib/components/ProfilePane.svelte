@@ -1,9 +1,44 @@
 <script lang="ts">
-	let { openChat, src, name, verified, self, handleVouch, bio, golf_id, member, handicap_index, gender } = $props();
+	import Back from './Back.svelte';
+
+	let {
+		closeModal,
+		openChat,
+		src,
+		name,
+		verified,
+		self,
+		bio,
+		golf_id,
+		member,
+		handicap_index,
+		gender,
+		id
+	} = $props();
+
+	async function handleVouch() {
+		try {
+			const res = await fetch('/api/vouch_user', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ self, id })
+			});
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+		verified = true;
+	}
 </script>
 
 <!-- Profile Section -->
-<div class="relative flex h-full w-full flex-col p-5">
+<div class="relative z-50 flex h-full w-full flex-col p-5">
+	<Back
+		onclick={closeModal}
+		onkeydown={(e: { key: string }) => (e.key === 'Esc' ? closeModal : null)}
+		width={30}
+		height={30}
+	/>
 	<!-- Chat Button -->
 	<button
 		onclick={openChat}
