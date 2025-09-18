@@ -8,6 +8,8 @@
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import LoaderChat from './loaders/LoaderChat.svelte';
+	import { sendMail } from '$lib/mailbox';
+	import type { PublicUserProfile } from '$lib/types/Database';
 
 	// svelte-ignore non_reactive_update
 	let inputRef: HTMLInputElement; // For keeping the text box focused
@@ -15,6 +17,7 @@
 	let taRef: HTMLTextAreaElement;
 	// svelte-ignore non_reactive_update
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
+	let form: HTMLFormElement;
 	let { openProfile, src, supabase, id, self, onlineUsers, verified, name } = $props();
 	let messages: Message[] = $state([]);
 	let newMessage = $state('');
@@ -129,6 +132,7 @@
 		if (m === '') return;
 
 		newMessage = '';
+		autoResize();
 
 		// Save message into DB
 		const res = await fetch('/api/message', {
@@ -165,7 +169,7 @@
 
 		const to = id;
 		const subject = `[TeesAway] New message from: ${self.full_name}`;
-		const text = '';
+		const text = `You have a new message from ${self.full_name}:\n\n"${m}"`;
 
 		// Only send email if user is not online
 		if (!$onlineUsers.includes(id)) {
@@ -176,8 +180,10 @@
 			});
 		}
 
+		await sendMail(id, 'message', text, self.avatar_url, self.full_name, supabase);
 		await loadMessages();
 		await tick();
+		console.log('CHECKING SELF: ', self);
 		// inputRef.focus();
 	}
 
@@ -299,7 +305,7 @@
 		{:else}
 			<main class="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto px-5 pt-5">
 				<aside class="mb-5 w-full text-center text-sm text-gray-500">
-					This is the start of your chat!
+					This is the start of your with {name}!
 				</aside>
 				{#each messages as message}
 					{#if message.sender_id == id}
@@ -337,10 +343,11 @@
 	<form
 		class="sticky bottom-0 z-50 flex w-full items-center gap-4 px-5 pt-1"
 		onsubmit={sendMessage}
+		bind:this={form}
 	>
 		{#if !loading}
 			<div
-				class="group relative mb-5 flex flex-1 w-full flex-wrap items-center focus:ring-0"
+				class="group relative mb-5 flex w-full flex-1 flex-wrap items-center focus:ring-0"
 				style={`height: ${h + 16}px`}
 				onfocusin={() => (showIcon = true)}
 				onfocusout={() => (showIcon = false)}
@@ -351,14 +358,22 @@
 					rows="1"
 					oninput={autoResize}
 					onchange={autoResize}
-					class={`absolute inset-x-0 bottom-2 resize-none overflow-hidden rounded-3xl bg-transparent
-           px-2 py-2 pr-14 leading-6 [scrollbar-gutter:stable] border-black focus:outline-none focus:ring-0 ${isMultiline ? 'pb-10 md:pr-2' : ''}`}
+					onkeydown={(e: KeyboardEvent) => {
+						if (e.key === 'Backspace') {
+							autoResize();
+						} else if (e.key === 'Enter' && !e.shiftKey) {
+							e.preventDefault();
+							form?.requestSubmit(); // submits the form (fires on:submit)
+						}
+					}}
+					class={`absolute inset-x-0 bottom-2 resize-none overflow-hidden rounded-3xl border-black
+           bg-transparent px-2 py-2 pr-14 leading-6 [scrollbar-gutter:stable] focus:ring-0 focus:outline-none ${isMultiline ? 'pb-10 md:pr-2' : ''}`}
 					placeholder={`Message ${name}`}
 				></textarea>
 				<button
 					type="submit"
 					class={`absolute right-5 bottom-2.5 grid h-9 w-9 place-items-center rounded-full
-					bg-[#52796F] text-white opacity-0
+					bg-[#52796F] text-white opacity-0 cursor-pointer
 					shadow transition-opacity duration-200
 					group-focus-within:opacity-100 disabled:opacity-40`}
 				>

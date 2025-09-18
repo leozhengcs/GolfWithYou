@@ -15,10 +15,10 @@ export const load: PageServerLoad = async({ locals: { supabase }}) => {
         .single();
 
     // get all chats the user is a part of
-    const userChats = await supabase
-        .from('private_chats')
-        .select('*')
-        .or(`user1.eq.${user?.id},user2.eq.${user?.id}`);
+    // const userChats = await supabase
+    //     .from('private_chats')
+    //     .select('*')
+    //     .or(`user1.eq.${user?.id},user2.eq.${user?.id}`);
 
     if (userQuery.error) {
         console.error("Error fetching user profile ", userQuery.error);
@@ -38,6 +38,6 @@ export const load: PageServerLoad = async({ locals: { supabase }}) => {
     return {
         user: userQuery.data,
         users: filteredData,
-        userChats: userChats.data
+        // userChats: userChats.data
     };
 }

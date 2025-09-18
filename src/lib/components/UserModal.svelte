@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { draw, fade, fly } from 'svelte/transition';
-	import { onMount, onDestroy, tick } from 'svelte';
-	import { toast } from 'svelte-sonner';
-	import type { Message } from '$lib/types/Chat';
-	import type { RealtimeChannel } from '@supabase/supabase-js';
-	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte';
-	import LoaderChat from './loaders/LoaderChat.svelte';
-	import Back from './Back.svelte';
 	import { circOut } from 'svelte/easing';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import ProfilePane from './ProfilePane.svelte';
 	import ChatPane from './ChatPane.svelte';
 
@@ -52,6 +46,7 @@
 
 <div
 	class="fixed top-0 left-0 h-full w-full bg-[#DFDFDF] md:grid md:grid-cols-[40%_60%] md:gap-0 lg:grid-cols-[30%_70%]"
+	transition:fade={{ duration: 300, easing: circOut }}
 >
 	{#if isMdUp}
 		<div class="min-h-0">
@@ -73,7 +68,7 @@
 		<div class="flex min-h-0 flex-col">
 			<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
 		</div>
-	{:else if selectedTab === 'profile'}
+	{:else}
 		<ProfilePane
 			{id}
 			{closeModal}
@@ -88,7 +83,10 @@
 			{src}
 			{verified}
 		/>
-	{:else if selectedTab === 'chat'}
-		<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+		{#if selectedTab === 'chat'}
+		<div class='absolute w-full h-full inset-0 z-50'>
+			<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+		</div>
+		{/if}
 	{/if}
 </div>

@@ -9,11 +9,22 @@
 	// Page Loader Animations
 	import LoaderDiscover from '$lib/components/loaders/LoaderDiscover.svelte';
 	import LoaderProfile from '$lib/components/loaders/LoaderProfile.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { navbarState } from '$lib/stores/navbarState.svelte';
+	import { subscribeToMailbox } from '$lib/mailbox';
+	import { unread, notifications } from '$lib/stores/globalStates.svelte';
+	import type { UserProfile } from '$lib/types/Database';
+	import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
+	import type { Notification } from '$lib/types/Chat';
 
-	let { children, data } = $props();
+	let {
+		children,
+		data
+	}: {
+		children: any;
+		data: { profile: UserProfile; supabase: SupabaseClient; user: User; session: Session };
+	} = $props();
 	let { supabase } = $derived(data);
 	injectAnalytics();
 
@@ -48,40 +59,35 @@
 	});
 
 	let channel: ReturnType<typeof supabase.channel> | null = null;
+	let stopMail = () => {};
 
-	function startPresence(userId: string) {
+	function startPresence(userId: string, name: string, avatar: string) {
 		// if (channel && channel.state !== 'closed') return;
+		if (channel && channel.state === 'joined') return;
+
 		channel = supabase.channel('online-users', {
 			config: { presence: { key: userId }, broadcast: { self: true } }
 		});
 
 		const refresh = () => {
-			const state = channel!.presenceState() as Record<string, unknown[]>;
+			const state = channel!.presenceState() as Record<string, Notification[]>;
 			onlineUsers.set(Object.keys(state));
-			console.log('STATE', JSON.stringify(state, null, 2));
 		};
 
 		channel.on('presence', { event: 'sync' }, refresh);
 		channel.on('presence', { event: 'join' }, (e) => {
-			console.log('JOIN diff', e);
 			refresh();
 		});
-		  channel.on('presence', { event: 'leave' }, (e) => {
-			console.log("LEAVE diff: ", e);
+		channel.on('presence', { event: 'leave' }, (e) => {
 			refresh();
-		  });
-
-		// channel.on('presence', { event: 'sync' }, () => {
-		// 	const state = channel!.presenceState() as Record<string, unknown[]>;
-		// 	onlineUsers.set(Object.keys(state));
-		// });
+		});
 
 		channel.subscribe(async (status) => {
 			// console.log('USER STATUS:', status);
 			if (status === 'SUBSCRIBED') {
-				await channel!.track({ online_at: new Date().toISOString() });
+				await channel!.track({ id: userId, name, avatar, online_at: new Date().toISOString() });
 				// optimistic: show self immediately
-				onlineUsers.update((ids) => (ids.includes(userId) ? ids : [...ids, userId]));
+				onlineUsers.update((id) => (id.includes(userId) ? id : [...id, userId, name, avatar]));
 			}
 		});
 	}
@@ -97,39 +103,45 @@
 		onlineUsers.set([]);
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		await tick();
 		navbarState.show = true;
 		// Sets the auth token for when you login
-		(async () => {
-			const {
-				data: { session }
-			} = await supabase.auth.getSession();
-			if (session) await supabase.realtime.setAuth(session.access_token);
-		})();
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
+
+		if (!session) {
+			console.error('No session please login again');
+			toast.error('No session, please login again.');
+			return;
+		}
+
+		await supabase.realtime.setAuth(session.access_token);
+
+		stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
+			notifications.update((existing) => [row, ...existing]);
+			console.log(notifications);
+			unread.update((num) => num + 1);
+			// console.log('Update row: ', row);
+			toast.info(`You have a new notification from: ${row.from_name}`);
+		});
 
 		if (!data.user) {
 			toast.error('Error getting user, please log in again');
 			return;
 		}
 
-		startPresence(data.user.id);
+		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
+	});
 
-		// Go offline quickly on tab close/reload
-		const cleanup = () => {
-			stopPresence();
-		};
-		window.addEventListener('beforeunload', cleanup);
-
-		return () => {
-			window.removeEventListener('beforeunload', cleanup);
-			stopPresence();
-		};
+	onDestroy(() => {
+		stopPresence();
+		stopMail();
 	});
 </script>
 
-<div
-	class="bg-[#2f3e46] relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30"
->
+<div class="relative flex min-h-screen flex-col overflow-x-clip bg-[#2f3e46] p-10 pt-32 xl:p-30">
 	{#if show}
 		<Loader />
 	{:else}

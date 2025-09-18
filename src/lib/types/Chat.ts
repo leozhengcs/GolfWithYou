@@ -5,3 +5,9 @@ export interface Message {
     content: string;
     created_at: string;
 }
+
+export interface Notification {
+    id: string,
+    name: string,
+    avatar: string
+}

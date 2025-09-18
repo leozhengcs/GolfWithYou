@@ -1,5 +1,6 @@
 // Needed for hooks
 import type { PageServerLoad } from '../$types';
+import type { UserProfile } from '$lib/types/Database';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const { data, error } = await supabase.from('users').select('*').single();
@@ -8,5 +9,5 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 		return { error: 'Error fetching user' };
 	}
 
-	return { profile: data };
+	return { profile: data as UserProfile  };
 };

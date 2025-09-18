@@ -36,7 +36,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   if (existing) {
-    return json({ chatId: existing.id, user1: existing.user1, user2: existing.user2 });
+    return json({ chatId: existing.id, user1: existing.user1, user2: existing.user2 }, { status: 200 });
   }
 
   // Create new chat
@@ -47,8 +47,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     .single();
 
   if (insertError) {
+    console.log('server insert error:', insertError);
     return json({ error: insertError.message }, { status: 500 });
   }
 
-  return json({ chatId: newChat.id, user1: existing.user1, user2: existing.user2 }, { status: 201 });
+  return json({ chatId: newChat.id, user1: currentUserId, user2: otherUserId }, { status: 201 });
 };

@@ -43,7 +43,7 @@
 	<button
 		onclick={openChat}
 		aria-label="Chat"
-		class="fixed right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 text-ellipsis md:hidden"
+		class="fixed right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 text-ellipsis md:hidden z-50"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
