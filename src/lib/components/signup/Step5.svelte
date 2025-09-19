@@ -19,7 +19,7 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="md:min-w-md mx-auto flex flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<h1 class="text-2xl text-white md:text-3xl">Which best describes your gender?</h1>
 	<div>

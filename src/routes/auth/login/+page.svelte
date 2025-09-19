@@ -77,6 +77,9 @@
 			<a href="/auth/forgot-password" class="cursor-pointer text-gray-400 hover:underline">
 				Forgot Password?
 			</a>
+			<a href="/auth/signup" class="cursor-pointer text-gray-400 hover:underline">
+				Register
+			</a>
 		</div>
 	</div>
 </div>

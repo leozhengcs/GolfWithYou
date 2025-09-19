@@ -21,7 +21,7 @@
 </script>
 
 <div
-	class="md:mx-auto flex max-w-lg min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="md:mx-auto flex md:min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<section class="flex flex-col">
 		<h1 class="text-xl text-white md:text-3xl">A few more questions!</h1>

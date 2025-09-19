@@ -1,14 +1,16 @@
 <script lang="ts">
 	import type { UserProfile } from '$lib/types/Database';
-	import { goto, invalidateAll, invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { toTitleCase } from '$lib/utils/string';
 
 	import ProfileTab from '$lib/components/profile/profile.svelte';
 	import PersonalTab from '$lib/components/profile/personal.svelte';
 	import AccountTab from '$lib/components/profile/account.svelte';
 	import DataTab from '$lib/components/profile/data.svelte';
+	import PhotosTab from '$lib/components/profile/photos.svelte'
 	import { toast } from 'svelte-sonner';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 	let { profile, supabase }: { profile: UserProfile | null; supabase: SupabaseClient } =
@@ -149,6 +151,15 @@
 				Account Details
 			</button>
 			<button
+				onclick={() => {
+					tab = 'photos'
+					disabled = true
+				}}
+				class='w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300'
+			>
+				Featured Photos
+			</button>
+			<button
 				onclick={handleLogout}
 				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left text-red-400 transition-all duration-100 hover:bg-red-200"
 			>
@@ -193,8 +204,13 @@
 			{handleSubmit}
 			{handleDeleteAccount}
 		/>
-	{:else}
+	{:else if tab == 'data'}
 		<DataTab />
+	{:else if tab == 'photos'}
+		<PhotosTab 
+			handlePhotoUpload={null}
+			photos={null}
+		/>
 	{/if}
 </div>
 

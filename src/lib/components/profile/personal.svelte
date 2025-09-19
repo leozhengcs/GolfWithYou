@@ -55,7 +55,7 @@
 
 <section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-gray-300 bg-gray-300/50 px-5 md:p-10 py-5">
 	<h1 class="text-3xl">Personal Info</h1>
-	{#if !profile?.verified}
+	<!-- {#if !profile?.verified}
 		<Tooltip text="Please contact a verified user to verify your profile.">
 			<span
 				class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
@@ -67,7 +67,7 @@
 			class={`text-sm ${profile?.verified ? 'bg-green-500' : 'bg-red-500'} w-fit rounded-lg p-1 text-white`}
 			>{profile?.verified ? 'Verified' : 'Awaiting Verification'}
 		</span>
-	{/if}
+	{/if} -->
 	<div>
 		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Phone Number</label>
 		<div class="mt-2">
