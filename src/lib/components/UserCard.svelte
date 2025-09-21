@@ -66,7 +66,7 @@
 	onclick={() => {
 		showUser = true;
 	}}
-	class={`grid h-76 w-60 flex-shrink-0 transform cursor-pointer auto-rows-auto rounded-2xl bg-[#CAD2C5] p-4 transition duration-200 hover:scale-105 ${
+	class={`grid h-76 w-60 flex-shrink-0 transform cursor-pointer auto-rows-auto rounded-2xl bg-[#B9C8B7] p-4 transition duration-200 hover:scale-105 ${
 		$onlineUsers.includes(user.id) ? 'outline-6 outline-green-500' : ''
 	}`}
 >
