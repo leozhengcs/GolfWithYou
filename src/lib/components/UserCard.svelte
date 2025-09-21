@@ -29,17 +29,13 @@
 			unread = false;
 		}
 		if (unread) {
-			console.log('CHAT');
-
 			selectedTab = 'chat';
 		}
 	});
-
-	$inspect(selectedTab);
 </script>
 
 {#if showUser}
-	<div class="absolute top-0 left-0 h-full w-full items-center justify-center overflow-clip z-50">
+	<div class="absolute top-0 left-0 h-full w-full items-center justify-center overflow-clip z-[70]">
 		<UserModal
 			id={user.id}
 			name={user.full_name}

@@ -1,11 +1,13 @@
 <script lang="ts">
 	import UserCard from '$lib/components/UserCard.svelte';
-	import { onDestroy, onMount, tick } from 'svelte';
+	import Dropdown from '$lib/components/Dropdown.svelte';
+	import { clubs } from '$lib';
+	import { onDestroy, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { chatMap, openedModal, unreadMap } from '$lib/stores/globalStates.svelte.js';
+	import { unreadMap } from '$lib/stores/globalStates.svelte.js';
 	import { fade, fly } from 'svelte/transition';
 	import LoaderDiscover from '$lib/components/loaders/LoaderDiscover.svelte';
 
@@ -24,28 +26,50 @@
 
 	let otherUsers: PublicUserProfile[] = $state([]);
 	let filteredUsers: PublicUserProfile[] = $state([]);
-	$inspect(filteredUsers);
+
 	let loading = $state(true);
 
-	let filter = $state('');
-	let filterTimer: NodeJS.Timeout | undefined;
+	let search = $state('');
+	let searchTimer: NodeJS.Timeout | undefined;
 
 	const searchUsers = (event: SubmitEvent | null = null) => {
 		if (event) {
 			event.preventDefault();
 		}
-		const normalized = filter.trim().toLowerCase();
-		if (!filter) filteredUsers = otherUsers;
+		const normalized = search.trim().toLowerCase();
+		if (!search) filteredUsers = otherUsers;
 
-		filteredUsers = otherUsers.filter((user) => user.full_name.toLowerCase().includes(normalized));
+		if (filterClubs.length > 0) {
+			filteredUsers = filteredUsers.filter((user) =>
+				user.full_name.toLowerCase().includes(normalized)
+			);
+		} else {
+			filteredUsers = otherUsers.filter((user) =>
+				user.full_name.toLowerCase().includes(normalized)
+			);
+		}
 	};
 
 	const handleFilterInput = () => {
-		clearTimeout(filterTimer);
-		filterTimer = setTimeout(() => {
+		clearTimeout(searchTimer);
+		searchTimer = setTimeout(() => {
 			searchUsers();
 		}, 500);
 	};
+
+	let filterClubs = $state<string[]>([]);
+	$inspect(filterClubs);
+
+	$effect(() => {
+		if (filterClubs.length > 0) {
+			search = '';
+			// Check if there is an existing name search filter
+			filteredUsers = otherUsers.filter((user) => filterClubs.includes(user.club_name));
+		} else if (filterClubs.length == 0) {
+			search = '';
+			filteredUsers = otherUsers;
+		}
+	});
 
 	onMount(async () => {
 		otherUsers = users.filter((u) => u.id !== user?.id);
@@ -71,11 +95,11 @@
 	});
 
 	onDestroy(() => {
-		clearTimeout(filterTimer);
-	})
+		clearTimeout(searchTimer);
+	});
 </script>
 
-<div class="relative top-12 mb-[-7%] flex flex-col">
+<div class="relative flex flex-col md:top-12">
 	<svg
 		class="fixed inset-0 h-screen w-screen"
 		xmlns="http://www.w3.org/2000/svg"
@@ -107,47 +131,54 @@
 	{#if loading}
 		<LoaderDiscover />
 	{:else}
-		<form class="mb-5 max-w-md md:mb-10" onsubmit={searchUsers}>
-			<label
-				for="default-search"
-				class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white">Search</label
-			>
-			<div class="relative">
-				<div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
-					<svg
-						class="h-4 w-4 text-gray-500 dark:text-gray-400"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 20 20"
-					>
-						<path
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-						/>
-					</svg>
-				</div>
-				<input
-					bind:value={filter}
-					type="search"
-					id="default-search"
-					class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 focus:border-[#84A98C] focus:ring-[#84A98C]"
-					placeholder="Search Users"
-					oninput={handleFilterInput}
-				/>
-				<!-- <button
+		<div class="z-20 mb-10 w-full">
+			<form class="mb-5 max-w-md md:mb-10" onsubmit={searchUsers}>
+				<label for="default-search" class="sr-only mb-2 text-sm font-medium text-gray-900"
+					>Search</label
+				>
+				<div class="relative">
+					<div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+						<svg
+							class="h-4 w-4 text-gray-500"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 20 20"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+							/>
+						</svg>
+					</div>
+					<input
+						bind:value={search}
+						type="search"
+						id="default-search"
+						class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 focus:border-[#84A98C] focus:ring-[#84A98C]"
+						placeholder="Search Users"
+						oninput={handleFilterInput}
+					/>
+					<!-- <button
 					type="submit"
 					class="absolute end-2.5 bottom-2.5 rounded-lg bg-[#52796F] px-4 py-2 text-sm font-medium text-white hover:bg-[#84A98C] focus:ring-4 focus:ring-[#84A98C] focus:outline-none cursor-pointer"
 					>Search</button
 				> -->
-			</div>
-		</form>
+				</div>
+			</form>
+			<Dropdown
+				searchLabel="Search Club"
+				options={clubs}
+				label="Filter Clubs"
+				bind:selectedClubs={filterClubs}
+			/>
+		</div>
 
 		<div
-			class="z-[60] grid w-full grid-cols-1 place-items-center gap-10 pb-20 sm:grid-cols-2 md:grid-cols-3 md:pb-32 lg:grid-cols-4"
+			class="z-50 grid w-full grid-cols-1 place-items-center gap-10 pb-20 sm:grid-cols-2 md:grid-cols-3 md:pb-32 lg:grid-cols-4"
 			in:fade={{ duration: 1000 }}
 		>
 			{#each filteredUsers as otherUser}
