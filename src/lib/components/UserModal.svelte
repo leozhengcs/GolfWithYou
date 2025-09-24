@@ -53,11 +53,33 @@
 </script>
 
 <div
-	class="fixed top-0 left-0 h-full w-full bg-[#DFDFDF] md:grid md:grid-cols-[40%_60%] md:gap-0 lg:grid-cols-[30%_70%]"
+	class={`fixed inset-0 overflow-y-auto bg-[#DFDFDF]`}
 	transition:fade={{ duration: 300, easing: circOut }}
 >
-	{#if isMdUp}
-		<div class="min-h-0">
+	<div class="relative md:grid md:grid-cols-[40%_60%] md:gap-0 lg:grid-cols-[30%_70%]">
+		{#if isMdUp}
+			<div class="min-h-0">
+				<ProfilePane
+					{id}
+					{closeModal}
+					{openChat}
+					{bio}
+					{gender}
+					{name}
+					{golf_id}
+					{handicap_index}
+					{member}
+					{self}
+					{src}
+					{verified}
+					{featuredImages}
+					{featuredImagesLoading}
+				/>
+			</div>
+			<div class="min-h-0 flex-col">
+				<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+			</div>
+		{:else}
 			<ProfilePane
 				{id}
 				{closeModal}
@@ -74,31 +96,11 @@
 				{featuredImages}
 				{featuredImagesLoading}
 			/>
-		</div>
-		<div class="flex min-h-0 flex-col">
-			<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
-		</div>
-	{:else}
-		<ProfilePane
-			{id}
-			{closeModal}
-			{openChat}
-			{bio}
-			{gender}
-			{name}
-			{golf_id}
-			{handicap_index}
-			{member}
-			{self}
-			{src}
-			{verified}
-			{featuredImages}
-			{featuredImagesLoading}
-		/>
-		{#if selectedTab === 'chat'}
-			<div class="absolute inset-0 z-50 h-full w-full">
-				<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
-			</div>
+			{#if selectedTab === 'chat'}
+				<div class="absolute inset-0 top-0 left-0 z-50 overflow-clip">
+					<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+				</div>
+			{/if}
 		{/if}
-	{/if}
+	</div>
 </div>

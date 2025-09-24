@@ -69,7 +69,7 @@
 			class="h-24 w-24 rounded-full object-cover object-center md:h-40 md:w-40 md:rounded-none"
 		/>
 		<section class="flex flex-col">
-			<h1 class="text-lg md:text-xl">
+			<h1 class="text-lg md:text-xl text-center">
 				{name}
 			</h1>
 			<p
@@ -127,12 +127,33 @@
 
 	<section class="flex-col md:flex">
 		<h1 class="text-sm">Featured Photos</h1>
-		{#if featuredImagesLoading}{:else}
+		{#if featuredImagesLoading}
+			<div
+				class="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-transparent"
+			></div>
+		{:else}
 			<div class="flex w-full gap-5">
-				{#each featuredImages as image}
-					<div class="w-32 rounded-xl aspect-square overflow-hidden">
-						<img src={image} alt="">
-					</div>
+				{#each featuredImages as image, i}
+					<label class="relative inline-block">
+						<!-- toggler (hidden) -->
+						<input type="checkbox" class="peer sr-only" aria-label={`Open image ${i + 1}`} />
+
+						<!-- thumbnail -->
+						<div class="aspect-square w-32 cursor-zoom-in overflow-hidden rounded-xl">
+							<img src={image} alt={`Featured photo ${i + 1}`} class="h-full w-full object-cover" />
+						</div>
+
+						<!-- fullscreen overlay -->
+						<div
+							class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4
+                   peer-checked:flex duration-300 transition-all"
+						>
+							<img src={image} alt="" class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl" />
+							<span class="absolute top-4 right-4 rounded bg-black/60 px-3 py-1 text-sm text-white">
+								Click anywhere to close
+							</span>
+						</div>
+					</label>
 				{/each}
 			</div>
 		{/if}

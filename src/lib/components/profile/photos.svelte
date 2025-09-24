@@ -83,7 +83,6 @@
 
 	onMount(async () => {
 		// Load the existing photos
-		console.log(id);
 		const { data, error } = await supabase.storage.from('user-images').list(id, {
 			limit: 100,
 			offset: 0,
@@ -144,6 +143,7 @@
 	>
 		<input
 			type="file"
+			accept='image/*'
 			name="upload"
 			id="upload"
 			multiple

@@ -284,12 +284,12 @@
 </script>
 
 <div
-	class="flex h-full min-h-0 flex-col bg-[#DFDFDF] shadow-2xl md:shadow-none"
+	class="flex h-full flex-col bg-[#DFDFDF] shadow-2xl md:shadow-none"
 	in:fly={{ duration: 500, x: 500, easing: circOut }}
 	out:fly={{ duration: 500, x: 500, easing: circOut }}
 >
 	<!-- Header -->
-	<div class="z-50 flex h-20 w-full flex-row items-center gap-5 px-5 py-4 shadow-lg md:hidden">
+	<div class="z-50 sticky top-0 flex h-20 w-full flex-row bg-[#DFDFDF] items-center gap-5 px-5 py-4 shadow-lg md:hidden">
 		<Back onclick={openProfile} />
 		<div class="aspect-square w-12 overflow-hidden rounded-full">
 			<img {src} alt="" class="object-cover object-center" />
@@ -372,8 +372,8 @@
 				></textarea>
 				<button
 					type="submit"
-					class={`absolute right-5 bottom-2.5 grid h-9 w-9 place-items-center rounded-full
-					bg-[#52796F] text-white opacity-0 cursor-pointer
+					class={`absolute right-5 bottom-2.5 grid h-9 w-9 cursor-pointer place-items-center
+					rounded-full bg-[#52796F] text-white opacity-0
 					shadow transition-opacity duration-200
 					group-focus-within:opacity-100 disabled:opacity-40`}
 				>
