@@ -21,7 +21,7 @@ export function subscribeToMailbox(
 			}
 		)
 		.subscribe((status) => {
-			console.log("[status]: ", status);
+			// console.log("[status]: ", status);
 		});
 
 	return () => supabase.removeChannel(channel);
@@ -45,8 +45,6 @@ export async function sendMail(
 	if (user.id === toUserId) {
 		return { data: null, error: null };
 	}
-
-	console.log("from user id in chat: ", user.id)
 
 	const { data, error } = await supabase.from('mailbox').insert({
 		owner_id: toUserId,

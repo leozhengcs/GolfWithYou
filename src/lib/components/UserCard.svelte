@@ -3,7 +3,7 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import UserModal from './UserModal.svelte';
 	import { onlineUsers } from '$lib/stores/users.svelte';
-	import { onMount } from 'svelte';
+	import { notifications } from '$lib/stores/globalStates.svelte';
 
 	let {
 		user,
@@ -27,6 +27,7 @@
 	$effect(() => {
 		if (showUser) {
 			unread = false;
+			notifications.update((list) => list.filter((n) => n.from_user_id !== user.id));
 		}
 		if (unread) {
 			selectedTab = 'chat';
@@ -35,7 +36,7 @@
 </script>
 
 {#if showUser}
-	<div class="absolute top-0 left-0 h-full w-full items-center justify-center overflow-clip z-[70]">
+	<div class="absolute top-0 left-0 z-[70] h-full w-full items-center justify-center overflow-clip">
 		<UserModal
 			id={user.id}
 			name={user.full_name}

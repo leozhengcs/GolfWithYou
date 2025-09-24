@@ -49,7 +49,7 @@
 
 		const data = await res.json();
 		if (res.ok) {
-			toast.success(data.message);
+			toast.success("Successfully uploaded image.");
 			setTimeout(() => {
 				window.location.reload();
 			}, 1000);

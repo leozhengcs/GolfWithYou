@@ -32,7 +32,7 @@ export const load: PageServerLoad = async({ locals: { supabase }}) => {
     
     // Hide admin user
     const filteredData = data
-    // .filter(user => user.id != 'bfe468f3-5c2b-4522-9ade-a38f45d0f305')
+    .filter(user => user.id != 'bfe468f3-5c2b-4522-9ade-a38f45d0f305')
 
     return {
         user: userQuery.data,

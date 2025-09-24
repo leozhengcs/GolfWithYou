@@ -7,8 +7,8 @@
 	import { page } from '$app/state';
 	import type { PublicUserProfile, UserProfile } from '$lib/types/Database.js';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { unreadMap } from '$lib/stores/globalStates.svelte.js';
 	import { fade, fly } from 'svelte/transition';
+	import { notifications } from '$lib/stores/globalStates.svelte.js';
 	import LoaderDiscover from '$lib/components/loaders/LoaderDiscover.svelte';
 
 	let { data } = $props();
@@ -58,7 +58,14 @@
 	};
 
 	let filterClubs = $state<string[]>([]);
-	$inspect(filterClubs);
+
+	let indexMap: Map<string, number> | undefined = $state();
+	const notifiedIds = $derived(new Set($notifications.map((n) => n.from_user_id)));
+
+	let sortedOtherUsers = $derived([
+		...otherUsers.filter((u) => notifiedIds.has(u.id)),
+		...otherUsers.filter((u) => !notifiedIds.has(u.id))
+	]);
 
 	$effect(() => {
 		if (filterClubs.length > 0) {
@@ -69,11 +76,55 @@
 			search = '';
 			filteredUsers = otherUsers;
 		}
+
+		filteredUsers = sortedOtherUsers
+		indexMap = new Map(otherUsers.map((u, i) => [u.id, i]));
 	});
 
+	$inspect(filteredUsers)
+
 	onMount(async () => {
+		// Check if the latest messages are up to date
+		const { data: chats } = await supabase
+			.from('private_chats')
+			.select('*')
+			.or(`user1.eq.${user?.id},user2.eq.${user?.id}`);
+
+		// TODO: Fix typing errors
+		chats?.forEach(async (chat) => {
+			if (user?.id == chat.user1 && chat.user1LastRead != chat.lastMessage) {
+				const { data } = await supabase
+					.from('public_user_profile')
+					.select('*')
+					.eq('id', chat.user2);
+				notifications.update((existing) => [
+					...existing,
+					{
+						from_user_id: chat.user2,
+						avatar: data?.avatar_url ?? '',
+						id: data?.id ?? '',
+						name: data?.name ?? ''
+					}
+				]);
+			} else if (user?.id == chat.user2 && chat.user2LastRead != chat.lastMessage) {
+				const { data } = await supabase
+					.from('public_user_profile')
+					.select('*')
+					.eq('id', chat.user1);
+				notifications.update((existing) => [
+					...existing,
+					{
+						from_user_id: chat.user1,
+						avatar: data?.avatar_url ?? '',
+						id: data?.id ?? '',
+						name: data?.name ?? ''
+					}
+				]);
+			}
+		});
+
 		otherUsers = users.filter((u) => u.id !== user?.id);
-		filteredUsers = otherUsers;
+		filteredUsers = sortedOtherUsers;
 
 		const { data } = await supabase.auth.getSession();
 		const session = data.session;
@@ -181,8 +232,13 @@
 			class="z-50 grid w-full grid-cols-1 place-items-center gap-10 pb-20 sm:grid-cols-2 md:grid-cols-3 md:pb-32 lg:grid-cols-4"
 			in:fade={{ duration: 1000 }}
 		>
-			{#each filteredUsers as otherUser}
-				<UserCard user={otherUser} self={user!} {supabase} unread={$unreadMap[otherUser.id]} />
+			{#each filteredUsers as otherUser (otherUser.id)}
+				<UserCard
+					user={otherUser}
+					self={user!}
+					{supabase}
+					unread={$notifications.some((notification) => notification.from_user_id === otherUser.id)}
+				/>
 			{/each}
 		</div>
 	{/if}

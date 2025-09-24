@@ -8,6 +8,7 @@ export interface Message {
 
 export interface Notification {
     id: string,
+    from_user_id: string,
     name: string,
     avatar: string
 }

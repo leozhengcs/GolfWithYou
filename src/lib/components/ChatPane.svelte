@@ -3,7 +3,7 @@
 	import { circOut } from 'svelte/easing';
 	import Back from './Back.svelte';
 	import { onMount, tick } from 'svelte';
-	import { openedModal } from '$lib/stores/globalStates.svelte';
+	import { notifications, openedModal } from '$lib/stores/globalStates.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
@@ -170,7 +170,7 @@
 		const to = id;
 		const subject = `[TeesAway] New message from: ${self.full_name}`;
 		const text = `You have a new message from ${self.full_name}:\n\n"${m}"`;
-
+		
 		// Only send email if user is not online
 		if (!$onlineUsers.includes(id)) {
 			await fetch('/api/send_email', {
@@ -183,7 +183,6 @@
 		await sendMail(id, 'message', text, self.avatar_url, self.full_name, supabase);
 		await loadMessages();
 		await tick();
-		console.log('CHECKING SELF: ', self);
 		// inputRef.focus();
 	}
 

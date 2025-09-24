@@ -121,7 +121,6 @@
 
 		stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
 			notifications.update((existing) => [row, ...existing]);
-			console.log(notifications);
 			unread.update((num) => num + 1);
 			// console.log('Update row: ', row);
 			toast.info(`You have a new notification from: ${row.from_name}`);
