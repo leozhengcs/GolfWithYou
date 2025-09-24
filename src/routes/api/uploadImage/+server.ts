@@ -13,7 +13,6 @@ use the else block for handling other user images
 
 */
 
-
 // src/routes/api/messages/+server.ts
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -23,59 +22,70 @@ import { PRIVATE_SUPABASE_URL } from '$env/static/private';
 
 const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL);
 
-
 export const POST: RequestHandler = async ({ request, locals }) => {
-    const supabase = locals.supabase;
+	const supabase = locals.supabase;
 
-    const {
-        data: { user },
-        error: authError
-    } = await supabase.auth.getUser();
+	const {
+		data: { user },
+		error: authError
+	} = await supabase.auth.getUser();
 
-    if (authError || !user) {
-        return json({ error: 'Unauthorized' }, { status: 401 });
-    }
+	if (authError || !user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
 
-    const body = await request.formData();
-    const image = body.get('image') as File;
-    const type = body.get('type') as string;
+	const body = await request.formData();
+	const image = body.get('image') as File;
+	const files = body.getAll('files') as File[];
+	const type = body.get('type') as string;
 
-    if (!type.trim()) {
-        return json({ error: 'Missing image type.' }, { status: 400 });
-    }
+	if (!type.trim()) {
+		return json({ error: 'Missing image type.' }, { status: 400 });
+	}
 
-    if (type == "avatar") {
-        const filePath = `avatar/${user.id}`;
+	if (type == 'avatar') {
+		const filePath = `avatar/${user.id}`;
 
-        const { error: uploadError } = await supabase.storage
-            .from('user-images')
-            .upload(filePath, image, { upsert: true });
+		const { error: uploadError } = await supabase.storage
+			.from('user-images')
+			.upload(filePath, image, { upsert: true });
 
-        if (uploadError) {
-            return json({ error: uploadError.message }, { status: 500 });
-        }
+		if (uploadError) {
+			return json({ error: uploadError.message }, { status: 500 });
+		}
 
-        const { data: urlData } = supabase.storage
-            .from('user-images')
-            .getPublicUrl(filePath);
+		const { data: urlData } = supabase.storage.from('user-images').getPublicUrl(filePath);
 
-        const { data, error } = await supabaseAdmin
-            .from('users')
-            .update({ avatar_url: urlData.publicUrl })
-            .eq('id', user.id);
+		const { data, error } = await supabaseAdmin
+			.from('users')
+			.update({ avatar_url: urlData.publicUrl })
+			.eq('id', user.id);
 
-        if (error) {
-            return json({ error: error.message }, { status: 500 });
-        }
+		if (error) {
+			return json({ error: error.message }, { status: 500 });
+		}
 
-        return json(data, { status: 201 });
+		return json(data, { status: 201 });
+	} else if (type == 'featuredImage') {
+		//add other handling here
+		const filePath = `${user.id}`;
 
-    } else {
-        //add other handling here
+		const results = await Promise.all(
+			Array.from(files as File[]).map(async (file) => {
+				const path = `${filePath}/${file.name}`;
+				const { error } = await supabase.storage
+					.from('user-images')
+					.upload(path, file, { upsert: true, contentType: file.type || undefined });
 
-    }
-    const data = "not avatar"
+				return error ? { path, error: error.message } : { path };
+			})
+		);
 
+		const firstError = results.find((r) => 'error' in r);
+		if (firstError) return json({ error: firstError.error }, { status: 500 });
+		return json({ results }, { status: 201 });
+	}
+	const data = 'not avatar';
 
-    return json(data, { status: 201 });
+	return json(data, { status: 201 });
 };

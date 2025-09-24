@@ -7,7 +7,7 @@
 	import PersonalTab from '$lib/components/profile/personal.svelte';
 	import AccountTab from '$lib/components/profile/account.svelte';
 	import DataTab from '$lib/components/profile/data.svelte';
-	import PhotosTab from '$lib/components/profile/photos.svelte'
+	import PhotosTab from '$lib/components/profile/photos.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { onMount } from 'svelte';
@@ -17,7 +17,7 @@
 		$derived(data);
 
 	//profile tab
-	let { full_name, bio, gender, club_name, handicap_index, golf_id, other_gender } = $derived(
+	let { full_name, bio, gender, club_name, handicap_index, golf_id, other_gender, id } = $derived(
 		profile!
 	);
 
@@ -74,6 +74,7 @@
 	}
 
 	let imageFile: File | null = $state(null);
+	let featuredFiles: File[] = $state([]);
 	$inspect(imageFile);
 
 	let avatarUrl = $derived(profile?.avatar_url);
@@ -119,7 +120,7 @@
 
 <div class="flex w-full flex-1 flex-col gap-5 md:grid md:grid-cols-[250px_auto] lg:px-52">
 	<section
-		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-gray-300 bg-gray-300/50"
+		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-[#84A98C] bg-[#84A98C]"
 	>
 		<h1 class="m-5 mb-0 text-gray-600">Settings</h1>
 		<div class="flex h-full flex-col">
@@ -152,10 +153,10 @@
 			</button>
 			<button
 				onclick={() => {
-					tab = 'photos'
-					disabled = true
+					tab = 'photos';
+					disabled = true;
 				}}
-				class='w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300'
+				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
 			>
 				Featured Photos
 			</button>
@@ -207,10 +208,7 @@
 	{:else if tab == 'data'}
 		<DataTab />
 	{:else if tab == 'photos'}
-		<PhotosTab 
-			handlePhotoUpload={null}
-			photos={null}
-		/>
+		<PhotosTab {supabase} {id}/>
 	{/if}
 </div>
 
