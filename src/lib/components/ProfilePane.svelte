@@ -13,7 +13,9 @@
 		member,
 		handicap_index,
 		gender,
-		id
+		id,
+		featuredImages,
+		featuredImagesLoading
 	} = $props();
 
 	async function handleVouch() {
@@ -43,7 +45,7 @@
 	<button
 		onclick={openChat}
 		aria-label="Chat"
-		class="fixed right-5 bottom-5 h-fit w-fit rounded-full bg-[#84A98C] p-4 text-ellipsis md:hidden z-50"
+		class="fixed right-5 bottom-5 z-50 h-fit w-fit rounded-full bg-[#84A98C] p-4 text-ellipsis md:hidden"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -125,5 +127,14 @@
 
 	<section class="flex-col md:flex">
 		<h1 class="text-sm">Featured Photos</h1>
+		{#if featuredImagesLoading}{:else}
+			<div class="flex w-full gap-5">
+				{#each featuredImages as image}
+					<div class="w-32 rounded-xl aspect-square overflow-hidden">
+						<img src={image} alt="">
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</section>
 </div>

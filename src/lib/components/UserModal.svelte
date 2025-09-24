@@ -4,6 +4,7 @@
 	import { onMount, onDestroy, tick } from 'svelte';
 	import ProfilePane from './ProfilePane.svelte';
 	import ChatPane from './ChatPane.svelte';
+	import { fetchFeaturedImages } from '$lib/utils/db';
 
 	let {
 		id, //id of opened user modal
@@ -29,13 +30,20 @@
 	let openProfile = () => (selectedTab = 'profile');
 
 	let isMdUp = $state(false);
-	$inspect(isMdUp);
+	let featuredImagesLoading = $state(true);
+	let featuredImages: string[] = $state([]);
+
 	onMount(() => {
 		document.body.classList.add('overflow-y-hidden');
 		const media = window.matchMedia('(min-width: 768px)');
 		const update = () => (isMdUp = media.matches);
 		update();
 		media.addEventListener('change', update);
+		fetchFeaturedImages(supabase, id)
+			.then((res) => {
+				if (res.data) featuredImages = res.data;
+			})
+			.finally(() => (featuredImagesLoading = false));
 		return () => media.removeEventListener('change', update);
 	});
 
@@ -63,6 +71,8 @@
 				{self}
 				{src}
 				{verified}
+				{featuredImages}
+				{featuredImagesLoading}
 			/>
 		</div>
 		<div class="flex min-h-0 flex-col">
@@ -82,11 +92,13 @@
 			{self}
 			{src}
 			{verified}
+			{featuredImages}
+			{featuredImagesLoading}
 		/>
 		{#if selectedTab === 'chat'}
-		<div class='absolute w-full h-full inset-0 z-50'>
-			<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
-		</div>
+			<div class="absolute inset-0 z-50 h-full w-full">
+				<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+			</div>
 		{/if}
 	{/if}
 </div>
