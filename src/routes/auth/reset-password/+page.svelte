@@ -7,7 +7,8 @@
 	let password = $state('');
 	let confirmPassword = $state('');
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (event: Event) => {
+		event.preventDefault();
 		// Check if the passwords match and they are safe
 		if (password.length < 6) {
 			toast.error('Password must be at least 6 characters long!');
@@ -34,7 +35,7 @@
 	<div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
 		<h2 class="mb-4 text-center text-2xl">Set New Password</h2>
 
-		<form class="space-y-4">
+		<form class="space-y-4" onsubmit={handleSubmit}>
 			<input
 				type="password"
 				name="password"
@@ -54,8 +55,6 @@
 			/>
 
 			<button
-				onclick={handleSubmit}
-				type="button"
 				class="w-full cursor-pointer rounded-lg bg-green-600 py-3 text-white hover:bg-green-700"
 			>
 				Update Password

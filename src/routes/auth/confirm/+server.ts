@@ -16,16 +16,16 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	redirectTo.pathname = next;
 	redirectTo.searchParams.delete('token_hash');
 	redirectTo.searchParams.delete('type');
-	console.log(redirectTo)
 
 	if (token_hash && type) {
 		const { error } = await supabase.auth.verifyOtp({ type, token_hash });
 		if (!error) {
 			redirectTo.searchParams.delete('next');
-			redirect(303, redirectTo.toString());
+			throw redirect(303, redirectTo.toString());
 		}
+		console.log("error")
 	}
 
 	redirectTo.pathname = '/auth/error';
-	redirect(303, redirectTo.toString());
+	throw redirect(303, redirectTo.toString());
 };
