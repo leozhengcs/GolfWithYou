@@ -11,7 +11,6 @@
 	});
 
 	const { profile } = $props();
-
 </script>
 
 {#if showNav}

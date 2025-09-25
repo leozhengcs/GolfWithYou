@@ -7,7 +7,6 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	const token_hash = url.searchParams.get('token_hash');
 	const type = url.searchParams.get('type') as EmailOtpType | null;
 	const next = url.searchParams.get('next') ?? '/';
-
 	/**
 	 * Clean up the redirect URL by deleting the Auth flow parameters.
 	 *
@@ -17,6 +16,7 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	redirectTo.pathname = next;
 	redirectTo.searchParams.delete('token_hash');
 	redirectTo.searchParams.delete('type');
+	console.log(redirectTo)
 
 	if (token_hash && type) {
 		const { error } = await supabase.auth.verifyOtp({ type, token_hash });
