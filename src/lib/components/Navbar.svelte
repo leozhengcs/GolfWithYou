@@ -22,10 +22,10 @@
 			class="flex cursor-pointer flex-row items-center justify-center gap-2"
 			onclick={() => goto('/discover')}
 		>
-			<div class="w-8 md:w-16">
+			<div class="w-12 md:w-16">
 				<img src="/icons/Logo.png" alt="" />
 			</div>
-			<a href="/discover" class="font-fugaz text-center text-base md:text-2xl text-white">Tees Away</a>
+			<a href="/discover" class="font-fugaz text-center text-lg md:text-2xl text-white">Tees Away</a>
 		</button>
 		<div class="flex justify-between gap-10">
 			{#if profile}

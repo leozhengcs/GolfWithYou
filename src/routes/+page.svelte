@@ -13,7 +13,7 @@
 		</p>
 		<button
 			class="w-fit cursor-pointer rounded-full border-1 border-white px-5 md:px-6 py-3 text-white text-sm md:text-base"
-			onclick={() => goto('/auth/signup')}
+			onclick={() => goto('/about')}
 		>
 			Where do you want to play?
 		</button>
