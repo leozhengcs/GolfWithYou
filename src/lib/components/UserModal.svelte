@@ -76,7 +76,7 @@
 					{featuredImagesLoading}
 				/>
 			</div>
-			<div class="min-h-0 flex-col">
+			<div class="min-h-0 flex-col h-screen">
 				<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
 			</div>
 		{:else}
@@ -97,7 +97,7 @@
 				{featuredImagesLoading}
 			/>
 			{#if selectedTab === 'chat'}
-				<div class="absolute inset-0 top-0 left-0 z-50 overflow-clip">
+				<div class="absolute inset-0 top-0 left-0 z-50 h-screen overflow-clip">
 					<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
 				</div>
 			{/if}

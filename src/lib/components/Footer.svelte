@@ -13,9 +13,7 @@
 				<span class="text-xs text-white">© Teesaway 2025. All rights reserved</span>
 			</div>
 			<div class="relative z-10 flex gap-5">
-				<a href="/about" class="text-secondary-shade text-xs underline md:text-sm">
-					About Us
-				</a>
+				<a href="/about" class="text-secondary-shade text-xs underline md:text-sm"> About Us </a>
 				<a
 					href="/files/terms-of-use.pdf"
 					target="_blank"

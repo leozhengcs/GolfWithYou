@@ -82,8 +82,8 @@
 			refresh();
 		});
 
+		// TODO: Make this more resilient by retying to connect
 		channel.subscribe(async (status) => {
-			// console.log('USER STATUS:', status);
 			if (status === 'SUBSCRIBED') {
 				await channel!.track({ id: userId, name, avatar, online_at: new Date().toISOString() });
 				// optimistic: show self immediately

@@ -15,13 +15,11 @@
 	let {
 		user,
 		users,
-		supabase,
-		userChats
+		supabase
 	}: {
 		user: UserProfile | null;
 		users: PublicUserProfile[];
 		supabase: SupabaseClient;
-		userChats?: any[] | null | undefined;
 	} = $derived(data);
 
 	let otherUsers: PublicUserProfile[] = $state([]);
@@ -32,19 +30,29 @@
 	let search = $state('');
 	let searchTimer: NodeJS.Timeout | undefined;
 
+	let filterClubs = $state<string[]>([]);
+
+	let indexMap: Map<string, number> | undefined = $state();
+	const notifiedIds = $derived(new Set($notifications.map((n) => n.from_user_id)));
+
+	let sortedOtherUsers = $derived([
+		...otherUsers.filter((u) => notifiedIds.has(u.id)),
+		...otherUsers.filter((u) => !notifiedIds.has(u.id))
+	]);
+
 	const searchUsers = (event: SubmitEvent | null = null) => {
 		if (event) {
 			event.preventDefault();
 		}
 		const normalized = search.trim().toLowerCase();
-		if (!search) filteredUsers = otherUsers;
+		if (!search) filteredUsers = sortedOtherUsers;
 
 		if (filterClubs.length > 0) {
 			filteredUsers = filteredUsers.filter((user) =>
 				user.full_name.toLowerCase().includes(normalized)
 			);
 		} else {
-			filteredUsers = otherUsers.filter((user) =>
+			filteredUsers = sortedOtherUsers.filter((user) =>
 				user.full_name.toLowerCase().includes(normalized)
 			);
 		}
@@ -57,31 +65,17 @@
 		}, 500);
 	};
 
-	let filterClubs = $state<string[]>([]);
-
-	let indexMap: Map<string, number> | undefined = $state();
-	const notifiedIds = $derived(new Set($notifications.map((n) => n.from_user_id)));
-
-	let sortedOtherUsers = $derived([
-		...otherUsers.filter((u) => notifiedIds.has(u.id)),
-		...otherUsers.filter((u) => !notifiedIds.has(u.id))
-	]);
-
 	$effect(() => {
 		if (filterClubs.length > 0) {
-			search = '';
-			// Check if there is an existing name search filter
-			filteredUsers = otherUsers.filter((user) => filterClubs.includes(user.club_name));
+			filteredUsers = sortedOtherUsers.filter((user) =>
+				filterClubs.includes(user.club_name.toLowerCase())
+			);
 		} else if (filterClubs.length == 0) {
-			search = '';
-			filteredUsers = otherUsers;
+			filteredUsers = sortedOtherUsers;
 		}
 
-		filteredUsers = sortedOtherUsers
 		indexMap = new Map(otherUsers.map((u, i) => [u.id, i]));
 	});
-
-	$inspect(filteredUsers)
 
 	onMount(async () => {
 		// Check if the latest messages are up to date
@@ -90,27 +84,28 @@
 			.select('*')
 			.or(`user1.eq.${user?.id},user2.eq.${user?.id}`);
 
-		// TODO: Fix typing errors
 		chats?.forEach(async (chat) => {
 			if (user?.id == chat.user1 && chat.user1LastRead != chat.lastMessage) {
 				const { data } = await supabase
 					.from('public_user_profile')
 					.select('*')
-					.eq('id', chat.user2);
+					.eq('id', chat.user2)
+					.single();
 				notifications.update((existing) => [
 					...existing,
 					{
 						from_user_id: chat.user2,
 						avatar: data?.avatar_url ?? '',
 						id: data?.id ?? '',
-						name: data?.name ?? ''
+						name: data?.full_name ?? ''
 					}
 				]);
 			} else if (user?.id == chat.user2 && chat.user2LastRead != chat.lastMessage) {
 				const { data } = await supabase
 					.from('public_user_profile')
 					.select('*')
-					.eq('id', chat.user1);
+					.eq('id', chat.user1)
+					.single();
 				notifications.update((existing) => [
 					...existing,
 					{

@@ -89,5 +89,5 @@
 {/if}
 
 {#if finished}
-	<div class="bg-sky-background absolute inset-0 z-20" in:fade={{ duration: 1000 }}></div>
+	<div class="bg-[#52796F	] absolute inset-0 z-20" in:fade={{ duration: 1000 }}></div>
 {/if}

@@ -3,7 +3,7 @@
 	import { circOut } from 'svelte/easing';
 	import Back from './Back.svelte';
 	import { onMount, tick } from 'svelte';
-	import { notifications, openedModal } from '$lib/stores/globalStates.svelte';
+	import { openedModal } from '$lib/stores/globalStates.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { Message } from '$lib/types/Chat';
 	import type { RealtimeChannel } from '@supabase/supabase-js';
@@ -152,6 +152,8 @@
 
 			if (error) {
 				console.log('Update chat error: ', error);
+				toast.error("Error sending messsage, please try again");
+				return;
 			}
 		}
 
@@ -200,14 +202,15 @@
 		// Saves the latest message read
 		if (self.id == user1) {
 			const chatWrite = await supabase
-				.from('private_chats')
-				.update({ user1LastRead: lastRead.id })
-				.eq('id', chatId);
-
+			.from('private_chats')
+			.update({ user1LastRead: lastRead.id })
+			.eq('id', chatId);
+			
 			if (chatWrite.error) {
 				console.log('Update chat error: ', chatWrite.error);
 			}
 		} else if (self.id == user2) {
+			console.log("user2")
 			const { error } = await supabase
 				.from('private_chats')
 				.update({ user2LastRead: lastRead.id })

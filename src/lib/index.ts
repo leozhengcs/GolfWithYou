@@ -45,5 +45,5 @@ export const clubs = [
 	'Riverside Country Club',
 	'Ashburn Golf Club',
 	'Dalhousie Golf Club'
-];
+].map((club) => club.toLowerCase());
 
