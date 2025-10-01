@@ -18,7 +18,18 @@
 	// svelte-ignore non_reactive_update
 	let bottomRef: HTMLElement; // For scrolling the message chat down after sending a message
 	let form: HTMLFormElement;
-	let { openProfile, src, supabase, id, self, onlineUsers, verified, name } = $props();
+	let {
+		openProfile,
+		src,
+		supabase,
+		id,
+		self,
+		onlineUsers,
+		verified,
+		name,
+		handicap_index,
+		member
+	} = $props();
 	let messages: Message[] = $state([]);
 	let newMessage = $state('');
 	let chatId = $state('');
@@ -152,7 +163,7 @@
 
 			if (error) {
 				console.log('Update chat error: ', error);
-				toast.error("Error sending messsage, please try again");
+				toast.error('Error sending messsage, please try again');
 				return;
 			}
 		}
@@ -172,7 +183,7 @@
 		const to = id;
 		const subject = `[TeesAway] New message from: ${self.full_name}`;
 		const text = `You have a new message from ${self.full_name}:\n\n"${m}"`;
-		
+
 		// Only send email if user is not online
 		if (!$onlineUsers.includes(id)) {
 			await fetch('/api/send_email', {
@@ -202,15 +213,15 @@
 		// Saves the latest message read
 		if (self.id == user1) {
 			const chatWrite = await supabase
-			.from('private_chats')
-			.update({ user1LastRead: lastRead.id })
-			.eq('id', chatId);
-			
+				.from('private_chats')
+				.update({ user1LastRead: lastRead.id })
+				.eq('id', chatId);
+
 			if (chatWrite.error) {
 				console.log('Update chat error: ', chatWrite.error);
 			}
 		} else if (self.id == user2) {
-			console.log("user2")
+			console.log('user2');
 			const { error } = await supabase
 				.from('private_chats')
 				.update({ user2LastRead: lastRead.id })
@@ -291,14 +302,31 @@
 	out:fly={{ duration: 500, x: 500, easing: circOut }}
 >
 	<!-- Header -->
-	<div class="z-50 sticky top-0 flex h-20 w-full flex-row bg-[#DFDFDF] items-center gap-5 px-5 py-4 shadow-lg md:hidden">
+	<div
+		class="sticky top-0 z-50 flex h-20 w-full flex-row items-center gap-5 bg-[#DFDFDF] px-5 py-4 shadow-lg md:hidden"
+	>
 		<Back onclick={openProfile} />
-		<div class="aspect-square w-12 overflow-hidden rounded-full">
-			<img {src} alt="" class="object-cover object-center" />
+		<div class="aspect-square w-20 overflow-hidden rounded-full">
+			<img {src} alt="" class="h-full w-full object-cover" />
 		</div>
-		<h1 class="text-lg">
-			{name}
-		</h1>
+		<div class="flex w-full flex-col">
+			<section class="flex w-full gap-5">
+				<h1 class="text-lg truncate max-w-40">
+					{name}
+				</h1>
+				<div class="float-right flex flex-shrink-0 items-center gap-1">
+					<div class="w-3">
+						<img src="/icons/Golf_Ball.png" alt="" />
+					</div>
+					<div class="text-left">
+						<p class="text-sm font-medium text-gray-500">{handicap_index}</p>
+					</div>
+				</div>
+			</section>
+			<span class='text-xs text-gray-500 truncate'>
+				{member}
+			</span>
+		</div>
 	</div>
 	<!-- Body -->
 	<div class="relative flex min-h-0 flex-1 flex-col gap-5">

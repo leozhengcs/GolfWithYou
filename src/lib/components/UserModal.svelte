@@ -76,8 +76,19 @@
 					{featuredImagesLoading}
 				/>
 			</div>
-			<div class="min-h-0 flex-col h-screen">
-				<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+			<div class="h-screen min-h-0 flex-col">
+				<ChatPane
+					{openProfile}
+					{id}
+					{onlineUsers}
+					{self}
+					{src}
+					{supabase}
+					{verified}
+					{name}
+					{handicap_index}
+					{member}
+				/>
 			</div>
 		{:else}
 			<ProfilePane
@@ -98,7 +109,18 @@
 			/>
 			{#if selectedTab === 'chat'}
 				<div class="absolute inset-0 top-0 left-0 z-50 h-screen overflow-clip">
-					<ChatPane {openProfile} {id} {onlineUsers} {self} {src} {supabase} {verified} {name} />
+					<ChatPane
+						{openProfile}
+						{id}
+						{onlineUsers}
+						{self}
+						{src}
+						{supabase}
+						{verified}
+						{name}
+						{handicap_index}
+						{member}
+					/>
 				</div>
 			{/if}
 		{/if}
