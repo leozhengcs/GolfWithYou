@@ -11,6 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	let { data } = $props();
 	let { profile, supabase }: { profile: UserProfile | null; supabase: SupabaseClient } =
@@ -32,6 +33,7 @@
 	//navigation
 	let disabled = $state(true);
 	let tab = $state('profile');
+	let deleteOverlay = $state(false);
 
 	const handleLogout = async () => {
 		await supabase.auth.signOut();
@@ -142,15 +144,36 @@
 			>
 				Personal Info
 			</button>
-			<button
-				onclick={() => {
-					tab = 'account';
-					disabled = true;
-				}}
-				class="w-full cursor-pointer rounded-lg p-2 px-5 text-left transition-all duration-100 hover:bg-gray-300"
-			>
-				Account Details
-			</button>
+			<div>
+				<button
+					class="w-full cursor-pointer rounded-lg p-2 px-5 text-left text-red-600 transition-all duration-100 hover:bg-gray-300"
+					onclick={() => (deleteOverlay = true)}>Delete Account</button
+				>
+			</div>
+			{#if deleteOverlay}
+				<div class="fixed inset-0 z-10 flex items-center justify-center bg-black/50">
+					<div
+						transition:fly={{ duration: 300, y: 100 }}
+						class="bg-background w-[90%] max-w-md space-y-6 rounded-2xl p-8 text-center shadow-xl"
+					>
+						<h2 class="text-xl font-semibold">Are you sure?</h2>
+						<div class="flex justify-center gap-4">
+							<button
+								class="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-600 hover:text-white focus:ring-2"
+								onclick={handleDeleteAccount}
+							>
+								Yes
+							</button>
+							<button
+								class="rounded-lg border border-gray-600 px-4 py-2 text-sm font-medium text-black hover:bg-gray-600 hover:text-white"
+								onclick={() => (deleteOverlay = false)}
+							>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+			{/if}
 			<button
 				onclick={() => {
 					tab = 'photos';
@@ -208,7 +231,7 @@
 	{:else if tab == 'data'}
 		<DataTab />
 	{:else if tab == 'photos'}
-		<PhotosTab {supabase} {id}/>
+		<PhotosTab {supabase} {id} />
 	{/if}
 </div>
 

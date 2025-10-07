@@ -348,13 +348,13 @@
 								/>
 							</div>
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[500px] p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[500px] text-lg p-0 text-wrap">{message.content}</p>
 							</div>
 						</div>
 					{:else}
 						<div class="flex flex-row items-end justify-end gap-5">
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[300px] p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[300px] text-lg p-0 text-wrap">{message.content}</p>
 							</div>
 							<div class="aspect-square w-10 overflow-hidden rounded-full">
 								<img

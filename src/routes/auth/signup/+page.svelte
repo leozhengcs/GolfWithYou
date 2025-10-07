@@ -47,7 +47,7 @@
 	let fileImage: File | null = $state(null);
 
 	$effect(() => {
-		if (step == 13) {
+		if (step == 12) {
 			loading = true;
 
 			(async () => {
@@ -63,7 +63,7 @@
 				});
 
 				if (!res.ok) {
-					return toast.error("Error signing up, please try again later");
+					return toast.error('Error signing up, please try again later');
 				}
 
 				await invalidate('supabase:auth');
@@ -74,12 +74,16 @@
 	});
 </script>
 
-<div class='w-full h-full flex items-center justify-center' in:fly={{ delay: 200, duration: 1000, y: -100 }} out:fly={{ duration: 500, y: -100 }}>
+<div
+	class="flex h-full w-full items-center justify-center"
+	in:fly={{ delay: 200, duration: 1000, y: -100 }}
+	out:fly={{ duration: 500, y: -100 }}
+>
 	{#if step == 0}
 		<Step0 bind:step />
 	{:else if step == 1}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step1 bind:step bind:privateGolfer />
+			<Step8 bind:clubName bind:step />
 		</div>
 	{:else if step == 2}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
@@ -107,25 +111,21 @@
 		</div>
 	{:else if step == 7}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step8 bind:clubName bind:step />
+			<Step9 bind:step bind:handicapIndex />
 		</div>
 	{:else if step == 8}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step9 bind:step bind:handicapIndex />
+			<Step10 bind:golfId bind:step />
 		</div>
 	{:else if step == 9}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step10 bind:golfId bind:step />
+			<Step11 bind:step bind:password bind:passwordConfirm />
 		</div>
 	{:else if step == 10}
 		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
-			<Step11 bind:step bind:password bind:passwordConfirm />
-		</div>
-	{:else if step == 11}
-		<div in:fly={{ duration: 300, x: 300, opacity: 0 }}>
 			<Step12 bind:step bind:fileImage />
 		</div>
-	{:else if step == 12}
+	{:else if step == 11}
 		<Step13 bind:step />
 	{/if}
 </div>

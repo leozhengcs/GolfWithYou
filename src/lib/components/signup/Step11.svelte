@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-lg md:min-w-md flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
+	class="md:min-w-md max-w-lg mx-auto flex flex-col gap-5 rounded-xl bg-black/30 p-10 shadow-lg backdrop-blur-xs"
 >
 	<div class="flex flex-col gap-2">
 		<span class="text-base text-white">Please enter a password for your account.</span>

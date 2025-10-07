@@ -61,10 +61,6 @@
 			class="w-fit cursor-pointer rounded-lg border-1 border-red-200 px-4 py-2 text-sm font-medium text-red-400 transition-all duration-300 hover:bg-red-200 focus:ring-1 focus:outline-hidden"
 			onclick={() => (deleteOverlay = true)}>Delete Account</button
 		>
-		<!-- <button
-			class="w-fit cursor-pointer rounded-lg border-1 border-red-200 px-4 py-2 text-sm font-medium text-red-400 transition-all duration-300 hover:bg-red-200 focus:ring-1 focus:outline-hidden"
-			onclick={handleDeleteAccount}>Delete Account</button
-		> -->
 	</div>
 	{#if deleteOverlay}
 		<div class="fixed inset-0 z-10 flex items-center justify-center bg-black/50">

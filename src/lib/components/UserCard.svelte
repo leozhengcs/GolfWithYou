@@ -63,29 +63,46 @@
 	onclick={() => {
 		showUser = true;
 	}}
-	class={`flex items-center justify-center md:grid h-20 w-80 md:h-76 md:w-60 flex-shrink-0 transform cursor-pointer auto-rows-auto rounded-2xl bg-[#B9C8B7] p-4 transition duration-200 hover:scale-105 ${
+	class={`flex h-20 w-80 flex-shrink-0 transform cursor-pointer auto-rows-auto items-center justify-center rounded-2xl bg-[#B9C8B7] p-4 transition duration-200 hover:scale-105 md:grid md:h-76 md:w-60 ${
 		$onlineUsers.includes(user.id) ? 'outline-6 outline-green-500' : ''
 	}`}
 >
-	<div class="relative h-full w-full flex flex-row md:block gap-5">
+	<div class="relative flex h-full w-full flex-row gap-5 md:block">
 		{#if unread}
-			<span class="absolute -top-4 -right-4 md:top-0 md:right-0 h-4 w-4 md:h-6 md:w-6 rounded-full border border-white bg-red-500"
+			<span
+				class="absolute -top-4 -right-4 h-4 w-4 rounded-full border border-white bg-red-500 md:top-0 md:right-0 md:h-6 md:w-6"
 			></span>
 		{/if}
 		<img
 			alt=""
 			src={user.avatar_url ?? '/icons/DefaultProfile.png'}
-			class="h-full aspect-square md:h-48 md:w-full rounded-md object-cover object-center"
+			class="aspect-square h-full rounded-md object-cover object-center md:h-48 md:w-full"
 		/>
 
-		<div class="md:mt-2 w-full">
+		<div class="w-full md:mt-2">
 			<div class="flex w-full flex-row items-center justify-between">
-				<div class="w-fit">
+				<div class="flex w-fit flex-row gap-2">
 					<dt class="sr-only">Name</dt>
-					<dd class="font-medium truncate">{user.full_name}</dd>
+					<dd class="truncate font-medium">{user.full_name}</dd>
+					{#if user.verified}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-4"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
+							/>
+						</svg>
+					{/if}
 				</div>
 
-				<div class="flex flex-shrink-0 items-center float-right gap-1">
+				<div class="float-right flex flex-shrink-0 items-center gap-1">
 					<div class="w-3">
 						<img src="/icons/Golf_Ball.png" alt="" />
 					</div>
@@ -95,7 +112,7 @@
 				</div>
 			</div>
 
-			<div class="md:mt-2 flex flex-col gap-1 text-xs">
+			<div class="flex flex-col gap-1 text-xs md:mt-2">
 				<div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
 					<div class="mt-1.5 text-left sm:mt-0">
 						<!-- <p class="text-gray-500">Member of</p> -->
