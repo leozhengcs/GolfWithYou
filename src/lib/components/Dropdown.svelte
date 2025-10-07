@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { toTitleCase } from '$lib/utils/string';
 	import { fade } from 'svelte/transition';
-    import { portal } from '$lib/actions/portal';
+	import { portal } from '$lib/actions/portal';
 
 	let { options, label, searchLabel, selectedClubs = $bindable() } = $props();
 
 	let open = $state(false);
 
-    let clubSearch = $state('');
-    let filteredOptions: string[] = $state(options);
+	let clubSearch = $state('');
+	let filteredOptions: string[] = $state(options);
 
 	const searchClubs = (event: Event) => {
 		if (event) {
@@ -17,23 +17,26 @@
 		const normalized = clubSearch.trim().toLowerCase();
 		if (!clubSearch) filteredOptions = options;
 
-        filteredOptions = options.filter((option: string) => option.toLowerCase().includes(normalized));
+		filteredOptions = options.filter((option: string) => option.toLowerCase().includes(normalized));
 	};
 
-    const clearFilters = () => {
-        selectedClubs = [];
-        open = false;
-    }
+	const clearFilters = () => {
+		selectedClubs = [];
+		open = false;
+	};
 </script>
 
 <button
 	id="dropdownSearchButton"
 	data-dropdown-toggle="dropdownSearch"
 	data-dropdown-placement="bottom"
-	class="inline-flex w-full cursor-pointer items-center rounded-lg bg-[#84A98C] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#52796F] focus:bg-[#52796F] focus:ring-1 focus:outline-none md:w-fit"
+	class="inline-flex w-full cursor-pointer items-center rounded-lg bg-[#84A98C] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#52796F] focus:bg-[#52796F] focus:ring-1 focus:outline-none sm:w-fit"
 	type="button"
 	onclick={() => (open = true)}
-	>{selectedClubs.length > 0 ? `${selectedClubs.length} ${selectedClubs.length > 1 ? 'Clubs' : 'Club'} Selected` : label}<svg
+	>{selectedClubs.length > 0
+		? `${selectedClubs.length} ${selectedClubs.length > 1 ? 'Clubs' : 'Club'} Selected`
+		: label}
+	<svg
 		class="ms-3 h-2.5 w-2.5"
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
@@ -50,19 +53,19 @@
 	</svg>
 </button>
 
-<!-- Dropdown menu -->
+<!-- MOBILE - Dropdown menu -->
 {#if open}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-        use:portal
+		use:portal
 		onclick={() => (open = false)}
-		class="fixed top-0 left-0 z-[70] flex h-full w-full items-center justify-center bg-black/30 md:hidden"
+		class="fixed top-0 left-0 z-[70] flex h-full w-full items-center justify-center bg-black/30"
 		transition:fade={{ duration: 300 }}
 	>
 		<div
 			id="dropdownSearch"
-			class={`${open ? 'md:block' : 'hidden'} w-60 rounded-lg bg-white shadow-sm`}
+			class={`${open ? 'md:block' : 'hidden'} w-60 rounded-lg bg-white shadow-sm md:w-96`}
 			onclick={(e) => e.stopPropagation()}
 		>
 			<div class="p-3">
@@ -88,8 +91,8 @@
 						</svg>
 					</div>
 					<input
-                        bind:value={clubSearch}
-                        oninput={searchClubs}
+						bind:value={clubSearch}
+						oninput={searchClubs}
 						type="text"
 						id="input-group-search"
 						class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-[#52796F] focus:ring-[#52796F]"
@@ -123,7 +126,7 @@
 								id={`checkbox-item-${index}`}
 								type="checkbox"
 								value={option}
-                                bind:group={selectedClubs}
+								bind:group={selectedClubs}
 								class="h-4 w-4 rounded-sm border-gray-300 bg-gray-100 text-black checked:bg-[#52796F] focus:ring-1 focus:ring-[#52796F]"
 							/>
 							<label
@@ -136,8 +139,8 @@
 				{/each}
 			</ul>
 			<button
-                onclick={clearFilters}
-				class="flex items-center w-full rounded-b-lg border-t border-gray-200 bg-gray-50 p-3 text-sm font-medium text-red-600 hover:bg-gray-100 hover:underline"
+				onclick={clearFilters}
+				class="flex w-full items-center rounded-b-lg border-t border-gray-200 bg-gray-50 p-3 text-sm font-medium text-red-600 hover:bg-gray-100 hover:underline"
 			>
 				<svg
 					width="24px"

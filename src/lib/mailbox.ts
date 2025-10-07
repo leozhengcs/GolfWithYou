@@ -6,7 +6,6 @@ export function subscribeToMailbox(
 	supabase: SupabaseClient,
 	onItem: (row: any) => void
 ) {
-	console.log("Subscrbing to ownderID: ", ownerId)
 	const channel = supabase
 		.channel('mailbox:' + ownerId)
 		.on(

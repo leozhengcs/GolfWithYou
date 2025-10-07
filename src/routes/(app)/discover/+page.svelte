@@ -177,8 +177,8 @@
 	{#if loading}
 		<LoaderDiscover />
 	{:else}
-		<div class="z-20 mb-10 w-full">
-			<form class="mb-5 max-w-md md:mb-10" onsubmit={searchUsers}>
+		<div class="z-50 mb-10 w-full">
+			<form class="mb-5 w-full sm:max-w-md md:mb-10" onsubmit={searchUsers}>
 				<label for="default-search" class="sr-only mb-2 text-sm font-medium text-gray-900"
 					>Search</label
 				>
@@ -208,11 +208,6 @@
 						placeholder="Search Users"
 						oninput={handleFilterInput}
 					/>
-					<!-- <button
-					type="submit"
-					class="absolute end-2.5 bottom-2.5 rounded-lg bg-[#52796F] px-4 py-2 text-sm font-medium text-white hover:bg-[#84A98C] focus:ring-4 focus:ring-[#84A98C] focus:outline-none cursor-pointer"
-					>Search</button
-				> -->
 				</div>
 			</form>
 			<Dropdown

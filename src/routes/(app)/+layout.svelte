@@ -48,6 +48,14 @@
 
 	// Show/hide during client-side navigations
 	$effect(() => {
+		if (channel && channel.state !== 'joined') {
+			console.log("no longer joined")
+		} else if (!channel) {
+			console.log("no more channel");
+		} else if (channel) {
+			console.log("channel");
+		}
+
 		if (navigating.to) {
 			Loader = pickLoader(navigating.to.url.pathname); // note: .pathname, no .url
 			show = true;
@@ -62,7 +70,6 @@
 	let stopMail = () => {};
 
 	function startPresence(userId: string, name: string, avatar: string) {
-		// if (channel && channel.state !== 'closed') return;
 		if (channel && channel.state === 'joined') return;
 
 		channel = supabase.channel('online-users', {

@@ -5,9 +5,6 @@ import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { PRIVATE_SUPABASE_URL } from '$env/static/private';
 import { previewData } from '$lib/stores/previewData.svelte';
 
-
-// TEMPORARY SOLUTION
-
 const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_URL);
 
 export const actions: Actions = {
