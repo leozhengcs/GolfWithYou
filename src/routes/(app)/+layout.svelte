@@ -47,9 +47,10 @@
 	});
 
 	const handleVisibilityChange = () => {
-		console.log("On visiblityi change");
-		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
-	}
+		if (!channel) return;
+		const state = channel!.presenceState() as Record<string, Notification[]>;
+		onlineUsers.set(Object.keys(state));
+	};
 
 	// Show/hide during client-side navigations
 	$effect(() => {
@@ -77,7 +78,6 @@
 	function startPresence(userId: string, name: string, avatar: string) {
 		if (channel && channel.state === 'joined') return;
 
-		console.log("channel joined");
 		channel = supabase.channel('online-users', {
 			config: { presence: { key: userId }, broadcast: { self: true } }
 		});
