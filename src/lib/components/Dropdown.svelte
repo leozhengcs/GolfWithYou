@@ -30,7 +30,7 @@
 	id="dropdownSearchButton"
 	data-dropdown-toggle="dropdownSearch"
 	data-dropdown-placement="bottom"
-	class="inline-flex w-full cursor-pointer items-center rounded-lg bg-[#84A98C] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#52796F] focus:bg-[#52796F] focus:ring-1 focus:outline-none sm:w-fit"
+	class="inline-flex justify-between w-full cursor-pointer items-center rounded-lg bg-[#84A98C] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#52796F] focus:bg-[#52796F] focus:ring-1 focus:outline-none sm:w-fit"
 	type="button"
 	onclick={() => (open = true)}
 	>{selectedClubs.length > 0

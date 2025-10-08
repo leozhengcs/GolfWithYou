@@ -63,7 +63,7 @@
 	onclick={() => {
 		showUser = true;
 	}}
-	class={`flex h-20 w-80 flex-shrink-0 transform cursor-pointer auto-rows-auto items-center justify-center rounded-2xl bg-[#B9C8B7] p-4 transition duration-200 hover:scale-105 md:grid md:h-76 md:w-60 ${
+	class={`flex h-24 w-80 flex-shrink-0 transform cursor-pointer auto-rows-auto items-center justify-center rounded-2xl bg-[#B9C8B7] p-4 transition duration-200 hover:scale-105 md:grid md:h-76 md:w-60 ${
 		$onlineUsers.includes(user.id) ? 'outline-6 outline-green-500' : ''
 	}`}
 >

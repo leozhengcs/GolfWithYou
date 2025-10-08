@@ -46,14 +46,18 @@
 		return () => clearTimeout(t);
 	});
 
+	const handleVisibilityChange = () => {
+		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
+	}
+
 	// Show/hide during client-side navigations
 	$effect(() => {
 		if (channel && channel.state !== 'joined') {
-			console.log("no longer joined")
+			console.log('no longer joined');
 		} else if (!channel) {
-			console.log("no more channel");
+			console.log('no more channel');
 		} else if (channel) {
-			console.log("channel");
+			console.log('channel');
 		}
 
 		if (navigating.to) {
@@ -138,6 +142,7 @@
 			return;
 		}
 
+		document.addEventListener('visibilitychange', handleVisibilityChange);
 		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 	});
 

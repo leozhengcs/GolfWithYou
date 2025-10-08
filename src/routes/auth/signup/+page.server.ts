@@ -50,8 +50,6 @@ export const actions: Actions = {
 			}
 		]);
 
-        console.log("USER CREATED");
-
 		if (profileImage) {
 			const imageData = new FormData();
 			imageData.append('type', 'avatar');

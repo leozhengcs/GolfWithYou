@@ -10,7 +10,7 @@
 	<div class="relative z-20 justify-between bg-[#354F52] p-5">
 		<div class="flex justify-between">
 			<div class="relative z-20">
-				<span class="text-xs text-white">© Teesaway 2025. All rights reserved</span>
+				<span class="text-xs text-white">© Teesaway 2025. <span class='md:disabled:true'></span>All rights reserved</span>
 			</div>
 			<div class="relative z-10 flex gap-5">
 				<a href="/about" class="text-secondary-shade text-xs underline md:text-sm"> About Us </a>
