@@ -66,12 +66,6 @@
 		}
 	});
 
-	const refresh = () => {
-		if (!channel) return;
-		const state = channel!.presenceState() as Record<string, Notification[]>;
-		onlineUsers.set(Object.keys(state));
-	};
-
 	let channel: ReturnType<typeof supabase.channel> | null = null;
 	let stopMail = () => {};
 
@@ -116,10 +110,7 @@
 		onlineUsers.set([]);
 	}
 
-	onMount(async () => {
-		await tick();
-		navbarState.show = true;
-		// Sets the auth token for when you login
+	const refresh = async () => {
 		const {
 			data: { session }
 		} = await supabase.auth.getSession();
@@ -135,7 +126,6 @@
 		stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
 			notifications.update((existing) => [row, ...existing]);
 			unread.update((num) => num + 1);
-			// console.log('Update row: ', row);
 			toast.info(`You have a new notification from: ${row.from_name}`);
 		});
 
@@ -145,27 +135,74 @@
 		}
 
 		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
-		document.addEventListener('pageshow', (e) => {
-			stopPresence();
-			startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
-			if ((e as PageTransitionEvent).persisted) {
-				location.reload();
-			}
-		});
+	};
 
-		document.addEventListener('visibilitychange', () => {
-			stopPresence();
-			startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
-			try {
+	onMount(async () => {
+		await tick();
+		navbarState.show = true;
+		// Sets the auth token for when you login
+		// const {
+		// 	data: { session }
+		// } = await supabase.auth.getSession();
+
+		// if (!session) {
+		// 	console.error('No session please login again');
+		// 	toast.error('No session, please login again.');
+		// 	return;
+		// }
+
+		// await supabase.realtime.setAuth(session.access_token);
+
+		// stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
+		// 	notifications.update((existing) => [row, ...existing]);
+		// 	unread.update((num) => num + 1);
+		// 	// console.log('Update row: ', row);
+		// 	toast.info(`You have a new notification from: ${row.from_name}`);
+		// });
+
+		// if (!data.user) {
+		// 	toast.error('Error getting user, please log in again');
+		// 	return;
+		// }
+
+		// startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
+		refresh();
+		let last = 0;
+		const GAP = 200;
+		const once = (fn: () => void) => {
+			const n = Date.now();
+			if (n - last > GAP) {
+				last = n;
+				fn();
+			}
+		};
+
+		const onVisible = () =>
+			document.visibilityState === 'visible' &&
+			once(() => {
 				stopMail?.();
-			} catch {}
-			stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
-				notifications.update((existing) => [row, ...existing]);
-				unread.update((num) => num + 1);
-				// console.log('Update row: ', row);
-				toast.info(`You have a new notification from: ${row.from_name}`);
+				stop?.();
+				refresh();
 			});
-		});
+
+		const onShow = (e: PageTransitionEvent) =>
+			once(() => {
+				// bfcache restore or general resume
+				stopMail?.();
+				stop?.();
+				refresh();
+			});
+			
+		const onOnline = () =>
+			once(() => {
+				stopMail?.();
+				stop?.();
+				refresh();
+			});
+
+		document.addEventListener('visibilitychange', onVisible, { passive: true });
+		window.addEventListener('pageshow', onShow as any, { passive: true });
+		window.addEventListener('online', onOnline, { passive: true });
 	});
 
 	onDestroy(() => {
