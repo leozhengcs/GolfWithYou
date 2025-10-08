@@ -205,12 +205,8 @@
 	});
 
 	onDestroy(() => {
-		document.removeEventListener('visibilitychange', onVisible);
-		window.removeEventListener('pageshow', onShow as any);
-		window.removeEventListener('online', onOnline);
 		stopPresence();
 		stopMail();
-		stop?.();
 	});
 </script>
 

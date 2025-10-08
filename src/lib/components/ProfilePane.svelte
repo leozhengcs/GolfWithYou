@@ -34,7 +34,7 @@
 </script>
 
 <!-- Profile Section -->
-<div class="relative z-50 flex h-full w-full flex-col p-5">
+<div class="relative z-50 flex h-full w-full flex-col p-5 gap-5 md:gap-0">
 	<Back
 		onclick={closeModal}
 		onkeydown={(e: { key: string }) => (e.key === 'Esc' ? closeModal : null)}
@@ -62,11 +62,11 @@
 			/>
 		</svg>
 	</button>
-	<div class="flex h-52 w-full flex-col items-center justify-center gap-2">
+	<div class="flex w-full flex-col items-center justify-center gap-2">
 		<img
 			{src}
 			alt=""
-			class="h-24 w-24 rounded-full object-cover object-center md:h-40 md:w-40 md:rounded-none"
+			class="w-80 h-60 rounded-xl object-contain object-center md:h-40 md:w-40 md:rounded-none"
 		/>
 		<section class="flex flex-col">
 			<h1 class="text-lg md:text-xl text-center">
