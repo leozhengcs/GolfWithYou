@@ -167,38 +167,26 @@
 
 		// startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 		refresh();
-		let last = 0;
-		const GAP = 200;
-		const once = (fn: () => void) => {
-			const n = Date.now();
-			if (n - last > GAP) {
-				last = n;
-				fn();
+
+		const onVisible = () => {
+			if (document.visibilityState === 'visible') {
+				stopMail?.();
+				stop?.();
+				refresh();
 			}
 		};
 
-		const onVisible = () =>
-			document.visibilityState === 'visible' &&
-			once(() => {
-				stopMail?.();
-				stop?.();
-				refresh();
-			});
+		const onShow = (e: PageTransitionEvent) => {
+			stopMail?.();
+			stop?.();
+			refresh();
+		};
 
-		const onShow = (e: PageTransitionEvent) =>
-			once(() => {
-				// bfcache restore or general resume
-				stopMail?.();
-				stop?.();
-				refresh();
-			});
-			
-		const onOnline = () =>
-			once(() => {
-				stopMail?.();
-				stop?.();
-				refresh();
-			});
+		const onOnline = () => {
+			stopMail?.();
+			stop?.();
+			refresh();
+		};
 
 		document.addEventListener('visibilitychange', onVisible, { passive: true });
 		window.addEventListener('pageshow', onShow as any, { passive: true });
