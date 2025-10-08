@@ -46,10 +46,6 @@
 		return () => clearTimeout(t);
 	});
 
-	const handleVisibilityChange = () => {
-		window.location.reload();
-	};
-
 	// Show/hide during client-side navigations
 	$effect(() => {
 		if (channel && channel.state !== 'joined') {
@@ -69,6 +65,12 @@
 			return () => clearTimeout(t);
 		}
 	});
+
+	const refresh = () => {
+		if (!channel) return;
+		const state = channel!.presenceState() as Record<string, Notification[]>;
+		onlineUsers.set(Object.keys(state));
+	};
 
 	let channel: ReturnType<typeof supabase.channel> | null = null;
 	let stopMail = () => {};
@@ -142,8 +144,32 @@
 			return;
 		}
 
-		document.addEventListener('visibilitychange', handleVisibilityChange);
 		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
+		document.addEventListener('pageshow', (e) => {
+			if ((e as PageTransitionEvent).persisted) {
+				try {
+					stopMail?.();
+				} catch {}
+				stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
+					notifications.update((existing) => [row, ...existing]);
+					unread.update((num) => num + 1);
+					// console.log('Update row: ', row);
+					toast.info(`You have a new notification from: ${row.from_name}`);
+				});
+			}
+		});
+
+		document.addEventListener('visibilitychange', () => {
+			try {
+				stopMail?.();
+			} catch {}
+			stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
+				notifications.update((existing) => [row, ...existing]);
+				unread.update((num) => num + 1);
+				// console.log('Update row: ', row);
+				toast.info(`You have a new notification from: ${row.from_name}`);
+			});
+		});
 	});
 
 	onDestroy(() => {
