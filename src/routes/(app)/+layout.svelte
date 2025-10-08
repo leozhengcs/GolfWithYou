@@ -149,15 +149,7 @@
 			stopPresence();
 			startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 			if ((e as PageTransitionEvent).persisted) {
-				try {
-					stopMail?.();
-				} catch {}
-				stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
-					notifications.update((existing) => [row, ...existing]);
-					unread.update((num) => num + 1);
-					// console.log('Update row: ', row);
-					toast.info(`You have a new notification from: ${row.from_name}`);
-				});
+				location.reload();
 			}
 		});
 
