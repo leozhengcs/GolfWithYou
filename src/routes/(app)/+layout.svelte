@@ -47,9 +47,7 @@
 	});
 
 	const handleVisibilityChange = () => {
-		if (!channel) return;
-		const state = channel!.presenceState() as Record<string, Notification[]>;
-		onlineUsers.set(Object.keys(state));
+		window.location.reload();
 	};
 
 	// Show/hide during client-side navigations
