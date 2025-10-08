@@ -146,6 +146,7 @@
 
 		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 		document.addEventListener('pageshow', (e) => {
+			stopPresence();
 			startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 			if ((e as PageTransitionEvent).persisted) {
 				try {
@@ -161,6 +162,7 @@
 		});
 
 		document.addEventListener('visibilitychange', () => {
+			stopPresence();
 			startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 			try {
 				stopMail?.();
