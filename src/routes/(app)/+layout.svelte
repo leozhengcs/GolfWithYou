@@ -17,7 +17,6 @@
 	import type { UserProfile } from '$lib/types/Database';
 	import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
 	import type { Notification } from '$lib/types/Chat';
-	import { _ } from '$env/static/private';
 
 	let {
 		children,
