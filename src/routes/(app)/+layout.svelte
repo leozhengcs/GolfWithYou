@@ -137,6 +137,37 @@
 		startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 	};
 
+	const onVisible = () => {
+		if (document.visibilityState === 'visible') {
+			console.log('on visible');
+			location.reload();
+			stopMail?.();
+			stop?.();
+			stopPresence();
+
+			refresh();
+		}
+	};
+
+	const onShow = (e: PageTransitionEvent) => {
+		console.log('on show');
+		location.reload();
+		stopMail?.();
+		stop?.();
+		stopPresence();
+
+		refresh();
+	};
+
+	const onOnline = () => {
+		console.log('on online');
+		location.reload();
+		stopMail?.();
+		stop?.();
+		stopPresence();
+		refresh();
+	};
+
 	onMount(async () => {
 		await tick();
 		navbarState.show = true;
@@ -168,45 +199,18 @@
 		// startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 		refresh();
 
-		const onVisible = () => {
-			if (document.visibilityState === 'visible') {
-				console.log('on visible');
-				location.reload();
-				stopMail?.();
-				stop?.();
-				stopPresence();
-
-				refresh();
-			}
-		};
-
-		const onShow = (e: PageTransitionEvent) => {
-			console.log('on show');
-			location.reload();
-			stopMail?.();
-			stop?.();
-			stopPresence();
-
-			refresh();
-		};
-
-		const onOnline = () => {
-			console.log('on online');
-			location.reload();
-			stopMail?.();
-			stop?.();
-			stopPresence();
-			refresh();
-		};
-
 		document.addEventListener('visibilitychange', onVisible, { passive: true });
 		window.addEventListener('pageshow', onShow as any, { passive: true });
 		window.addEventListener('online', onOnline, { passive: true });
 	});
 
 	onDestroy(() => {
+		document.removeEventListener('visibilitychange', onVisible);
+		window.removeEventListener('pageshow', onShow as any);
+		window.removeEventListener('online', onOnline);
 		stopPresence();
 		stopMail();
+		stop?.();
 	});
 </script>
 
