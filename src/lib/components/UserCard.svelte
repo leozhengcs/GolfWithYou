@@ -102,14 +102,14 @@
 					{/if}
 				</div>
 
-				<div class="float-right flex flex-shrink-0 items-center gap-1">
+				<!-- <div class="float-right flex flex-shrink-0 items-center gap-1">
 					<div class="w-3">
 						<img src="/icons/Golf_Ball.png" alt="" />
 					</div>
 					<div class="text-left">
 						<p class="text-sm font-medium text-gray-500">{user.handicap_index}</p>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="flex flex-col gap-1 text-xs md:mt-2">
