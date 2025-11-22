@@ -171,32 +171,7 @@
 	onMount(async () => {
 		await tick();
 		navbarState.show = true;
-		// Sets the auth token for when you login
-		// const {
-		// 	data: { session }
-		// } = await supabase.auth.getSession();
 
-		// if (!session) {
-		// 	console.error('No session please login again');
-		// 	toast.error('No session, please login again.');
-		// 	return;
-		// }
-
-		// await supabase.realtime.setAuth(session.access_token);
-
-		// stopMail = subscribeToMailbox(session?.user.id, supabase, (row) => {
-		// 	notifications.update((existing) => [row, ...existing]);
-		// 	unread.update((num) => num + 1);
-		// 	// console.log('Update row: ', row);
-		// 	toast.info(`You have a new notification from: ${row.from_name}`);
-		// });
-
-		// if (!data.user) {
-		// 	toast.error('Error getting user, please log in again');
-		// 	return;
-		// }
-
-		// startPresence(data.user.id, data.profile.full_name, data.profile.avatar_url);
 		refresh();
 
 		document.addEventListener('visibilitychange', onVisible, { passive: true });
@@ -210,7 +185,7 @@
 	});
 </script>
 
-<div class="relative flex min-h-screen flex-col overflow-x-clip bg-[#CAD2C5] p-10 pt-32 xl:p-30">
+<div class="relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30">
 	{#if show}
 		<Loader />
 	{:else}

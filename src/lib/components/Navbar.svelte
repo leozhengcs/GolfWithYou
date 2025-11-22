@@ -2,21 +2,21 @@
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import Tooltip from './Tooltip.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { navbarState } from '$lib/stores/navbarState.svelte';
 
-	let showNav: boolean = $state(false);
-
-	onMount(() => {
-		showNav = true;
+	onDestroy(() => {
+		// window.removeEventListener('scroll', handleScroll);
 	});
 
 	const { profile } = $props();
 </script>
 
-{#if showNav}
+{#if navbarState.show}
 	<nav
 		class="absolute top-0 left-0 z-50 flex h-[100px] w-full select-none flex-row items-center justify-between p-5 px-10 md:px-20"
-		in:fade={{ duration: 500 }}
+		in:fade={{ duration: 300 }}
+		out:fade={{ duration: 300 }}
 	>
 		<button
 			class="flex cursor-pointer flex-row items-center justify-center gap-2"

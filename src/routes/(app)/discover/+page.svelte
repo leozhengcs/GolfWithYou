@@ -1,4 +1,5 @@
 <script lang="ts">
+	export const ssr = false;
 	import UserCard from '$lib/components/UserCard.svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import { clubs } from '$lib';
@@ -146,34 +147,6 @@
 </script>
 
 <div class="relative flex flex-col md:top-12">
-	<svg
-		class="fixed inset-0 h-screen w-screen"
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 550 420"
-		preserveAspectRatio="none"
-	>
-		<path
-			in:fly={{ duration: 300, y: 100 }}
-			class="fill-[#A7BEA9]"
-			d="M0 200 20 180 60 166 90 170 120 190 130 195 180 200 230 190 265 220 290 210 310 200 340 180 360 175 380 175 400 180 420 178 450 185 500 185 550 200 550 420 0 420Z"
-		/>
-		<path
-			in:fly={{ duration: 300, y: 100, delay: 100 }}
-			class="fill-[#84A98C]"
-			d="M0 240 30 240 100 260 160 255 250 240 330 230 450 240 500 235 530 230 550 230 550 420 0 420Z"
-		/>
-		<path
-			in:fly={{ duration: 300, y: 100, delay: 200 }}
-			class="fill-[#52796F]"
-			d="M0 325 75 310 150 302 250 310 300 318 410 310 470 302 550 300 550 420 0 420Z"
-		/>
-		<path
-			in:fly={{ duration: 300, y: 100, delay: 300 }}
-			class="fill-[#354F52]"
-			d="M0 380 40 370 100 371 130 365 180 350 280 338 350 340 410 335 430 335 500 340 550 342 550 420 0 420Z"
-		/>
-	</svg>
-
 	{#if loading}
 		<LoaderDiscover />
 	{:else}
@@ -189,7 +162,7 @@
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
-							viewBox="0 0 20 20"npm
+							viewBox="0 0 20 20"
 						>
 							<path
 								stroke="currentColor"
