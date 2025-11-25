@@ -53,7 +53,7 @@
 </script>
 
 <div
-	class={`fixed inset-0 overflow-y-auto bg-[#DFDFDF]`}
+	class={`fixed inset-0 overflow-y-auto bg-[#FFFFFF]`}
 	transition:fade={{ duration: 300, easing: circOut }}
 >
 	<div class="relative md:grid md:grid-cols-[40%_60%] md:gap-0 lg:grid-cols-[30%_70%]">
@@ -108,7 +108,7 @@
 				{featuredImagesLoading}
 			/>
 			{#if selectedTab === 'chat'}
-				<div class="absolute inset-0 top-0 left-0 z-50 h-screen overflow-clip">
+				<div class="fixed inset-0 top-0 left-0 z-50 w-screen h-screen overflow-y-clip">
 					<ChatPane
 						{openProfile}
 						{id}

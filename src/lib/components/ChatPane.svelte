@@ -297,7 +297,7 @@
 </script>
 
 <div
-	class="flex h-full flex-col bg-[#DFDFDF] shadow-2xl md:shadow-none"
+	class="flex h-full flex-col bg-[#FFFFFF] shadow-2xl md:shadow-none"
 	in:fly={{ duration: 500, x: 500, easing: circOut }}
 	out:fly={{ duration: 500, x: 500, easing: circOut }}
 >
@@ -311,7 +311,7 @@
 		</div>
 		<div class="flex w-full flex-col">
 			<section class="flex w-full gap-5">
-				<h1 class="text-lg truncate max-w-40">
+				<h1 class="max-w-40 truncate text-lg">
 					{name}
 				</h1>
 				<div class="float-right flex flex-shrink-0 items-center gap-1">
@@ -323,7 +323,7 @@
 					</div>
 				</div>
 			</section>
-			<span class='text-xs text-gray-500 truncate'>
+			<span class="truncate text-xs text-gray-500">
 				{member}
 			</span>
 		</div>
@@ -348,13 +348,13 @@
 								/>
 							</div>
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[500px] text-lg p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[500px] p-0 text-lg text-wrap">{message.content}</p>
 							</div>
 						</div>
 					{:else}
 						<div class="flex flex-row items-end justify-end gap-5">
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
-								<p class="m-0 w-fit max-w-[300px] text-lg p-0 text-wrap">{message.content}</p>
+								<p class="m-0 w-fit max-w-[300px] p-0 text-lg text-wrap">{message.content}</p>
 							</div>
 							<div class="aspect-square w-10 overflow-hidden rounded-full">
 								<img
@@ -402,26 +402,24 @@
 				></textarea>
 				<button
 					type="submit"
+					aria-label="Send Message"
 					class={`absolute right-5 bottom-2.5 grid h-9 w-9 cursor-pointer place-items-center
-					rounded-full bg-[#52796F] text-white opacity-0
-					shadow transition-opacity duration-200
-					group-focus-within:opacity-100 disabled:opacity-40`}
+					rounded-full bg-[#52796F] text-white
+					shadow transition-opacity duration-200 disabled:opacity-40`}
 				>
-					{#if showIcon}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="h-6 w-6"
-						>
-							<path d="M22 2L11 13" transition:draw={{ delay: 300, duration: 500 }} />
-							<path d="M22 2L15 22l-4-9-9-4z" transition:draw={{ duration: 500 }} />
-						</svg>
-					{/if}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="h-6 w-6"
+					>
+						<path d="M22 2L11 13" transition:draw={{ delay: 300, duration: 500 }} />
+						<path d="M22 2L15 22l-4-9-9-4z" transition:draw={{ duration: 500 }} />
+					</svg>
 				</button>
 				<div class="h-20"></div>
 			</div>

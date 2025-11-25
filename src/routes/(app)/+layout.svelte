@@ -185,7 +185,7 @@
 	});
 </script>
 
-<div class="relative flex min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30">
+<div class="relative flex w-full min-h-screen flex-col overflow-x-clip p-10 pt-32 xl:p-30">
 	{#if show}
 		<Loader />
 	{:else}
