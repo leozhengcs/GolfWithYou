@@ -294,10 +294,12 @@
 			$openedModal = '';
 		});
 	});
+
+	$inspect(messages);
 </script>
 
 <div
-	class="flex h-full flex-col bg-[#FFFFFF] shadow-2xl md:shadow-none"
+	class="flex h-screen flex-col bg-[#FFFFFF] shadow-2xl md:shadow-none"
 	in:fly={{ duration: 500, x: 500, easing: circOut }}
 	out:fly={{ duration: 500, x: 500, easing: circOut }}
 >
@@ -337,15 +339,17 @@
 				<aside class="mb-5 w-full text-center text-sm text-gray-500">
 					This is the start of your with {name}!
 				</aside>
-				{#each messages as message}
+				{#each messages as message, i}
 					{#if message.sender_id == id}
 						<div class="flex flex-row items-end gap-5">
 							<div class="aspect-square w-10 overflow-hidden rounded-full">
-								<img
-									src={src ?? '/icons/DefaultProfile.png'}
-									alt=""
-									class="h-full w-full object-cover"
-								/>
+								{#if (i < messages.length - 1 && messages[i].sender_id !== messages[i + 1].sender_id) || i === messages.length - 1 || i === messages.length - 1}
+									<img
+										src={src ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								{/if}
 							</div>
 							<div class="w-fit rounded-lg bg-gray-200 p-2">
 								<p class="m-0 w-fit max-w-[500px] p-0 text-lg text-wrap">{message.content}</p>
@@ -357,11 +361,13 @@
 								<p class="m-0 w-fit max-w-[300px] p-0 text-lg text-wrap">{message.content}</p>
 							</div>
 							<div class="aspect-square w-10 overflow-hidden rounded-full">
-								<img
-									src={self.avatar_url ?? '/icons/DefaultProfile.png'}
-									alt=""
-									class="h-full w-full object-cover"
-								/>
+								{#if (i < messages.length - 1 && messages[i].sender_id !== messages[i + 1].sender_id) || i === messages.length - 1 || i === messages.length - 1}
+									<img
+										src={self.avatar_url ?? '/icons/DefaultProfile.png'}
+										alt=""
+										class="h-full w-full object-cover"
+									/>
+								{/if}
 							</div>
 						</div>
 					{/if}
@@ -393,19 +399,19 @@
 							autoResize();
 						} else if (e.key === 'Enter' && !e.shiftKey) {
 							e.preventDefault();
-							form?.requestSubmit(); // submits the form (fires on:submit)
+							form?.requestSubmit();
 						}
 					}}
-					class={`absolute inset-x-0 bottom-2 resize-none overflow-hidden rounded-3xl border-black
-           bg-transparent px-2 py-2 pr-14 leading-6 [scrollbar-gutter:stable] focus:ring-0 focus:outline-none ${isMultiline ? 'pb-10 md:pr-2' : ''}`}
+					class={`flex-1 resize-none overflow-hidden rounded-3xl border border-black bg-transparent px-3 py-2 
+        leading-6 [scrollbar-gutter:stable] focus:ring-0 focus:outline-none ${isMultiline ? 'pb-10' : ''}`}
 					placeholder={`Message ${name}`}
 				></textarea>
+
 				<button
 					type="submit"
 					aria-label="Send Message"
-					class={`absolute right-5 bottom-2.5 grid h-9 w-9 cursor-pointer place-items-center
-					rounded-full bg-[#52796F] text-white
-					shadow transition-opacity duration-200 disabled:opacity-40`}
+					class="grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-full
+        bg-[#52796F] text-white shadow transition-opacity disabled:opacity-40"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -417,8 +423,8 @@
 						stroke-linejoin="round"
 						class="h-6 w-6"
 					>
-						<path d="M22 2L11 13" transition:draw={{ delay: 300, duration: 500 }} />
-						<path d="M22 2L15 22l-4-9-9-4z" transition:draw={{ duration: 500 }} />
+						<path d="M22 2L11 13" />
+						<path d="M22 2L15 22l-4-9-9-4z" />
 					</svg>
 				</button>
 				<div class="h-20"></div>

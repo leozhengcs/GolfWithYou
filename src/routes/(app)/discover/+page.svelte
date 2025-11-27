@@ -1,5 +1,4 @@
 <script lang="ts">
-	export const ssr = false;
 	import UserCard from '$lib/components/UserCard.svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import { clubs } from '$lib';
