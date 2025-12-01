@@ -383,7 +383,7 @@
 	>
 		{#if !loading}
 			<div
-				class="group relative mb-5 flex w-full flex-1 flex-wrap items-center focus:ring-0"
+				class="group relative mb-5 space-x-2 flex w-full flex-1 flex-wrap items-center focus:ring-0"
 				style={`height: ${h + 16}px`}
 				onfocusin={() => (showIcon = true)}
 				onfocusout={() => (showIcon = false)}
@@ -392,6 +392,8 @@
 					bind:value={newMessage}
 					bind:this={taRef}
 					rows="1"
+					onfocus={() => document.body.classList.add('bg-white')}
+					onblur={() => document.body.classList.remove('bg-white')}
 					oninput={autoResize}
 					onchange={autoResize}
 					onkeydown={(e: KeyboardEvent) => {

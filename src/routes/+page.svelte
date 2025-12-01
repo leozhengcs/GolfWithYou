@@ -15,12 +15,13 @@
 		<div class='flex flex-col'>
 			<p class="text-white opacity-50 md:text-lg">
 				Connect with members from over 200 private courses to get your next dream tee time.
+				<a href="/about" class="underline">Want to learn more about us?</a>
 			</p>
 			<!-- <a class="md:hidden text-sm text-white opacity-50 underline" href="/auth/signup">Sign up today </a> -->
 		</div>
 		<button
 			class="w-fit cursor-pointer rounded-full border-1 border-white px-5 py-3 text-sm text-white md:px-6 md:text-base"
-			onclick={() => goto('/about')}
+			onclick={() => goto('/auth/signup')}
 		>
 			Sign Up Today!
 		</button>

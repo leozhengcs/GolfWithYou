@@ -19,7 +19,6 @@
 		});
 
 		scroller.addEventListener('scroll', () => {
-			console.log(scroller.scrollTop)
 			if (scroller.scrollTop > 100) {
 				navbarState.show = false;
 			} else {
