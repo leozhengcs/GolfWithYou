@@ -11,7 +11,7 @@
 	<title>Oops! An Error Has Occured</title>
 </svelte:head>
 
-<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
+<div class="flex min-h-dvh items-center justify-center bg-green-50 px-4">
 	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
 		<div class="mb-6 flex items-center justify-center">
 			<!-- Status badge -->

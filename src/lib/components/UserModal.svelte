@@ -76,7 +76,7 @@
 					{featuredImagesLoading}
 				/>
 			</div>
-			<div class="h-screen min-h-0 flex-col">
+			<div class="h-dvh min-h-0 flex-col">
 				<ChatPane
 					{openProfile}
 					{id}
@@ -108,7 +108,7 @@
 				{featuredImagesLoading}
 			/>
 			{#if selectedTab === 'chat'}
-				<div class="fixed inset-0 top-0 left-0 z-50 w-screen h-screen overflow-y-clip">
+				<div class="fixed inset-0 top-0 left-0 z-50 w-screen h-dvh overflow-y-clip">
 					<ChatPane
 						{openProfile}
 						{id}

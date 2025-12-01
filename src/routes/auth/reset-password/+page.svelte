@@ -31,7 +31,7 @@
 	};
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
+<div class="flex min-h-dvh items-center justify-center bg-green-50 px-4">
 	<div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
 		<h2 class="mb-4 text-center text-2xl">Set New Password</h2>
 

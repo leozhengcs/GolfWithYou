@@ -299,7 +299,7 @@
 </script>
 
 <div
-	class="flex h-screen flex-col bg-[#FFFFFF] shadow-2xl md:shadow-none"
+	class="flex h-dvh flex-col bg-[#FFFFFF] shadow-2xl md:shadow-none"
 	in:fly={{ duration: 500, x: 500, easing: circOut }}
 	out:fly={{ duration: 500, x: 500, easing: circOut }}
 >

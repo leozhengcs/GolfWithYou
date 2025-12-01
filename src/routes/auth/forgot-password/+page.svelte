@@ -15,7 +15,7 @@
 	});
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-green-50 px-4">
+<div class="flex min-h-dvh items-center justify-center bg-green-50 px-4">
 	<div class="w-full max-w-md rounded-2xl border bg-white p-8 shadow-xl">
 		<h1 class="mb-6 text-center text-2xl font-bold text-green-800">Forgot Your Password?</h1>
 
