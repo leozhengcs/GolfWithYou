@@ -6,13 +6,8 @@ html, body {
 	height: 100%;
 	overflow: hidden;
 	margin: 0;
-	padding: 0;
+	padding: env(safe-area-inset-5);
 }
-
-* {
-  outline: 1px solid red;
-}
-
 
 @theme {
 	--color-background: #2f3e46;

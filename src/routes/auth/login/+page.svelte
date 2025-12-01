@@ -16,7 +16,6 @@
 		loading = true;
 
 		return async ({ result }) => {
-			console.log('Form result: ', result);
 			// This callback runs after the server action completes
 			if (result.type === 'success') {
 				finished = true;
