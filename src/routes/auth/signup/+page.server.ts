@@ -45,8 +45,7 @@ export const actions: Actions = {
 				club_name: clubName,
 				handicap_index: handicapIndex,
 				golf_id: golfId,
-				verified: false,
-				email_verified: false
+				verified: false
 			}
 		]);
 
