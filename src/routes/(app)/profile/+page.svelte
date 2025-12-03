@@ -77,7 +77,6 @@
 
 	let imageFile: File | null = $state(null);
 	let featuredFiles: File[] = $state([]);
-	$inspect(imageFile);
 
 	let avatarUrl = $derived(profile?.avatar_url);
 	let tempUrl: string | null = $state(null);
@@ -122,10 +121,10 @@
 
 <div class="flex w-full flex-1 flex-col gap-5 md:grid md:grid-cols-[250px_auto] lg:px-52">
 	<section
-		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg border-1 border-[#84A98C] bg-[#84A98C]"
+		class="flex h-full w-full flex-col gap-5 overflow-x-hidden rounded-lg backdrop-blur-xs bg-black/30"
 	>
-		<h1 class="m-5 mb-0 text-gray-600">Settings</h1>
-		<div class="flex h-full flex-col">
+		<h1 class="m-5 mb-0 text-xl text-white">Settings</h1>
+		<div class="flex h-full flex-col text-white">
 			<button
 				onclick={() => {
 					tab = 'profile';

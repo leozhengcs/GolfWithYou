@@ -53,8 +53,8 @@
 	};
 </script>
 
-<section class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-[#84A98C] bg-[#84A98C] px-5 md:p-10 py-5">
-	<h1 class="text-3xl">Personal Info</h1>
+<section class="flex h-full w-full flex-col gap-5 rounded-lg backdrop-blur-xs bg-black/30 px-5 md:p-10 py-5">
+	<h1 class="text-3xl text-white">Personal Info</h1>
 	<!-- {#if !profile?.verified}
 		<Tooltip text="Please contact a verified user to verify your profile.">
 			<span
@@ -101,16 +101,16 @@
 	<div class="flex w-full justify-end gap-5">
 		{#if disabled == true}
 			<button
-				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleEdit}>Edit</button
 			>
 		{:else}
 			<button
-				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleCancel}>Cancel</button
 			>
 			<button
-				class="border-green-700 bg-green-700 hover:text-green-700 w-fit cursor-pointer rounded-lg border-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleSubmit}>Save</button
 			>
 		{/if}

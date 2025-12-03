@@ -108,9 +108,9 @@
 </script>
 
 <section
-	class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-[#84A98C] bg-[#84A98C] px-5 py-5 md:p-10"
+	class="flex h-full w-full flex-col gap-5 rounded-lg backdrop-blur-xs bg-black/30 px-5 py-5 md:p-10"
 >
-	<h1 class="text-3xl">Featured Photos</h1>
+	<h1 class="text-3xl text-white">Featured Photos</h1>
 	<h1 class="mt-10 text-3xl font-bold text-white">Posted Images</h1>
 	{#if loading}
 		<div

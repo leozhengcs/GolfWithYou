@@ -2,6 +2,7 @@
 	import { toast } from 'svelte-sonner';
 	import Tooltip from '../Tooltip.svelte';
 	import { clubs } from '$lib';
+	import { onMount } from 'svelte';
 
 	let {
 		profile = $bindable(),
@@ -13,8 +14,8 @@
 
 		full_name = $bindable(),
 		bio = $bindable(),
-		gender = $bindable(),
-		club_name = $bindable(),
+		gender = $bindable() as string,
+		club_name = $bindable() as string,
 		handicap_index = $bindable(),
 		golf_id = $bindable(),
 		other_gender = $bindable(),
@@ -23,6 +24,14 @@
 
 	} = $props();
 
+	onMount(() => {
+		club_name = club_name.toLowerCase();
+		try {
+			other_gender = other_gender.toLowerCase();
+		} catch {}
+		gender = gender.toLowerCase();
+	})
+	
 	const handleScoreInput = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 
@@ -58,9 +67,9 @@
 
 		full_name = data.user.full_name;
 		bio = data.user.bio;
-		gender = data.user.gender;
-		other_gender = data.user.other_gender;
-		club_name = data.user.club_name;
+		gender = data.user.gender.toLowerCase();
+		other_gender = data.user.other_gender.toLowerCase();
+		club_name = data.user.club_name.toLowerCase();
 		handicap_index = data.user.handicap_index;
 		golf_id = data.user.golf_id;
 		imageUploaded = null;
@@ -69,9 +78,9 @@
 </script>
 
 <section
-	class="flex h-full w-full flex-col gap-5 rounded-lg border-1 border-[#84A98C] bg-[#84A98C] px-5 py-5 md:p-10"
+	class="flex h-full w-full flex-col gap-5 rounded-lg backdrop-blur-xs bg-black/30 px-5 py-5 md:p-10"
 >
-	<h1 class="text-3xl">Profile</h1>
+	<h1 class="text-3xl text-white">Profile</h1>
 	{#if !profile?.verified}
 		<Tooltip text="Please contact a verified user to verify your profile.">
 			<span
@@ -86,7 +95,7 @@
 		</span>
 	{/if}
 	<div>
-		<label for="image" class="block text-sm/6 font-medium text-gray-900">Upload Icon</label>
+		<label for="image" class="block text-sm/6 font-medium text-white/50">Upload Icon</label>
 		<div class="mt-2">
 			<input
 				id="file-upload"
@@ -100,7 +109,7 @@
 			<!-- Styled label as a button -->
 			<label
 				for="file-upload"
-				class="upload-button inline-block cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-blue-600"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				>Select Image</label
 			>
 			{#if tempUrl}
@@ -122,7 +131,7 @@
 		</div>
 	</div>
 	<div>
-		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Full Name</label>
+		<label for="full_name" class="block text-sm/6 font-medium text-white/50">Full Name</label>
 		<div class="mt-2">
 			<input
 				bind:value={full_name}
@@ -130,13 +139,13 @@
 				name="full_name"
 				id="full_name"
 				required
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/>
 		</div>
 	</div>
 	<div>
-		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Handicap Index</label>
+		<label for="full_name" class="block text-sm/6 font-medium text-white/50">Handicap Index</label>
 		<div class="mt-2">
 			<input
 				bind:value={handicap_index}
@@ -147,19 +156,19 @@
 				name="handicap_index"
 				id="handicap_index"
 				required
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/>
 		</div>
 	</div>
 	<div>
-		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Club Name</label>
+		<label for="full_name" class="block text-sm/6 font-medium text-white/50">Club Name</label>
 		<div class="mt-2">
 			<select
 				name="club_name"
 				id="club_name"
 				bind:value={club_name}
-				class="block w-full truncate rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full truncate rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			>
 				{#each clubs as club}
@@ -172,13 +181,13 @@
 				name="club_name"
 				id="club_name"
 				required
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-white/50 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/> -->
 		</div>
 	</div>
 	<div>
-		<label for="full_name" class="block text-sm/6 font-medium text-gray-900">Golf ID</label>
+		<label for="full_name" class="block text-sm/6 font-medium text-white/50">Golf ID</label>
 		<div class="mt-2">
 			<input
 				bind:value={golf_id}
@@ -187,13 +196,13 @@
 				id="golfId"
 				required
 				oninput={handleIdInput}
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			/>
 		</div>
 	</div>
 	<div>
-		<label for="email" class="block text-sm/6 font-medium text-gray-900">Bio</label>
+		<label for="email" class="block text-sm/6 font-medium text-white/50">Bio</label>
 		<div class="mt-2">
 			<textarea
 				bind:value={bio}
@@ -201,19 +210,19 @@
 				id="bio"
 				rows="3"
 				required
-				class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+				class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 				{disabled}
 			></textarea>
 		</div>
 	</div>
 	<div>
-		<label for="email" class="block text-sm/6 font-medium text-gray-900">Gender</label>
+		<label for="email" class="block text-sm/6 font-medium text-white/50">Gender</label>
 		<select
 			bind:value={gender}
 			name="gender"
 			id="gender"
 			required
-			class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+			class="block w-full rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 			{disabled}
 		>
 			<option value="" disabled selected>Select your gender</option>
@@ -221,9 +230,9 @@
 			<option value="female">Female</option>
 			<option value="nonbinary">Non-binary</option>
 			<option value="prefer_not_to_say">Prefer not to say</option>
-			<option value="Other">Other</option>
+			<option value="other">Other</option>
 		</select>
-		{#if gender === 'Other'}
+		{#if gender === 'other'}
 			<input
 				type="text"
 				class="mt-2 w-full border-0 border-b border-black bg-transparent focus:border-blue-400 focus:ring-0 focus:outline-none sm:text-sm lg:text-base"
@@ -235,16 +244,16 @@
 	<div class="flex w-full justify-end gap-5">
 		{#if disabled == true}
 			<button
-				class="w-fit cursor-pointer rounded-lg border-1 border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent hover:text-green-700 focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleEdit}>Edit</button
 			>
 		{:else}
 			<button
-				class="w-fit cursor-pointer rounded-lg border-1 border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent hover:text-green-700 focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleCancel}>Cancel</button
 			>
 			<button
-				class="w-fit cursor-pointer rounded-lg border-1 border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-transparent hover:text-green-700 focus:ring-1 focus:outline-hidden"
+				class="w-fit rounded-sm border border-white/30 bg-white/30 px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black focus:ring-1 focus:outline-hidden cursor-pointer duration-300 transition-all"
 				onclick={handleSubmit}>Save</button
 			>
 		{/if}
