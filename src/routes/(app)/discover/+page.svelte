@@ -176,7 +176,7 @@
 						bind:value={search}
 						type="search"
 						id="default-search"
-						class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 focus:border-[#84A98C] focus:ring-[#84A98C]"
+						class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-gray-900 focus:border-[#84A98C] focus:ring-[#84A98C]"
 						placeholder="Search Users"
 						oninput={handleFilterInput}
 					/>
