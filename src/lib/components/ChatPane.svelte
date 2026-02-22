@@ -182,9 +182,7 @@
 
 		const to = id;
 		const subject = `[TeesAway] New message from: ${self.full_name}`;
-		const text = `
-		${m}
-`;
+		const text = `${m}`;
 
 		// Only send email if user is not online
 		if (!$onlineUsers.includes(id)) {

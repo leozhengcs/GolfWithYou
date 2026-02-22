@@ -31,17 +31,18 @@ export async function POST({ request }) {
       from: PRIVATE_EMAIL_USER,
       to: data.email,
       subject,
-      text: `
-      'You have a new message:'
+      text: `You have a new message:
 
       "${text}"
 
       To view your message, please visit: ${WEBSITE_URL}. 
 
       Thank you,
-      Teesaway Team
-      `,
+      Teesaway Team`,
       html: `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6;">
       <p>Hello,</p>
 
 		  <p>You've received a new message:</p>
@@ -57,7 +58,9 @@ export async function POST({ request }) {
       </a>
       </p>
 
-      <p>Thank you,<br>Teesaway Team</p>`
+      <p>Thank you,<br>Teesaway Team</p>
+      </body>
+      </html>`
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
