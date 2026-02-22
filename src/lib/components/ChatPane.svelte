@@ -182,22 +182,9 @@
 
 		const to = id;
 		const subject = `[TeesAway] New message from: ${self.full_name}`;
-		const text = `<p>Hello,</p>
-
-		<p>You've received a new message from <strong>${self.full_name}</strong>:</p>
-
-		<blockquote style="border-left: 4px solid #ccc; padding-left: 10px;">
+		const text = `
 		${m}
-		</blockquote>
-
-		<p style="margin-top: 20px;">
-		<a href="https://teesaway.com" 
-			style="background-color:#3a5a40;color:white;padding:10px 16px;text-decoration:none;border-radius:6px;">
-			View Message
-		</a>
-		</p>
-
-		<p>Thank you,<br>Teesaway Team</p>`;
+`;
 
 		// Only send email if user is not online
 		if (!$onlineUsers.includes(id)) {
